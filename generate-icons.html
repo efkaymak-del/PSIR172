@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html><head><title>Generate PSIR 172 Icons</title></head>
+<body style="font-family:system-ui;padding:40px;text-align:center">
+<h2>Click each button to download the icon</h2>
+<p><button onclick="gen(192)">Download 192×192</button></p>
+<p><button onclick="gen(512)">Download 512×512</button></p>
+<canvas id="c" style="display:none"></canvas>
+<script>
+function gen(size){
+  const c=document.getElementById('c');
+  c.width=size;c.height=size;
+  const ctx=c.getContext('2d');
+  // Background
+  const r=size*0.1875;
+  ctx.beginPath();
+  ctx.moveTo(r,0);ctx.lineTo(size-r,0);ctx.quadraticCurveTo(size,0,size,r);
+  ctx.lineTo(size,size-r);ctx.quadraticCurveTo(size,size,size-r,size);
+  ctx.lineTo(r,size);ctx.quadraticCurveTo(0,size,0,size-r);
+  ctx.lineTo(0,r);ctx.quadraticCurveTo(0,0,r,0);
+  ctx.closePath();ctx.fillStyle='#4361ee';ctx.fill();
+  // Text
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillStyle='#ffffff';ctx.font=`900 ${size*0.22}px system-ui`;
+  ctx.fillText('PSIR',size/2,size*0.36);
+  ctx.fillStyle='#10b981';ctx.font=`900 ${size*0.28}px system-ui`;
+  ctx.fillText('172',size/2,size*0.66);
+  // Download
+  const a=document.createElement('a');
+  a.download=`icon-${size}.png`;a.href=c.toDataURL('image/png');a.click();
+}
+</script>
+</body>
+</html>
