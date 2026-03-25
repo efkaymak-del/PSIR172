@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="description" content="PSIR 172 Applied Political Skills — student toolkit for semester planning, writing, policy briefs, MUN, and campaigns."/>
+<meta name="theme-color" content="#4361ee"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-title" content="PSIR 172"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='96' fill='%234361ee'/%3E%3Ctext x='256' y='200' text-anchor='middle' font-family='system-ui,sans-serif' font-weight='900' font-size='120' fill='white'%3EPSIR%3C/text%3E%3Ctext x='256' y='340' text-anchor='middle' font-family='system-ui,sans-serif' font-weight='900' font-size='140' fill='%2310b981'%3E172%3C/text%3E%3C/svg%3E"/>
+<link rel="apple-touch-icon" href="icons/icon-192.png"/>
+<title>PSIR 172 — Applied Skills Toolkit</title>
+<style>
+:root{
+  --bg:#f5f7fb;--bg-alt:#edf0f8;--surface:#ffffff;--surface-2:#f8f9fd;
+  --text:#1e2a4a;--muted:#64748b;--accent:#4361ee;--accent-light:#e8ecff;
+  --accent-2:#10b981;--accent-2-light:#d1fae5;
+  --warn:#f59e0b;--warn-light:#fef3c7;
+  --danger:#ef4444;--danger-light:#fee2e2;
+  --ok:#10b981;--ok-light:#d1fae5;
+  --border:#e2e8f0;--border-focus:#4361ee;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.06);
+  --shadow:0 4px 16px rgba(0,0,0,.07);
+  --shadow-lg:0 10px 32px rgba(0,0,0,.09);
+  --radius:14px;--radius-sm:10px;
+  --font:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  --transition:0.2s ease;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+
+/* ── PWA INSTALL BANNER ── */
+.install-banner{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--accent);color:#fff;padding:14px 24px;z-index:10000;box-shadow:0 -4px 20px rgba(0,0,0,.15);align-items:center;justify-content:center;gap:12px;font-weight:600;font-size:.92rem}
+.install-banner.show{display:flex}
+.install-banner button{background:#fff;color:var(--accent);border:none;padding:8px 18px;border-radius:8px;font:inherit;font-weight:700;cursor:pointer}
+.install-banner .dismiss{background:transparent;color:rgba(255,255,255,.8);text-decoration:underline;padding:0}
+
+/* ── LAYOUT ── */
+.app{max-width:1360px;margin:0 auto;padding:20px 24px 40px}
+
+/* ── OFFLINE INDICATOR ── */
+.offline-bar{display:none;background:var(--warn-light);color:#92400e;text-align:center;padding:8px;font-size:.85rem;font-weight:600;border-bottom:1px solid var(--warn)}
+.offline-bar.show{display:block}
+
+/* ── TOPBAR ── */
+.topbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:20px;padding:14px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm)}
+.brand{font-weight:900;font-size:1.15rem;color:var(--accent);letter-spacing:-.02em;display:flex;align-items:center;gap:8px}
+.brand span{color:var(--text)}
+.brand-icon{width:28px;height:28px;border-radius:6px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);padding:9px 16px;border-radius:var(--radius-sm);cursor:pointer;font:inherit;font-size:.88rem;font-weight:600;transition:var(--transition);white-space:nowrap;-webkit-tap-highlight-color:transparent}
+.btn:hover{border-color:var(--accent);color:var(--accent);box-shadow:var(--shadow-sm);transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.primary:hover{background:#3451d1;transform:translateY(-1px)}
+.btn.success{background:var(--accent-2);color:#fff;border-color:var(--accent-2)}
+.btn.success:hover{background:#059669}
+.btn.warn{background:var(--warn-light);color:#92400e;border-color:var(--warn)}
+.btn.warn:hover{background:#fde68a}
+.btn.danger{background:var(--danger-light);color:#991b1b;border-color:var(--danger)}
+.btn.danger:hover{background:#fecaca}
+.btn.small{padding:7px 12px;font-size:.82rem;border-radius:8px}
+.btn.ghost{background:transparent;border-color:transparent}
+.btn.ghost:hover{background:var(--accent-light)}
+
+/* ── HERO ── */
+.hero{display:grid;grid-template-columns:1.3fr .7fr;gap:18px;margin-bottom:20px}
+@media(max-width:960px){.hero{grid-template-columns:1fr}}
+.hero-main,.hero-side{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:28px}
+.hero-main{background:linear-gradient(135deg,#f0f3ff 0%,#e8fff4 100%)}
+.hero-main h1{font-size:clamp(1.6rem,2.6vw,2.3rem);font-weight:900;letter-spacing:-.03em;margin-bottom:8px;background:linear-gradient(135deg,var(--accent),var(--accent-2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-main>p{color:var(--muted);max-width:700px}
+.pill-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.pill{background:var(--accent-light);color:var(--accent);padding:6px 14px;border-radius:999px;font-size:.82rem;font-weight:600;border:1px solid rgba(67,97,238,.15)}
+.snapshot-item{margin-bottom:12px}
+.snapshot-label{font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.snapshot-value{font-size:1.2rem;font-weight:900;margin-top:2px}
+.callout{border-left:4px solid var(--accent);padding:12px 16px;background:var(--accent-light);border-radius:var(--radius-sm);font-size:.9rem;color:var(--text);margin-top:14px}
+
+/* ── TABS ── */
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;padding:6px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm);position:sticky;top:0;z-index:100}
+.tab-btn{flex:1;min-width:100px;text-align:center;border:none;background:transparent;color:var(--muted);padding:11px 8px;border-radius:var(--radius-sm);cursor:pointer;font:inherit;font-weight:700;font-size:.88rem;transition:var(--transition);-webkit-tap-highlight-color:transparent}
+.tab-btn:hover{background:var(--bg-alt);color:var(--text)}
+.tab-btn.active{background:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(67,97,238,.25)}
+.tab-content{display:none;animation:fadeIn .3s ease}
+.tab-content.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── GRID ── */
+.grid{display:grid;gap:18px}
+.grid-2{grid-template-columns:1fr 1fr}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+.grid-5{grid-template-columns:repeat(5,1fr)}
+@media(max-width:980px){.grid-2,.grid-3,.grid-4,.grid-5{grid-template-columns:1fr}}
+
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:22px}
+.card h2{font-size:1.2rem;margin-bottom:4px;letter-spacing:-.02em}
+.card h3{font-size:1.02rem;margin-bottom:4px;letter-spacing:-.01em}
+
+/* ── KPI ── */
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;text-align:center;box-shadow:var(--shadow-sm);transition:var(--transition)}
+.kpi:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.kpi .label{font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.kpi .value{font-size:1.8rem;font-weight:900;margin-top:4px;color:var(--accent)}
+
+/* ── FORMS ── */
+.field{margin-bottom:14px}
+label{display:block;margin-bottom:5px;font-weight:700;font-size:.9rem}
+label .hint{font-weight:400;color:var(--muted);font-size:.82rem;display:block;margin-top:2px}
+input[type="text"],input[type="number"],textarea,select{width:100%;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:var(--radius-sm);padding:11px 14px;font:inherit;font-size:.92rem;outline:none;transition:var(--transition)}
+textarea{min-height:110px;resize:vertical}
+input:focus,textarea:focus,select:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px rgba(67,97,238,.12)}
+select{cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.wordcount{color:var(--accent-2);font-size:.8rem;font-weight:600;margin-top:4px}
+
+/* ── PROGRESS ── */
+.progress-wrap{background:var(--bg-alt);border:1px solid var(--border);border-radius:999px;height:14px;overflow:hidden;margin:8px 0 6px}
+.progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:999px;transition:width .4s ease}
+.progress-text{font-size:.82rem;color:var(--muted);font-weight:600}
+
+/* ── SECTION BLOCKS ── */
+.section-block{border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;margin-bottom:14px;background:var(--surface-2);transition:var(--transition)}
+.section-block:hover{border-color:rgba(67,97,238,.25)}
+.section-block h3{color:var(--accent);font-size:.95rem;margin-bottom:10px}
+
+/* ── CHECKLIST ── */
+.checklist{display:grid;gap:8px;margin-top:8px}
+.check-item{display:flex;align-items:flex-start;gap:10px;background:var(--surface-2);padding:10px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);transition:var(--transition);cursor:pointer;font-size:.9rem}
+.check-item:hover{border-color:var(--accent);background:var(--accent-light)}
+.check-item input[type="checkbox"]{margin-top:3px;accent-color:var(--accent);transform:scale(1.15);cursor:pointer;flex-shrink:0}
+.check-item.checked{background:var(--ok-light);border-color:var(--ok)}
+.check-item.checked span{text-decoration:line-through;color:var(--muted)}
+
+/* ── OUTPUT ── */
+.output-box{white-space:pre-wrap;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;min-height:200px;max-height:600px;overflow:auto;font-size:.9rem;line-height:1.65}
+
+/* ── WEEK CARDS ── */
+.week-list{display:grid;gap:10px}
+.week-card{border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;background:var(--surface-2);transition:var(--transition)}
+.week-card:hover{border-color:var(--accent);box-shadow:var(--shadow-sm)}
+.week-header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.week-title{font-weight:800;font-size:.95rem}
+.badge{display:inline-block;padding:4px 10px;border-radius:999px;font-size:.76rem;font-weight:700;border:1px solid var(--border);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:var(--transition);user-select:none}
+.badge:hover{transform:scale(1.05)}
+.badge.not-started{background:#f1f5f9;color:#64748b}
+.badge.in-progress{background:var(--warn-light);color:#92400e;border-color:var(--warn)}
+.badge.done{background:var(--ok-light);color:#065f46;border-color:var(--ok)}
+.week-topics{margin-top:8px;color:var(--muted);font-size:.88rem;line-height:1.5}
+.week-notes textarea{min-height:50px;font-size:.85rem;margin-top:8px}
+
+/* ── TOOL CARDS ── */
+.tool-card{border:1px solid var(--border);background:var(--surface-2);border-radius:var(--radius-sm);padding:14px;margin-bottom:10px}
+.tool-card h4{margin-bottom:4px;color:var(--text)}
+.tool-recommend{color:var(--accent-2);font-weight:700;font-size:.85rem;margin-bottom:6px}
+.helper-list{margin:6px 0 0 18px;color:var(--muted);font-size:.88rem;line-height:1.5}
+.helper-list li{margin-bottom:4px}
+
+/* ── RUBRIC TABLE ── */
+.rubric-table{width:100%;border-collapse:collapse;font-size:.85rem;margin-top:10px}
+.rubric-table th,.rubric-table td{border:1px solid var(--border);padding:8px 10px;text-align:left}
+.rubric-table th{background:var(--accent-light);color:var(--accent);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.04em}
+.rubric-table tr:nth-child(even){background:var(--surface-2)}
+
+/* ── MISC ── */
+.hr{height:1px;background:var(--border);margin:16px 0}
+.tag{display:inline-block;padding:5px 12px;border:1px solid var(--border);border-radius:999px;margin:4px 4px 0 0;font-size:.8rem;font-weight:600;color:var(--muted);background:var(--surface-2)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.focus-box{border:1px solid var(--border);background:linear-gradient(135deg,rgba(67,97,238,.04),rgba(16,185,129,.04));border-radius:var(--radius-sm);padding:16px;font-size:.92rem;line-height:1.55}
+
+/* ── TOAST ── */
+.toast-container{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{padding:12px 20px;border-radius:var(--radius-sm);font-size:.88rem;font-weight:600;box-shadow:var(--shadow-lg);animation:toastIn .3s ease;color:#fff;pointer-events:auto}
+.toast.success{background:var(--accent-2)}
+.toast.info{background:var(--accent)}
+.toast.error{background:var(--danger)}
+@keyframes toastIn{from{opacity:0;transform:translateY(12px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+/* ── PRINT ── */
+@media print{
+  body{background:#fff!important}
+  .topbar,.tabs,.toolbar,.btn,.toast-container,.install-banner,.offline-bar{display:none!important}
+  .hero,.grid,.grid-2,.grid-3,.grid-4,.grid-5{display:block!important}
+  .card,.hero-main,.hero-side{box-shadow:none!important;border:1px solid #ccc!important;background:#fff!important;margin-bottom:14px!important;break-inside:avoid}
+  .tab-content{display:none!important}
+  .tab-content.active{display:block!important}
+}
+@media(max-width:640px){
+  .app{padding:12px 14px 30px}
+  .topbar{padding:10px 14px}
+  .hero-main,.hero-side,.card{padding:16px}
+  .tab-btn{min-width:auto;font-size:.8rem;padding:9px 4px}
+  .grid-3{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- OFFLINE BAR -->
+<div class="offline-bar" id="offlineBar">You are offline — all changes are saved locally and will persist.</div>
+
+<!-- INSTALL BANNER -->
+<div class="install-banner" id="installBanner">
+  <span>Install PSIR 172 Toolkit for quick access</span>
+  <button id="installBtn">Install</button>
+  <button class="dismiss" id="installDismiss">Not now</button>
+</div>
+
+<div class="app">
+
+<!-- ══════ TOPBAR ══════ -->
+<div class="topbar">
+  <div class="brand">
+    <svg class="brand-icon" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><rect width="512" height="512" rx="96" fill="#4361ee"/><text x="256" y="200" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="900" font-size="120" fill="white">PSIR</text><text x="256" y="340" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="900" font-size="140" fill="#10b981">172</text></svg>
+    <span>PSIR 172</span> Toolkit
+  </div>
+  <div class="toolbar">
+    <button class="btn small" onclick="exportJSON()">Export JSON</button>
+    <label class="btn small" for="jsonImport" style="cursor:pointer">Import JSON</label>
+    <input type="file" id="jsonImport" accept=".json" style="display:none"/>
+    <button class="btn small" onclick="window.print()">Print</button>
+    <button class="btn small danger" onclick="resetAllData()">Reset All</button>
+  </div>
+</div>
+
+<!-- ══════ HERO ══════ -->
+<section class="hero">
+  <div class="hero-main">
+    <h1>PSIR 172: Applied Political Skills</h1>
+    <p>Your all-in-one workspace for semester planning, academic writing, policy analysis, Model United Nations preparation, and campaign communication design. Works offline as an installed app.</p>
+    <div class="pill-row">
+      <span class="pill">Spring 2026</span>
+      <span class="pill">Semester Planner</span>
+      <span class="pill">Writing Lab</span>
+      <span class="pill">Policy Brief</span>
+      <span class="pill">MUN Prep</span>
+      <span class="pill">Campaign Studio</span>
+      <span class="pill">Offline-Ready PWA</span>
+    </div>
+  </div>
+  <div class="hero-side">
+    <h3 style="margin-bottom:14px">Key Dates</h3>
+    <div class="snapshot-item"><div class="snapshot-label">Classes Begin</div><div class="snapshot-value">Feb 23, 2026</div></div>
+    <div class="snapshot-item"><div class="snapshot-label">Midterm Period</div><div class="snapshot-value">Apr 10 – 25</div></div>
+    <div class="snapshot-item"><div class="snapshot-label">Final Exam Period</div><div class="snapshot-value">Jun 15 – 27</div></div>
+    <div class="callout">All work auto-saves to your browser. Use <strong>Export JSON</strong> to back up your work. This app works fully offline once installed.</div>
+  </div>
+</section>
+
+<!-- ══════ TABS ══════ -->
+<nav class="tabs" role="tablist">
+  <button class="tab-btn active" data-tab="home" role="tab">Dashboard</button>
+  <button class="tab-btn" data-tab="semester" role="tab">Semester</button>
+  <button class="tab-btn" data-tab="writing" role="tab">Writing Lab</button>
+  <button class="tab-btn" data-tab="policy" role="tab">Policy Brief</button>
+  <button class="tab-btn" data-tab="mun" role="tab">MUN Prep</button>
+  <button class="tab-btn" data-tab="campaign" role="tab">Campaign</button>
+</nav>
+
+<!-- ══════ DASHBOARD ══════ -->
+<section id="home" class="tab-content active">
+  <div class="grid grid-5" style="margin-bottom:18px">
+    <div class="kpi"><div class="label">Semester</div><div class="value" id="kpiSemester">0%</div></div>
+    <div class="kpi"><div class="label">Writing</div><div class="value" id="kpiWriting">0%</div></div>
+    <div class="kpi"><div class="label">Policy</div><div class="value" id="kpiPolicy">0%</div></div>
+    <div class="kpi"><div class="label">MUN</div><div class="value" id="kpiMUN">0%</div></div>
+    <div class="kpi"><div class="label">Campaign</div><div class="value" id="kpiCampaign">0%</div></div>
+  </div>
+  <div class="grid grid-2">
+    <div class="card">
+      <h2>This Week</h2>
+      <div class="field" style="margin-top:10px"><label for="currentWeekSel">Select Week</label><select id="currentWeekSel"></select></div>
+      <div id="weekFocusDisplay" class="focus-box" style="margin-top:10px">Choose a week above to view its focus areas and deliverables.</div>
+    </div>
+    <div class="card">
+      <h2>Key Deliverables</h2>
+      <div class="checklist" id="deadlineChecklist"></div>
+    </div>
+  </div>
+  <div class="grid grid-2" style="margin-top:18px">
+    <div class="card">
+      <h2>Recommended Workflow</h2>
+      <div style="display:grid;gap:10px;margin-top:10px">
+        <div class="section-block"><strong>Weeks 1–4</strong><br><span style="color:var(--muted)">Build foundations: research skills, essay writing, data literacy. Use Writing Lab and Semester Planner.</span></div>
+        <div class="section-block"><strong>Weeks 5–8</strong><br><span style="color:var(--muted)">Apply analysis: policy brief writing and campaign planning. Use Policy Brief and Campaign Studio.</span></div>
+        <div class="section-block"><strong>Weeks 9–12</strong><br><span style="color:var(--muted)">Diplomatic practice: MUN preparation, negotiation, presentations. Use MUN Prep Suite.</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Quick Navigation</h2>
+      <div class="row" style="margin-bottom:12px">
+        <button class="btn primary" onclick="switchTab('semester')">Semester</button>
+        <button class="btn primary" onclick="switchTab('writing')">Writing</button>
+        <button class="btn primary" onclick="switchTab('policy')">Policy</button>
+        <button class="btn primary" onclick="switchTab('mun')">MUN</button>
+        <button class="btn primary" onclick="switchTab('campaign')">Campaign</button>
+      </div>
+      <div class="hr"></div>
+      <div class="row"><button class="btn" onclick="downloadAllTxt()">Download All Work (.txt)</button><button class="btn" onclick="exportJSON()">Backup (JSON)</button></div>
+      <div class="hr"></div>
+      <div class="field"><label for="globalNotes">General Notes & Reminders</label><textarea id="globalNotes" placeholder="Instructor feedback, meeting notes, personal reminders..."></textarea></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ SEMESTER ══════ -->
+<section id="semester" class="tab-content">
+  <div class="grid grid-2">
+    <div class="card">
+      <h2>Semester Roadmap</h2>
+      <p style="color:var(--muted);font-size:.9rem;margin-bottom:10px">Click the status badge on each week to cycle: Not Started → In Progress → Done.</p>
+      <div class="progress-wrap"><div class="progress-bar" id="semesterBar"></div></div>
+      <div class="progress-text" id="semesterBarText">0 of 14 weeks completed</div>
+      <div class="hr"></div>
+      <div id="weekList" class="week-list"></div>
+    </div>
+    <div class="card">
+      <h2>Course Overview</h2>
+      <div class="grid grid-3" style="margin-bottom:14px">
+        <div class="kpi"><div class="label">Credits</div><div class="value" style="font-size:1.4rem">3</div></div>
+        <div class="kpi"><div class="label">ECTS</div><div class="value" style="font-size:1.4rem">6</div></div>
+        <div class="kpi"><div class="label">Type</div><div class="value" style="font-size:1.1rem">Core</div></div>
+      </div>
+      <h3>Assessment Breakdown</h3>
+      <div style="margin-top:8px">
+        <div class="tag">Midterm — 20%</div><div class="tag">Final — 25%</div><div class="tag">MUN — 20%</div>
+        <div class="tag">Policy/Campaign — 15%</div><div class="tag">Writing — 15%</div><div class="tag">Participation — 5%</div>
+      </div>
+      <div class="hr"></div>
+      <h3>Grade Calculator</h3>
+      <div class="grid grid-3" style="margin-top:8px">
+        <div class="field"><label>Midterm (20%)</label><input type="number" id="gradeMidterm" min="0" max="100" placeholder="0–100"/></div>
+        <div class="field"><label>Final (25%)</label><input type="number" id="gradeFinal" min="0" max="100" placeholder="0–100"/></div>
+        <div class="field"><label>MUN (20%)</label><input type="number" id="gradeMUN" min="0" max="100" placeholder="0–100"/></div>
+        <div class="field"><label>Policy/Campaign (15%)</label><input type="number" id="gradePolicy" min="0" max="100" placeholder="0–100"/></div>
+        <div class="field"><label>Writing (15%)</label><input type="number" id="gradeWriting" min="0" max="100" placeholder="0–100"/></div>
+        <div class="field"><label>Participation (5%)</label><input type="number" id="gradeParticipation" min="0" max="100" placeholder="0–100"/></div>
+      </div>
+      <div class="row"><button class="btn primary" onclick="calculateGrade()">Calculate</button><div id="gradeResult" style="font-weight:900;font-size:1.1rem;color:var(--accent)"></div></div>
+      <div class="hr"></div>
+      <div class="field"><label for="semesterNotes">Semester Reflections</label><textarea id="semesterNotes" placeholder="Goals, reflections, areas for improvement..."></textarea></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ WRITING LAB ══════ -->
+<section id="writing" class="tab-content">
+  <div class="grid grid-2">
+    <div class="card">
+      <h2>Academic Writing Workshop</h2>
+      <p style="color:var(--muted);font-size:.9rem;margin-bottom:10px">Practice structuring academic arguments. Use this for your Week 3 essay and any other writing assignments.</p>
+      <div class="progress-wrap"><div class="progress-bar" id="writingBar"></div></div>
+      <div class="progress-text" id="writingBarText">0% complete</div>
+      <div class="section-block">
+        <div class="field"><label>Essay Title</label><input type="text" id="essayTitle" placeholder="Enter your essay title"/></div>
+        <div class="field"><label>Essay Type</label><select id="essayType"><option value="">Select type</option><option>Argumentative</option><option>Analytical</option><option>Comparative</option><option>Literature Review</option><option>Case Study Analysis</option><option>Critical Response</option></select></div>
+      </div>
+      <div class="section-block"><h3>1. Thesis Statement</h3><div class="field"><label>Your thesis <span class="hint">A clear, arguable claim in 1–2 sentences. This is the backbone of your essay.</span></label><textarea id="essayThesis" placeholder="This essay argues that..."></textarea><div class="wordcount" id="wc-essayThesis">0 words</div></div></div>
+      <div class="section-block"><h3>2. Introduction</h3><div class="field"><label>Opening paragraph <span class="hint">Hook the reader, provide context, and state your thesis.</span></label><textarea id="essayIntro" placeholder="Begin with a compelling opening..."></textarea><div class="wordcount" id="wc-essayIntro">0 words</div></div></div>
+      <div class="section-block"><h3>3. Body Paragraphs</h3>
+        <div class="field"><label>Argument 1 <span class="hint">Topic sentence → evidence → analysis → link to thesis.</span></label><textarea id="essayBody1" placeholder="First main argument..."></textarea><div class="wordcount" id="wc-essayBody1">0 words</div></div>
+        <div class="field"><label>Argument 2</label><textarea id="essayBody2" placeholder="Second main argument..."></textarea><div class="wordcount" id="wc-essayBody2">0 words</div></div>
+        <div class="field"><label>Argument 3 (optional)</label><textarea id="essayBody3" placeholder="Third argument or counterargument analysis..."></textarea><div class="wordcount" id="wc-essayBody3">0 words</div></div>
+      </div>
+      <div class="section-block"><h3>4. Counterargument</h3><div class="field"><label>Opposing views <span class="hint">Acknowledge the strongest objection, then explain why your argument holds.</span></label><textarea id="essayCounter" placeholder="Critics might argue that... However..."></textarea><div class="wordcount" id="wc-essayCounter">0 words</div></div></div>
+      <div class="section-block"><h3>5. Conclusion</h3><div class="field"><label>Closing paragraph <span class="hint">Restate thesis in new terms, summarise key points, offer broader implications.</span></label><textarea id="essayConclusion" placeholder="In conclusion, this analysis has demonstrated..."></textarea><div class="wordcount" id="wc-essayConclusion">0 words</div></div></div>
+      <div class="section-block"><h3>6. References</h3><div class="field"><label>Citation notes</label><textarea id="essayRefs" placeholder="Author (Year). Title. Publisher/Journal..."></textarea></div></div>
+      <div class="row"><button class="btn primary" onclick="generateEssayOutput()">Compile Draft</button><button class="btn" onclick="copyText('essayOutput')">Copy</button><button class="btn" onclick="downloadTxt('essay')">Download .txt</button><button class="btn warn" onclick="resetModule('essay')">Reset</button></div>
+    </div>
+    <div class="card">
+      <h2>Writing Support</h2>
+      <h3>Paragraph Structure (PEEL)</h3>
+      <div class="section-block" style="margin-top:8px"><strong style="color:var(--accent)">P</strong>oint — State your topic sentence clearly<br><strong style="color:var(--accent)">E</strong>vidence — Provide data, quotes, or examples<br><strong style="color:var(--accent)">E</strong>xplanation — Analyse what the evidence means<br><strong style="color:var(--accent)">L</strong>ink — Connect back to your thesis</div>
+      <div class="hr"></div>
+      <h3>Transition Phrases</h3>
+      <div class="section-block" style="margin-top:8px;font-size:.88rem;color:var(--muted)"><strong>Adding:</strong> Furthermore, Moreover, In addition<br><strong>Contrasting:</strong> However, Nevertheless, Conversely<br><strong>Cause/Effect:</strong> Consequently, Therefore, As a result<br><strong>Exemplifying:</strong> For instance, Specifically, To illustrate<br><strong>Concluding:</strong> In summary, Ultimately, This demonstrates</div>
+      <div class="hr"></div>
+      <h3>Self-Assessment</h3>
+      <div class="checklist" id="writingChecklist">
+        <label class="check-item"><input type="checkbox"/><span>Thesis is clear, specific, and arguable</span></label>
+        <label class="check-item"><input type="checkbox"/><span>Introduction provides context and states the thesis</span></label>
+        <label class="check-item"><input type="checkbox"/><span>Each paragraph has a topic sentence</span></label>
+        <label class="check-item"><input type="checkbox"/><span>Evidence supports claims (not just opinions)</span></label>
+        <label class="check-item"><input type="checkbox"/><span>Analysis explains why evidence matters</span></label>
+        <label class="check-item"><input type="checkbox"/><span>Counterargument is addressed fairly</span></label>
+        <label class="check-item"><input type="checkbox"/><span>Conclusion does more than repeat the intro</span></label>
+        <label class="check-item"><input type="checkbox"/><span>Sources are cited properly</span></label>
+        <label class="check-item"><input type="checkbox"/><span>Proofread for grammar and clarity</span></label>
+      </div>
+      <div class="hr"></div>
+      <h3>Compiled Draft</h3>
+      <div id="essayOutput" class="output-box">Your compiled essay appears here after clicking "Compile Draft."</div>
+      <div class="wordcount" id="essayTotalWC" style="margin-top:6px">Total: 0 words</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ POLICY BRIEF ══════ -->
+<section id="policy" class="tab-content">
+  <div class="grid grid-2">
+    <div class="card">
+      <h2>Policy Brief Builder</h2>
+      <p style="color:var(--muted);font-size:.9rem;margin-bottom:10px">Build your brief section by section. Each section includes guidance on strong work.</p>
+      <div class="progress-wrap"><div class="progress-bar" id="policyBar"></div></div>
+      <div class="progress-text" id="policyBarText">0% complete</div>
+      <div class="section-block">
+        <div class="field"><label>Policy Brief Title</label><input type="text" id="policyTitle" placeholder="A concise, descriptive title"/></div>
+        <div class="field"><label>Policy Area</label><select id="policyArea"><option value="">Select area</option><option>Security & Defence</option><option>Environment & Climate</option><option>Human Rights</option><option>Economic Development</option><option>Health Policy</option><option>Education</option><option>Migration & Refugees</option><option>Technology & Digital Policy</option><option>Governance & Anti-Corruption</option><option>Other</option></select></div>
+      </div>
+      <div class="section-block"><h3>1. Executive Summary</h3><div class="field"><label>Overview <span class="hint">150–200 words. Summarise problem, key finding, and recommendation. Decision-makers often read only this.</span></label><textarea id="policyExecSummary" placeholder="This brief examines... The analysis finds... We recommend..."></textarea><div class="wordcount" id="wc-policyExecSummary">0 words</div></div></div>
+      <div class="section-block"><h3>2. Problem Statement</h3><div class="field"><label>Define the problem <span class="hint">Why should policymakers care? What happens if nothing changes?</span></label><textarea id="policyProblem" placeholder="Identify the issue, its scope, who is affected, and urgency."></textarea><div class="wordcount" id="wc-policyProblem">0 words</div></div></div>
+      <div class="section-block"><h3>3. Background & Context</h3><div class="field"><label>Context <span class="hint">What has been tried? What is the legal or political landscape?</span></label><textarea id="policyBackground" placeholder="Provide political, historical, or institutional context..."></textarea><div class="wordcount" id="wc-policyBackground">0 words</div></div></div>
+      <div class="section-block"><h3>4. Evidence & Data</h3><div class="field"><label>Supporting evidence <span class="hint">Statistics, case studies, expert reports, comparative examples. Cite sources.</span></label><textarea id="policyEvidence" placeholder="Present the evidence that informs your analysis..."></textarea><div class="wordcount" id="wc-policyEvidence">0 words</div></div></div>
+      <div class="section-block"><h3>5. Policy Options</h3><div class="field"><label>Compare 2–3 options <span class="hint">Describe each, list pros/cons, assess feasibility.</span></label><textarea id="policyOptions" placeholder="Option A: ...\nPros: ... Cons: ...\n\nOption B: ..."></textarea><div class="wordcount" id="wc-policyOptions">0 words</div></div></div>
+      <div class="section-block"><h3>6. Recommendation</h3><div class="field"><label>Your recommendation <span class="hint">Who should act? What exactly? By when? Why this over others?</span></label><textarea id="policyRecommendation" placeholder="We recommend that [actor] should [action] because..."></textarea><div class="wordcount" id="wc-policyRecommendation">0 words</div></div></div>
+      <div class="section-block"><h3>7. Implementation</h3><div class="field"><label>Implementation plan <span class="hint">Timeline, actors, budget, obstacles, monitoring.</span></label><textarea id="policyImplementation" placeholder="Implementation would require..."></textarea><div class="wordcount" id="wc-policyImplementation">0 words</div></div></div>
+      <div class="section-block"><h3>8. Sources</h3><div class="field"><label>References</label><textarea id="policySources" placeholder="Track all sources here."></textarea></div></div>
+      <div class="row"><button class="btn primary" onclick="generatePolicyOutput()">Compile Brief</button><button class="btn" onclick="copyText('policyOutput')">Copy</button><button class="btn" onclick="downloadTxt('policy')">Download .txt</button><button class="btn warn" onclick="resetModule('policy')">Reset</button></div>
+    </div>
+    <div class="card">
+      <h2>Policy Brief Guide</h2>
+      <h3>Quality Rubric</h3>
+      <table class="rubric-table"><tr><th>Criterion</th><th>Strong</th><th>Needs Work</th></tr><tr><td>Problem</td><td>Specific, evidence-based, urgent</td><td>Vague or overly broad</td></tr><tr><td>Evidence</td><td>Credible, well-integrated</td><td>Unsupported or cherry-picked</td></tr><tr><td>Options</td><td>Fair comparison, trade-offs</td><td>One-sided or missing alternatives</td></tr><tr><td>Recommendation</td><td>Actionable, specific, justified</td><td>Generic or unrealistic</td></tr><tr><td>Writing</td><td>Clear, concise, professional</td><td>Jargon-heavy or informal</td></tr></table>
+      <div class="hr"></div>
+      <h3>Self-Check</h3>
+      <div class="checklist" id="policyChecklist">
+        <label class="check-item"><input type="checkbox"/><span>Executive summary can stand alone</span></label>
+        <label class="check-item"><input type="checkbox"/><span>Problem is clearly defined with stakes</span></label>
+        <label class="check-item"><input type="checkbox"/><span>Evidence is from credible sources</span></label>
+        <label class="check-item"><input type="checkbox"/><span>At least 2 options compared fairly</span></label>
+        <label class="check-item"><input type="checkbox"/><span>Recommendation is specific and actionable</span></label>
+        <label class="check-item"><input type="checkbox"/><span>Implementation is realistic</span></label>
+        <label class="check-item"><input type="checkbox"/><span>Brief is under 2,500 words</span></label>
+        <label class="check-item"><input type="checkbox"/><span>All sources properly cited</span></label>
+      </div>
+      <div class="hr"></div>
+      <h3>Compiled Brief</h3>
+      <div id="policyOutput" class="output-box">Your policy brief appears here after clicking "Compile Brief."</div>
+      <div class="wordcount" id="policyTotalWC" style="margin-top:6px">Total: 0 words</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ MUN PREP ══════ -->
+<section id="mun" class="tab-content">
+  <div class="grid grid-2">
+    <div class="card">
+      <h2>MUN Preparation Suite</h2>
+      <p style="color:var(--muted);font-size:.9rem;margin-bottom:10px">Build your country profile, strategy, speech, and resolution clauses.</p>
+      <div class="progress-wrap"><div class="progress-bar" id="munBar"></div></div>
+      <div class="progress-text" id="munBarText">0% complete</div>
+      <div class="section-block"><div class="grid grid-3"><div class="field"><label>Country</label><input type="text" id="munCountry" placeholder="e.g. Greece"/></div><div class="field"><label>Committee</label><input type="text" id="munCommittee" placeholder="e.g. UNGA"/></div><div class="field"><label>Topic</label><input type="text" id="munTopic" placeholder="e.g. Digital Privacy"/></div></div></div>
+      <div class="section-block"><h3>1. Country Position</h3><div class="field"><label>Official stance <span class="hint">Base this on real foreign policy, voting records, and treaties.</span></label><textarea id="munPosition" placeholder="[Country] believes that..."></textarea><div class="wordcount" id="wc-munPosition">0 words</div></div></div>
+      <div class="section-block"><h3>2. National Interests</h3><div class="field"><label>Key priorities <span class="hint">Sovereignty, economy, regional influence, ideology.</span></label><textarea id="munInterests" placeholder="Our primary interests include..."></textarea><div class="wordcount" id="wc-munInterests">0 words</div></div></div>
+      <div class="section-block"><h3>3. Allies & Blocs</h3><div class="field"><label>Likely partners <span class="hint">Regional groups, voting blocs, ideological allies.</span></label><textarea id="munAllies" placeholder="We anticipate support from..."></textarea><div class="wordcount" id="wc-munAllies">0 words</div></div></div>
+      <div class="section-block"><h3>4. Opponents</h3><div class="field"><label>Opposition analysis <span class="hint">Who disagrees? What are their arguments?</span></label><textarea id="munOpponents" placeholder="Opposition is likely from..."></textarea><div class="wordcount" id="wc-munOpponents">0 words</div></div></div>
+      <div class="section-block"><h3>5. Red Lines & Compromises</h3><div class="grid grid-2"><div class="field"><label>Red lines</label><textarea id="munRedLines" placeholder="Cannot accept..." style="min-height:90px"></textarea><div class="wordcount" id="wc-munRedLines">0 words</div></div><div class="field"><label>Compromises</label><textarea id="munCompromises" placeholder="Willing to consider..." style="min-height:90px"></textarea><div class="wordcount" id="wc-munCompromises">0 words</div></div></div></div>
+      <div class="section-block"><h3>6. Negotiation Goals</h3><div class="field"><label>Strategic objectives <span class="hint">What do you want in the final resolution?</span></label><textarea id="munGoals" placeholder="Our delegation aims to..."></textarea><div class="wordcount" id="wc-munGoals">0 words</div></div></div>
+      <div class="section-block"><h3>7. Opening Speech</h3><div class="field"><label>Speech draft <span class="hint">60–90 seconds. State position clearly and diplomatically.</span></label><textarea id="munSpeech" placeholder="Honourable Chair, Distinguished Delegates..." style="min-height:160px"></textarea><div class="wordcount" id="wc-munSpeech">0 words</div></div></div>
+      <div class="section-block"><h3>8. Resolution Clauses</h3><div class="field"><label>Operative clauses <span class="hint">"Calls upon," "Encourages," "Requests," "Urges," "Decides."</span></label><textarea id="munClauses" placeholder="1. Calls upon Member States to..." style="min-height:140px"></textarea><div class="wordcount" id="wc-munClauses">0 words</div></div></div>
+      <div class="row"><button class="btn primary" onclick="generateMUNOutput()">Compile Dossier</button><button class="btn" onclick="copyText('munOutput')">Copy</button><button class="btn" onclick="downloadTxt('mun')">Download .txt</button><button class="btn warn" onclick="resetModule('mun')">Reset</button></div>
+    </div>
+    <div class="card">
+      <h2>MUN Guide</h2>
+      <h3>Performance Rubric</h3>
+      <table class="rubric-table"><tr><th>Skill</th><th>Excellent</th><th>Developing</th></tr><tr><td>Country Knowledge</td><td>Deep understanding of real policies</td><td>Generic or inaccurate</td></tr><tr><td>Diplomacy</td><td>Builds coalitions, compromises</td><td>Inflexible or passive</td></tr><tr><td>Speech</td><td>Clear, diplomatic, evidence-based</td><td>Unfocused or too brief</td></tr><tr><td>Resolutions</td><td>Specific, actionable clauses</td><td>Vague or incorrect format</td></tr><tr><td>Strategy</td><td>Anticipates opponents, plans</td><td>Reactive only</td></tr></table>
+      <div class="hr"></div>
+      <h3>MUN Vocabulary</h3>
+      <div class="section-block" style="font-size:.85rem;color:var(--muted);margin-top:8px"><strong>Preambular:</strong> Noting, Bearing in mind, Deeply concerned, Recalling, Guided by<br><strong>Operative:</strong> Calls upon, Urges, Encourages, Requests, Decides, Recommends, Condemns<br><strong>Procedural:</strong> Motion to table, Right of reply, Point of order, Moderated caucus, Unmoderated caucus</div>
+      <div class="hr"></div>
+      <h3>Speech Template</h3>
+      <div class="section-block" style="font-size:.88rem;margin-top:8px"><strong>1. Address</strong> — "Honourable Chair, Distinguished Delegates"<br><strong>2. Stake</strong> — Why this matters to your country<br><strong>3. Position</strong> — Your stance in 1–2 sentences<br><strong>4. Evidence</strong> — One concrete fact or example<br><strong>5. Proposal</strong> — What you want the committee to do<br><strong>6. Close</strong> — Call for cooperation / Thank the chair</div>
+      <div class="hr"></div>
+      <h3>Compiled Dossier</h3>
+      <div id="munOutput" class="output-box">Your MUN dossier appears here after clicking "Compile Dossier."</div>
+      <div class="wordcount" id="munTotalWC" style="margin-top:6px">Total: 0 words</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ CAMPAIGN STUDIO ══════ -->
+<section id="campaign" class="tab-content">
+  <div class="grid grid-2">
+    <div class="card">
+      <h2>Campaign Studio</h2>
+      <p style="color:var(--muted);font-size:.9rem;margin-bottom:10px">Design a campaign from strategy to execution. Message before medium.</p>
+      <div class="progress-wrap"><div class="progress-bar" id="campaignBar"></div></div>
+      <div class="progress-text" id="campaignBarText">0% complete</div>
+      <div class="section-block"><div class="grid grid-2"><div class="field"><label>Campaign Title</label><input type="text" id="campaignTitle" placeholder="e.g. Vote for Green Mobility"/></div><div class="field"><label>Output Type</label><select id="campaignType"><option value="">Select type</option><option>Poster</option><option>Instagram Post / Carousel</option><option>Story / Reel</option><option>Short Video (30–60s)</option><option>Flyer / Leaflet</option><option>Presentation Slides</option><option>Multi-platform Campaign</option></select></div></div></div>
+      <div class="section-block"><h3>1. Issue</h3><div class="field"><label>Problem <span class="hint">Who is affected? What is at stake?</span></label><textarea id="campaignIssue" placeholder="This campaign addresses..."></textarea><div class="wordcount" id="wc-campaignIssue">0 words</div></div></div>
+      <div class="section-block"><h3>2. Target Audience</h3><div class="field"><label>Audience <span class="hint">Demographics, values, media habits, current beliefs.</span></label><textarea id="campaignAudience" placeholder="Our primary audience is..."></textarea><div class="wordcount" id="wc-campaignAudience">0 words</div></div></div>
+      <div class="section-block"><h3>3. Campaign Goal</h3><div class="field"><label>Desired outcome <span class="hint">Awareness, attitude change, behaviour change, mobilisation?</span></label><textarea id="campaignGoal" placeholder="After seeing this campaign, we want the audience to..."></textarea><div class="wordcount" id="wc-campaignGoal">0 words</div></div></div>
+      <div class="section-block"><div class="grid grid-2"><div class="field"><label>4. Slogan</label><input type="text" id="campaignSlogan" placeholder="e.g. Clean Streets, Strong Future"/></div><div class="field"><label>Tone</label><select id="campaignTone"><option value="">Select tone</option><option>Hopeful / Positive</option><option>Urgent / Alarm-based</option><option>Evidence-driven</option><option>Emotional / Human-centered</option><option>National interest / Security</option><option>Youth-focused / Mobilising</option><option>Satirical / Ironic</option></select></div></div></div>
+      <div class="section-block"><h3>5. Core Message</h3><div class="field"><label>The one thing to remember <span class="hint">If the audience remembers one sentence, what is it?</span></label><textarea id="campaignMessage" placeholder="The core message is..."></textarea><div class="wordcount" id="wc-campaignMessage">0 words</div></div></div>
+      <div class="section-block"><h3>6. Visual / Poster Concept</h3><div class="field"><label>Design concept <span class="hint">Layout, imagery, colours, typography, slogan placement.</span></label><textarea id="campaignPosterConcept" placeholder="The poster features..."></textarea><div class="wordcount" id="wc-campaignPosterConcept">0 words</div></div><div class="field"><label>Call to Action</label><input type="text" id="campaignPosterCTA" placeholder="e.g. Join the campus clean-up Friday at 3pm"/></div></div>
+      <div class="section-block"><h3>7. Video Concept</h3><div class="field"><label>Video objective <span class="hint">Persuade, inform, mobilise, or emotional impact?</span></label><textarea id="campaignVideoGoal" placeholder="This video aims to..."></textarea><div class="wordcount" id="wc-campaignVideoGoal">0 words</div></div><div class="field"><label>Opening hook (first 3 seconds)</label><input type="text" id="campaignVideoHook" placeholder="e.g. Every year, our city loses..."/></div><div class="field"><label>Scene outline <span class="hint">Visual, text overlay, voiceover, duration for each scene.</span></label><textarea id="campaignVideoScenes" placeholder="Scene 1 (0–5s): ..."></textarea><div class="wordcount" id="wc-campaignVideoScenes">0 words</div></div></div>
+      <div class="section-block"><h3>8. Tool Plan</h3><div class="field"><label>Tools and rationale <span class="hint">Match tools to strategic needs.</span></label><textarea id="campaignTools" placeholder="For the poster: Canva..."></textarea><div class="wordcount" id="wc-campaignTools">0 words</div></div></div>
+      <div class="section-block"><h3>9. Ethics</h3><div class="field"><label>Risks and concerns <span class="hint">Misleading? Manipulative? Factually weak?</span></label><textarea id="campaignRisks" placeholder="Potential risks include..."></textarea><div class="wordcount" id="wc-campaignRisks">0 words</div></div></div>
+      <div class="section-block"><h3>10. Success Metrics</h3><div class="field"><label>How to measure impact <span class="hint">Reach, engagement, attendance, persuasion?</span></label><textarea id="campaignMetrics" placeholder="Success will be measured by..."></textarea><div class="wordcount" id="wc-campaignMetrics">0 words</div></div></div>
+      <div class="row"><button class="btn primary" onclick="generateCampaignOutput()">Compile Campaign</button><button class="btn" onclick="copyText('campaignOutput')">Copy</button><button class="btn" onclick="downloadTxt('campaign')">Download .txt</button><button class="btn warn" onclick="resetModule('campaign')">Reset</button></div>
+    </div>
+    <div class="card">
+      <h2>Campaign Guide</h2>
+      <div class="callout" style="margin-bottom:14px"><strong>Message → Audience → Goal → Medium → Tool.</strong><br>Never start with "I want to make a poster." Start with "I want to change how people think about X."</div>
+      <h3>Tool Recommendations</h3>
+      <div class="tool-card"><h4>Canva</h4><div class="tool-recommend">Best for: posters, social media, flyers, slides</div><ul class="helper-list"><li>One dominant element + clear headline</li><li>5-second readability test</li><li>Colours match tone (warm = urgency, cool = trust)</li><li>One clear call to action</li></ul></div>
+      <div class="tool-card"><h4>AI-Assisted Video</h4><div class="tool-recommend">Best for: scripts, subtitles, voiceovers, storyboarding</div><ul class="helper-list"><li>Write full script first</li><li>First 3 seconds = hook</li><li>Always add captions</li><li>Verify every claim independently</li></ul></div>
+      <div class="hr"></div>
+      <h3>Quality Rubric</h3>
+      <table class="rubric-table"><tr><th>Criterion</th><th>Strong</th><th>Needs Work</th></tr><tr><td>Strategy</td><td>Clear audience + goal + message</td><td>Vague or unfocused</td></tr><tr><td>Design</td><td>Professional, accessible</td><td>Cluttered or inconsistent</td></tr><tr><td>Message</td><td>Memorable, evidence-backed</td><td>Generic without substance</td></tr><tr><td>Ethics</td><td>Honest, AI-use disclosed</td><td>Misleading or manipulative</td></tr><tr><td>Feasibility</td><td>Realistic scope</td><td>Overambitious</td></tr></table>
+      <div class="hr"></div>
+      <h3>Ethics Checklist</h3>
+      <div class="checklist" id="campaignEthics">
+        <label class="check-item"><input type="checkbox"/><span>All factual claims verified</span></label>
+        <label class="check-item"><input type="checkbox"/><span>No fabricated data or sources</span></label>
+        <label class="check-item"><input type="checkbox"/><span>No deceptive deepfake-style content</span></label>
+        <label class="check-item"><input type="checkbox"/><span>No misleading impersonation</span></label>
+        <label class="check-item"><input type="checkbox"/><span>AI tools disclosed where used</span></label>
+        <label class="check-item"><input type="checkbox"/><span>Accessible (captions, contrast)</span></label>
+        <label class="check-item"><input type="checkbox"/><span>Follows course originality rules</span></label>
+      </div>
+      <div class="hr"></div>
+      <h3>Compiled Campaign</h3>
+      <div id="campaignOutput" class="output-box">Your campaign plan appears here.</div>
+      <div class="wordcount" id="campaignTotalWC" style="margin-top:6px">Total: 0 words</div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /.app -->
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   PSIR 172 TOOLKIT — PWA ENGINE
+   ════════════════════════════════════════════════════════════════ */
+
+// ── SERVICE WORKER REGISTRATION ──
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js').then(reg=>{
+      reg.addEventListener('updatefound',()=>{
+        const newWorker=reg.installing;
+        newWorker.addEventListener('statechange',()=>{
+          if(newWorker.state==='activated'&&navigator.serviceWorker.controller){
+            toast('App updated — refresh for latest version','info');
+          }
+        });
+      });
+    }).catch(err=>console.log('SW registration failed:',err));
+  });
+}
+
+// ── PWA INSTALL PROMPT ──
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();deferredPrompt=e;
+  document.getElementById('installBanner').classList.add('show');
+});
+document.getElementById('installBtn').addEventListener('click',()=>{
+  if(!deferredPrompt)return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(r=>{
+    if(r.outcome==='accepted')toast('App installed!');
+    deferredPrompt=null;
+    document.getElementById('installBanner').classList.remove('show');
+  });
+});
+document.getElementById('installDismiss').addEventListener('click',()=>{
+  document.getElementById('installBanner').classList.remove('show');
+});
+
+// ── OFFLINE DETECTION ──
+function updateOnlineStatus(){document.getElementById('offlineBar').classList.toggle('show',!navigator.onLine)}
+window.addEventListener('online',updateOnlineStatus);
+window.addEventListener('offline',updateOnlineStatus);
+updateOnlineStatus();
+
+// ── COURSE DATA ──
+const WEEKS=[
+  {n:1,title:"Introduction to Applied Political Skills",topics:"Course overview, skills framework, expectations, diagnostic self-assessment",deliverable:""},
+  {n:2,title:"Research Methods & Source Evaluation",topics:"Academic databases, source credibility, research design basics, note-taking strategies",deliverable:""},
+  {n:3,title:"Academic Writing Foundations",topics:"Essay structure, argumentation, thesis development, PEEL paragraphs, citation formats",deliverable:"Short Academic Essay"},
+  {n:4,title:"Data Literacy & Visualization",topics:"Reading data, basic statistics for policy, creating charts, interpreting infographics",deliverable:"Data Analysis & Visualization Report"},
+  {n:5,title:"Policy Analysis Frameworks",topics:"Problem definition, stakeholder mapping, cost-benefit thinking, policy cycle models",deliverable:""},
+  {n:6,title:"Writing Policy Briefs",topics:"Brief structure, executive summaries, writing for decision-makers, evidence integration",deliverable:""},
+  {n:7,title:"Policy Brief Workshop & Submission",topics:"Peer review, revision strategies, professional formatting, final submission",deliverable:"Policy Brief"},
+  {n:8,title:"Political Communication & Campaign Design",topics:"Message framing, audience analysis, visual communication, ethical persuasion",deliverable:""},
+  {n:9,title:"Model United Nations: Preparation",topics:"Country research, position papers, diplomatic language, speech writing, bloc politics",deliverable:"MUN Position Papers"},
+  {n:10,title:"MUN Simulation Day 1",topics:"Opening speeches, lobbying, moderated caucus, working paper drafting",deliverable:""},
+  {n:11,title:"MUN Simulation Day 2",topics:"Negotiations, resolution drafting, amendments, voting procedure, closing statements",deliverable:""},
+  {n:12,title:"Campaign Project Presentations",topics:"Student campaign presentations, peer feedback, instructor evaluation",deliverable:"Campaign Project + Presentation"},
+  {n:13,title:"Review & Exam Preparation",topics:"Semester review, practice questions, skills consolidation, Q&A",deliverable:""},
+  {n:14,title:"Final Exam Period",topics:"Written examination covering all course material",deliverable:"Final Exam"}
+];
+
+const DEADLINES=[
+  {key:"essayDone",label:"Week 3: Short Academic Essay"},
+  {key:"dataDone",label:"Week 4: Data Analysis & Visualization Report"},
+  {key:"briefDone",label:"Week 7: Policy Brief"},
+  {key:"munPaperDone",label:"Week 9: MUN Position Papers"},
+  {key:"campaignDone",label:"Week 12: Campaign Project + Presentation"},
+  {key:"finalDone",label:"Week 14: Final Exam"}
+];
+
+// ── STATE ──
+let state={};
+function defaultState(){return{weekStatuses:{},weekNotes:{},deadlines:{},globalNotes:"",semesterNotes:"",grades:{},essay:{},policy:{},mun:{},campaign:{}}}
+const STORAGE_KEY="psir172_toolkit_v4";
+function loadState(){try{const s=localStorage.getItem(STORAGE_KEY);state=s?{...defaultState(),...JSON.parse(s)}:defaultState()}catch(e){state=defaultState()}}
+function saveState(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}catch(e){}}
+
+// ── AUTO-SAVE ──
+let saveTimer=null;
+function autoSave(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>{gatherAll();saveState()},400)}
+
+// ── TOAST ──
+function toast(msg,type="success"){
+  const c=document.getElementById("toastContainer"),t=document.createElement("div");
+  t.className="toast "+type;t.textContent=msg;c.appendChild(t);
+  setTimeout(()=>{t.style.transition="opacity .3s";t.style.opacity="0";setTimeout(()=>t.remove(),300)},2600);
+}
+
+// ── TABS ──
+function switchTab(id){
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));
+  document.querySelectorAll(".tab-content").forEach(s=>s.classList.toggle("active",s.id===id));
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+document.addEventListener("click",e=>{if(e.target.classList.contains("tab-btn")&&e.target.dataset.tab)switchTab(e.target.dataset.tab)});
+
+// ── WORD COUNT ──
+function wc(str){return str.trim()?str.trim().split(/\s+/).length:0}
+function updateWC(id){const el=document.getElementById(id),wcEl=document.getElementById("wc-"+id);if(el&&wcEl){const c=wc(el.value);wcEl.textContent=c+" word"+(c!==1?"s":"")}}
+document.addEventListener("input",e=>{
+  if(e.target.matches("textarea,input[type='text'],select,input[type='number']")){autoSave();if(document.getElementById("wc-"+e.target.id))updateWC(e.target.id)}
+  updateAllProgress();
+});
+
+// ── CHECKLIST ──
+document.addEventListener("change",e=>{
+  if(e.target.type==="checkbox"){const item=e.target.closest(".check-item");if(item)item.classList.toggle("checked",e.target.checked);autoSave();updateAllProgress()}
+});
+
+// ── WEEK LIST ──
+function buildWeekList(){
+  const sel=document.getElementById("currentWeekSel");
+  sel.innerHTML=WEEKS.map(w=>`<option value="${w.n}">Week ${w.n}: ${w.title}</option>`).join("");
+  sel.addEventListener("change",showWeekFocus);
+  const list=document.getElementById("weekList");
+  list.innerHTML=WEEKS.map(w=>{
+    const status=state.weekStatuses[w.n]||"not-started";
+    const labels={"not-started":"Not Started","in-progress":"In Progress",done:"Done"};
+    return `<div class="week-card" data-week="${w.n}"><div class="week-header"><div class="week-title">Week ${w.n}: ${w.title}</div><button class="badge ${status}" onclick="cycleWeekStatus(${w.n},this)">${labels[status]}</button></div><div class="week-topics">${w.topics}${w.deliverable?`<br><strong style="color:var(--accent)">Due: ${w.deliverable}</strong>`:""}</div><div class="week-notes"><textarea id="weekNote${w.n}" placeholder="Notes for Week ${w.n}...">${state.weekNotes[w.n]||""}</textarea></div></div>`;
+  }).join("");
+}
+function cycleWeekStatus(n,btn){
+  const order=["not-started","in-progress","done"],labels={"not-started":"Not Started","in-progress":"In Progress",done:"Done"};
+  let idx=(order.indexOf(state.weekStatuses[n]||"not-started")+1)%3;
+  state.weekStatuses[n]=order[idx];btn.className="badge "+order[idx];btn.textContent=labels[order[idx]];
+  autoSave();updateAllProgress();
+}
+function showWeekFocus(){
+  const n=parseInt(document.getElementById("currentWeekSel").value),w=WEEKS.find(x=>x.n===n);
+  if(!w)return;
+  document.getElementById("weekFocusDisplay").innerHTML=`<strong style="color:var(--accent)">Week ${w.n}: ${w.title}</strong><br><br><strong>Topics:</strong> ${w.topics}<br>${w.deliverable?`<br><strong style="color:var(--danger)">Deliverable: ${w.deliverable}</strong>`:`<br><em style="color:var(--muted)">No deliverable this week.</em>`}`;
+}
+
+// ── DEADLINES ──
+function buildDeadlines(){
+  const el=document.getElementById("deadlineChecklist");
+  el.innerHTML=DEADLINES.map(d=>{const ch=state.deadlines[d.key]?"checked":"";return `<label class="check-item ${ch?"checked":""}"><input type="checkbox" data-deadline="${d.key}" ${ch}/><span>${d.label}</span></label>`}).join("");
+  el.addEventListener("change",e=>{if(e.target.dataset.deadline){state.deadlines[e.target.dataset.deadline]=e.target.checked;autoSave()}});
+}
+
+// ── GRADE CALC ──
+function calculateGrade(){
+  const f=[{id:"gradeMidterm",w:.20},{id:"gradeFinal",w:.25},{id:"gradeMUN",w:.20},{id:"gradePolicy",w:.15},{id:"gradeWriting",w:.15},{id:"gradeParticipation",w:.05}];
+  let total=0,tw=0;
+  f.forEach(x=>{const v=parseFloat(document.getElementById(x.id).value);if(!isNaN(v)){total+=v*x.w;tw+=x.w}});
+  const r=document.getElementById("gradeResult");
+  if(tw===0){r.textContent="Enter at least one grade.";return}
+  const avg=total/tw;let letter="";
+  if(avg>=90)letter="A";else if(avg>=85)letter="A-";else if(avg>=80)letter="B+";else if(avg>=75)letter="B";else if(avg>=70)letter="B-";else if(avg>=65)letter="C+";else if(avg>=60)letter="C";else if(avg>=55)letter="C-";else if(avg>=50)letter="D";else letter="F";
+  r.textContent=`Weighted: ${avg.toFixed(1)}/100 (${letter})`;
+  r.style.color=avg>=60?"var(--accent-2)":avg>=50?"var(--warn)":"var(--danger)";
+}
+
+// ── PROGRESS ──
+function getProgress(ids){let f=0;ids.forEach(id=>{const el=document.getElementById(id);if(el&&el.value.trim())f++});return ids.length?Math.round(f/ids.length*100):0}
+function setText(id,t){const el=document.getElementById(id);if(el)el.textContent=t}
+function setBar(id,p){const el=document.getElementById(id);if(el)el.style.width=Math.min(p,100)+"%"}
+function updateAllProgress(){
+  const done=Object.values(state.weekStatuses).filter(s=>s==="done").length;
+  const sp=Math.round(done/WEEKS.length*100);
+  setText("kpiSemester",sp+"%");setBar("semesterBar",sp);setText("semesterBarText",done+" of "+WEEKS.length+" weeks completed");
+  const wp=getProgress(["essayTitle","essayType","essayThesis","essayIntro","essayBody1","essayBody2","essayCounter","essayConclusion"]);
+  setText("kpiWriting",wp+"%");setBar("writingBar",wp);setText("writingBarText",wp+"% complete");
+  const pp=getProgress(["policyTitle","policyArea","policyExecSummary","policyProblem","policyBackground","policyEvidence","policyOptions","policyRecommendation","policyImplementation"]);
+  setText("kpiPolicy",pp+"%");setBar("policyBar",pp);setText("policyBarText",pp+"% complete");
+  const mp=getProgress(["munCountry","munCommittee","munTopic","munPosition","munInterests","munAllies","munOpponents","munRedLines","munGoals","munSpeech","munClauses"]);
+  setText("kpiMUN",mp+"%");setBar("munBar",mp);setText("munBarText",mp+"% complete");
+  const cp=getProgress(["campaignTitle","campaignType","campaignIssue","campaignAudience","campaignGoal","campaignSlogan","campaignTone","campaignMessage","campaignPosterConcept","campaignVideoGoal","campaignVideoScenes","campaignTools","campaignRisks","campaignMetrics"]);
+  setText("kpiCampaign",cp+"%");setBar("campaignBar",cp);setText("campaignBarText",cp+"% complete");
+}
+
+// ── GATHER & RESTORE ──
+function gatherAll(){
+  WEEKS.forEach(w=>{const el=document.getElementById("weekNote"+w.n);if(el)state.weekNotes[w.n]=el.value});
+  const skip=new Set(["currentWeekSel","jsonImport"]);
+  document.querySelectorAll("textarea[id],input[type='text'][id],input[type='number'][id],select[id]").forEach(el=>{
+    if(skip.has(el.id)||el.id.startsWith("weekNote"))return;
+    if(el.id.startsWith("essay"))state.essay[el.id]=el.value;
+    else if(el.id.startsWith("policy"))state.policy[el.id]=el.value;
+    else if(el.id.startsWith("mun"))state.mun[el.id]=el.value;
+    else if(el.id.startsWith("campaign"))state.campaign[el.id]=el.value;
+    else if(el.id.startsWith("grade"))state.grades[el.id]=el.value;
+    else if(el.id==="globalNotes")state.globalNotes=el.value;
+    else if(el.id==="semesterNotes")state.semesterNotes=el.value;
+  });
+  state.deadlines={};
+  document.querySelectorAll("[data-deadline]").forEach(cb=>{state.deadlines[cb.dataset.deadline]=cb.checked});
+}
+function restoreAll(){
+  document.querySelectorAll("textarea[id],input[type='text'][id],input[type='number'][id],select[id]").forEach(el=>{
+    if(el.id.startsWith("weekNote"))return;let val;
+    if(el.id.startsWith("essay"))val=state.essay[el.id];
+    else if(el.id.startsWith("policy"))val=state.policy[el.id];
+    else if(el.id.startsWith("mun"))val=state.mun[el.id];
+    else if(el.id.startsWith("campaign"))val=state.campaign[el.id];
+    else if(el.id.startsWith("grade"))val=state.grades[el.id];
+    else if(el.id==="globalNotes")val=state.globalNotes;
+    else if(el.id==="semesterNotes")val=state.semesterNotes;
+    if(val!==undefined)el.value=val;
+  });
+  document.querySelectorAll("[id^='wc-']").forEach(w=>updateWC(w.id.replace("wc-","")));
+  document.querySelectorAll("[data-deadline]").forEach(cb=>{cb.checked=!!state.deadlines[cb.dataset.deadline];const i=cb.closest(".check-item");if(i)i.classList.toggle("checked",cb.checked)});
+}
+
+// ── GENERATORS ──
+function generateEssayOutput(){
+  const g=id=>(document.getElementById(id)?.value?.trim()||"");
+  let o=`ACADEMIC ESSAY\n${"═".repeat(50)}\n\n`;
+  if(g("essayTitle"))o+=`Title: ${g("essayTitle")}\n`;if(g("essayType"))o+=`Type: ${g("essayType")}\n`;o+="\n";
+  [["THESIS STATEMENT","essayThesis"],["INTRODUCTION","essayIntro"],["ARGUMENT 1","essayBody1"],["ARGUMENT 2","essayBody2"],["ARGUMENT 3","essayBody3"],["COUNTERARGUMENT","essayCounter"],["CONCLUSION","essayConclusion"],["REFERENCES","essayRefs"]].forEach(([t,id])=>{if(g(id))o+=`${t}\n${g(id)}\n\n`});
+  document.getElementById("essayOutput").textContent=o;document.getElementById("essayTotalWC").textContent="Total: "+wc(o)+" words";toast("Essay compiled");
+}
+function generatePolicyOutput(){
+  const g=id=>(document.getElementById(id)?.value?.trim()||"");
+  let o=`POLICY BRIEF\n${"═".repeat(50)}\n\n`;
+  if(g("policyTitle"))o+=`Title: ${g("policyTitle")}\n`;if(g("policyArea"))o+=`Area: ${g("policyArea")}\n`;o+="\n";
+  [["EXECUTIVE SUMMARY","policyExecSummary"],["PROBLEM STATEMENT","policyProblem"],["BACKGROUND & CONTEXT","policyBackground"],["EVIDENCE & DATA","policyEvidence"],["POLICY OPTIONS","policyOptions"],["RECOMMENDATION","policyRecommendation"],["IMPLEMENTATION","policyImplementation"],["SOURCES","policySources"]].forEach(([t,id])=>{if(g(id))o+=`${t}\n${g(id)}\n\n`});
+  document.getElementById("policyOutput").textContent=o;document.getElementById("policyTotalWC").textContent="Total: "+wc(o)+" words";toast("Policy brief compiled");
+}
+function generateMUNOutput(){
+  const g=id=>(document.getElementById(id)?.value?.trim()||"");
+  let o=`MUN DELEGATION DOSSIER\n${"═".repeat(50)}\n\n`;
+  if(g("munCountry"))o+=`Country: ${g("munCountry")}\n`;if(g("munCommittee"))o+=`Committee: ${g("munCommittee")}\n`;if(g("munTopic"))o+=`Topic: ${g("munTopic")}\n`;o+="\n";
+  [["COUNTRY POSITION","munPosition"],["NATIONAL INTERESTS","munInterests"],["ALLIES & BLOCS","munAllies"],["OPPONENTS","munOpponents"],["RED LINES","munRedLines"],["COMPROMISES","munCompromises"],["NEGOTIATION GOALS","munGoals"],["OPENING SPEECH","munSpeech"],["RESOLUTION CLAUSES","munClauses"]].forEach(([t,id])=>{if(g(id))o+=`${t}\n${g(id)}\n\n`});
+  document.getElementById("munOutput").textContent=o;document.getElementById("munTotalWC").textContent="Total: "+wc(o)+" words";toast("MUN dossier compiled");
+}
+function generateCampaignOutput(){
+  const g=id=>(document.getElementById(id)?.value?.trim()||"");
+  let o=`CAMPAIGN PLAN\n${"═".repeat(50)}\n\n`;
+  if(g("campaignTitle"))o+=`Campaign: ${g("campaignTitle")}\n`;if(g("campaignType"))o+=`Type: ${g("campaignType")}\n`;if(g("campaignSlogan"))o+=`Slogan: ${g("campaignSlogan")}\n`;if(g("campaignTone"))o+=`Tone: ${g("campaignTone")}\n`;o+="\n";
+  [["ISSUE","campaignIssue"],["TARGET AUDIENCE","campaignAudience"],["CAMPAIGN GOAL","campaignGoal"],["CORE MESSAGE","campaignMessage"],["VISUAL/POSTER CONCEPT","campaignPosterConcept"],["CALL TO ACTION","campaignPosterCTA"],["VIDEO OBJECTIVE","campaignVideoGoal"],["VIDEO HOOK","campaignVideoHook"],["VIDEO SCENES","campaignVideoScenes"],["TOOL PLAN","campaignTools"],["ETHICAL ANALYSIS","campaignRisks"],["SUCCESS METRICS","campaignMetrics"]].forEach(([t,id])=>{if(g(id))o+=`${t}\n${g(id)}\n\n`});
+  document.getElementById("campaignOutput").textContent=o;document.getElementById("campaignTotalWC").textContent="Total: "+wc(o)+" words";toast("Campaign compiled");
+}
+
+// ── COPY / DOWNLOAD ──
+function copyText(id){const el=document.getElementById(id);if(!el||!el.textContent.trim()){toast("Compile first","error");return}navigator.clipboard.writeText(el.textContent).then(()=>toast("Copied")).catch(()=>toast("Copy failed","error"))}
+function downloadTxt(mod){
+  const map={essay:"essayOutput",policy:"policyOutput",mun:"munOutput",campaign:"campaignOutput"};
+  const el=document.getElementById(map[mod]);if(!el||!el.textContent.trim()){toast("Compile first","error");return}
+  const b=new Blob([el.textContent],{type:"text/plain"}),a=document.createElement("a");
+  a.href=URL.createObjectURL(b);a.download=`PSIR172_${mod}_${new Date().toISOString().slice(0,10)}.txt`;a.click();toast("Downloaded");
+}
+function downloadAllTxt(){
+  generateEssayOutput();generatePolicyOutput();generateMUNOutput();generateCampaignOutput();
+  let all="";["essayOutput","policyOutput","munOutput","campaignOutput"].forEach(id=>{const el=document.getElementById(id);if(el&&el.textContent.trim())all+=el.textContent+"\n\n"+("═".repeat(60))+"\n\n"});
+  if(!all.trim()){toast("No content","error");return}
+  const b=new Blob([all],{type:"text/plain"}),a=document.createElement("a");
+  a.href=URL.createObjectURL(b);a.download=`PSIR172_all_${new Date().toISOString().slice(0,10)}.txt`;a.click();toast("All work downloaded");
+}
+
+// ── JSON ──
+function exportJSON(){gatherAll();const b=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=`PSIR172_backup_${new Date().toISOString().slice(0,10)}.json`;a.click();toast("Backup exported")}
+document.getElementById("jsonImport").addEventListener("change",function(e){
+  const f=e.target.files[0];if(!f)return;const r=new FileReader();
+  r.onload=function(ev){try{state={...defaultState(),...JSON.parse(ev.target.result)};saveState();buildWeekList();buildDeadlines();restoreAll();updateAllProgress();showWeekFocus();toast("Data imported")}catch(err){toast("Invalid JSON","error")}};
+  r.readAsText(f);this.value="";
+});
+
+// ── RESET ──
+function resetModule(mod){
+  if(!confirm(`Reset all ${mod} data?`))return;
+  document.querySelectorAll("textarea,input[type='text'],select").forEach(el=>{if(el.id.startsWith(mod==="essay"?"essay":mod)){el.value="";if(el.tagName==="SELECT")el.selectedIndex=0}});
+  state[mod==="essay"?"essay":mod]={};saveState();updateAllProgress();
+  document.querySelectorAll("[id^='wc-']").forEach(w=>{if(w.id.replace("wc-","").startsWith(mod==="essay"?"essay":mod))w.textContent="0 words"});
+  toast(mod+" reset","info");
+}
+function resetAllData(){
+  if(!confirm("Reset ALL data? This cannot be undone."))return;
+  state=defaultState();saveState();
+  document.querySelectorAll("textarea,input[type='text'],input[type='number']").forEach(el=>el.value="");
+  document.querySelectorAll("select").forEach(el=>el.selectedIndex=0);
+  document.querySelectorAll("input[type='checkbox']").forEach(cb=>{cb.checked=false;const i=cb.closest(".check-item");if(i)i.classList.remove("checked")});
+  document.querySelectorAll("[id^='wc-']").forEach(el=>el.textContent="0 words");
+  ["essayOutput","policyOutput","munOutput","campaignOutput"].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=""});
+  buildWeekList();buildDeadlines();updateAllProgress();toast("All data cleared","info");
+}
+
+// ── INIT ──
+loadState();buildWeekList();buildDeadlines();restoreAll();updateAllProgress();showWeekFocus();
+</script>
+</body>
+</html>
