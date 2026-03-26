@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="theme-color" content="#4361ee"/>
+<title>PSIR 172 — Policy Brief Writer</title>
+<style>
+:root{
+  --bg:#f5f7fb;--surface:#fff;--surface-2:#f8f9fd;--text:#1e2a4a;--muted:#64748b;
+  --accent:#4361ee;--accent-light:#e8ecff;--accent-2:#10b981;--accent-2-light:#d1fae5;
+  --warn:#f59e0b;--warn-light:#fef3c7;--danger:#ef4444;--danger-light:#fee2e2;
+  --ok:#10b981;--border:#e2e8f0;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.06);--shadow:0 4px 16px rgba(0,0,0,.07);
+  --radius:14px;--radius-sm:10px;
+  --font:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased}
+
+.app{max-width:1100px;margin:0 auto;padding:20px 24px 60px}
+
+/* ── HEADER ── */
+.header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm);margin-bottom:20px}
+.header-left{display:flex;align-items:center;gap:10px}
+.header-logo{width:36px;height:36px}
+.header-title{font-weight:900;font-size:1.05rem;color:var(--accent)}
+.header-title span{color:var(--text);font-weight:700}
+.header-right{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);padding:8px 14px;border-radius:var(--radius-sm);cursor:pointer;font:inherit;font-size:.85rem;font-weight:600;transition:.2s ease;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.primary:hover{background:#3451d1}
+.btn.warn{background:var(--warn-light);color:#92400e;border-color:var(--warn)}
+.btn.danger{background:var(--danger-light);color:#991b1b;border-color:var(--danger)}
+.btn.success{background:var(--accent-2);color:#fff;border-color:var(--accent-2)}
+
+/* ── PROGRESS STRIP ── */
+.progress-strip{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:20px;box-shadow:var(--shadow-sm)}
+.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px}
+.progress-label{font-weight:700;font-size:.9rem}
+.progress-stats{display:flex;gap:16px;font-size:.85rem;color:var(--muted);font-weight:600}
+.progress-stats .count{color:var(--accent);font-weight:800}
+.progress-stats .over{color:var(--danger)}
+.progress-bar-wrap{background:var(--bg);border:1px solid var(--border);border-radius:999px;height:10px;overflow:hidden}
+.progress-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:999px;transition:width .4s ease}
+.progress-bar-fill.over{background:linear-gradient(90deg,var(--warn),var(--danger))}
+.section-dots{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.section-dot{width:32px;height:6px;border-radius:999px;background:var(--border);transition:.3s ease;cursor:pointer}
+.section-dot:hover{transform:scaleY(1.5)}
+.section-dot.filled{background:var(--accent-2)}
+.section-dot.active{background:var(--accent);transform:scaleY(1.8)}
+
+/* ── LAYOUT ── */
+.main{display:grid;grid-template-columns:1fr 340px;gap:20px}
+@media(max-width:900px){.main{grid-template-columns:1fr}}
+
+/* ── WRITER PANEL ── */
+.writer{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden}
+.section-nav{display:flex;overflow-x:auto;border-bottom:1px solid var(--border);background:var(--surface-2);padding:0 4px;-webkit-overflow-scrolling:touch}
+.section-nav button{flex-shrink:0;border:none;background:transparent;color:var(--muted);padding:12px 14px;font:inherit;font-size:.82rem;font-weight:700;cursor:pointer;border-bottom:3px solid transparent;transition:.2s ease;white-space:nowrap}
+.section-nav button:hover{color:var(--text);background:rgba(67,97,238,.04)}
+.section-nav button.active{color:var(--accent);border-bottom-color:var(--accent)}
+.section-nav button .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-left:5px;vertical-align:middle}
+.section-nav button .dot.empty{background:var(--border)}
+.section-nav button .dot.filled{background:var(--accent-2)}
+
+.section-panel{display:none;padding:24px}
+.section-panel.active{display:block;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+.section-panel h2{font-size:1.15rem;margin-bottom:2px;color:var(--accent)}
+.section-panel .guidance{color:var(--muted);font-size:.88rem;line-height:1.55;margin-bottom:16px;padding:12px 14px;background:var(--accent-light);border-radius:var(--radius-sm);border-left:4px solid var(--accent)}
+.section-panel .target{font-size:.82rem;color:var(--muted);font-weight:600;margin-bottom:8px}
+.section-panel .target strong{color:var(--accent)}
+
+textarea{width:100%;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:var(--radius-sm);padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.7;outline:none;transition:.2s ease;resize:vertical}
+textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(67,97,238,.1)}
+.field{margin-bottom:14px}
+label{display:block;font-weight:700;font-size:.9rem;margin-bottom:5px}
+input[type="text"],select{width:100%;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:var(--radius-sm);padding:10px 14px;font:inherit;font-size:.92rem;outline:none;transition:.2s ease}
+input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(67,97,238,.1)}
+select{cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+
+.wc-bar{display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:.82rem;font-weight:600}
+.wc-bar .words{color:var(--accent-2)}
+.wc-bar .words.over{color:var(--danger)}
+.wc-bar .hint{color:var(--muted)}
+
+.nav-buttons{display:flex;justify-content:space-between;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+
+/* ── SIDEBAR ── */
+.sidebar{display:flex;flex-direction:column;gap:16px}
+.sidebar-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:18px}
+.sidebar-card h3{font-size:.95rem;margin-bottom:8px}
+
+.checklist{display:grid;gap:6px}
+.check-item{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);font-size:.85rem;cursor:pointer;transition:.2s ease}
+.check-item:hover{border-color:var(--accent)}
+.check-item input{margin-top:2px;accent-color:var(--accent);transform:scale(1.1);cursor:pointer;flex-shrink:0}
+.check-item.checked{background:var(--accent-2-light);border-color:var(--ok)}
+.check-item.checked span{text-decoration:line-through;color:var(--muted)}
+
+.info-block{font-size:.85rem;color:var(--muted);line-height:1.55;padding:12px;background:var(--surface-2);border-radius:var(--radius-sm);border:1px solid var(--border)}
+.info-block strong{color:var(--text)}
+
+.deadline-box{text-align:center;padding:14px;background:linear-gradient(135deg,rgba(67,97,238,.06),rgba(16,185,129,.06));border:1px solid var(--border);border-radius:var(--radius-sm)}
+.deadline-box .due-label{font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.deadline-box .due-date{font-size:1.3rem;font-weight:900;color:var(--accent);margin-top:2px}
+.deadline-box .due-countdown{font-size:.85rem;color:var(--muted);font-weight:600;margin-top:4px}
+
+/* ── OUTPUT MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:1000;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal{background:var(--surface);border-radius:var(--radius);box-shadow:0 20px 60px rgba(0,0,0,.15);max-width:800px;width:100%;max-height:85vh;display:flex;flex-direction:column}
+.modal-header{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid var(--border)}
+.modal-header h2{font-size:1.1rem}
+.modal-body{padding:22px;overflow-y:auto;flex:1}
+.modal-body pre{white-space:pre-wrap;font-family:var(--font);font-size:.9rem;line-height:1.7}
+.modal-footer{padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
+
+/* ── TOAST ── */
+.toast-container{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{padding:10px 18px;border-radius:var(--radius-sm);font-size:.85rem;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.12);animation:toastIn .3s ease;color:#fff;pointer-events:auto}
+.toast.success{background:var(--accent-2)}.toast.info{background:var(--accent)}.toast.error{background:var(--danger)}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+@media print{
+  .header,.progress-strip,.sidebar,.section-nav,.nav-buttons,.btn,.toast-container{display:none!important}
+  .main{display:block!important}
+  .writer{box-shadow:none!important;border:none!important}
+  .section-panel{display:block!important;padding:10px 0!important}
+  textarea{border:none!important;background:none!important;padding:0!important;min-height:auto!important;height:auto!important}
+}
+@media(max-width:640px){
+  .app{padding:12px 14px 40px}
+  .section-panel{padding:16px}
+  .header{padding:12px 14px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <svg class="header-logo" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><rect width="512" height="512" rx="96" fill="#4361ee"/><text x="256" y="200" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="900" font-size="120" fill="white">PSIR</text><text x="256" y="340" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="900" font-size="140" fill="#10b981">172</text></svg>
+    <div class="header-title">Policy Brief Writer <span>— PSIR 172 Spring 2026</span></div>
+  </div>
+  <div class="header-right">
+    <button class="btn" onclick="exportJSON()">Save Backup</button>
+    <label class="btn" for="importFile" style="cursor:pointer">Load Backup</label>
+    <input type="file" id="importFile" accept=".json" style="display:none"/>
+    <button class="btn primary" onclick="openPreview()">Preview & Export</button>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-strip">
+  <div class="progress-top">
+    <div class="progress-label">Brief Progress</div>
+    <div class="progress-stats">
+      <span>Sections: <span class="count" id="sectionCount">0/7</span></span>
+      <span>Words: <span class="count" id="totalWords">0</span> / 1,000</span>
+    </div>
+  </div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar"></div></div>
+  <div class="section-dots" id="sectionDots"></div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- WRITER -->
+  <div class="writer">
+    <div class="section-nav" id="sectionNav"></div>
+    <div id="sectionPanels"></div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <div class="sidebar-card">
+      <div class="deadline-box">
+        <div class="due-label">Submission Deadline</div>
+        <div class="due-date">Monday, 6 April 2026</div>
+        <div class="due-countdown" id="countdown"></div>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>Submission Checklist</h3>
+      <div class="checklist" id="checklist"></div>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>Assignment at a Glance</h3>
+      <div class="info-block">
+        <strong>Length:</strong> 1,000 words (±10%)<br>
+        <strong>Sources:</strong> Min. 5 (3+ academic/institutional)<br>
+        <strong>Format:</strong> PDF, Times New Roman 12pt or Calibri 11pt, 1.5 spacing<br>
+        <strong>Referencing:</strong> APA 7th or Harvard (consistent)<br>
+        <strong>File name:</strong> PSIR172_PolicyBrief_[Surname]_[ID].pdf<br>
+        <strong>Weight:</strong> 5% of final grade
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>How This Is Graded</h3>
+      <div class="info-block">
+        <strong>Problem Definition</strong> — 15%<br>
+        <strong>Research & Evidence</strong> — 25%<br>
+        <strong>Options Analysis</strong> — 20%<br>
+        <strong>Recommendation</strong> — 20%<br>
+        <strong>Writing & Structure</strong> — 15%<br>
+        <strong>Referencing</strong> — 5%
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>Remember</h3>
+      <div class="info-block">
+        This is <strong>not an essay</strong>. You are writing for a decision-maker — someone who needs to understand a problem and act on it. Keep your language direct and professional. Write the Executive Summary last.
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>AI Use</h3>
+      <div class="info-block">
+        You may use AI tools to brainstorm, outline, or check grammar. You may <strong>not</strong> submit AI-generated text as your own. If you use AI, include a short disclosure before your references. The instructor may ask you about your brief in person.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div>
+
+<!-- PREVIEW MODAL -->
+<div class="modal-overlay" id="previewModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Policy Brief Preview</h2>
+      <button class="btn" onclick="closePreview()">Close</button>
+    </div>
+    <div class="modal-body"><pre id="previewContent"></pre></div>
+    <div class="modal-footer">
+      <button class="btn" onclick="copyPreview()">Copy to Clipboard</button>
+      <button class="btn primary" onclick="downloadTxt()">Download .txt</button>
+      <button class="btn success" onclick="closePreview();window.print()">Print</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toasts"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   PSIR 172 POLICY BRIEF WRITER — ENGINE
+   ═══════════════════════════════════════════════════════ */
+
+const SECTIONS = [
+  {
+    id: "meta",
+    tab: "Setup",
+    title: "Title & Topic",
+    guidance: "Choose a specific policy topic and give your brief a clear, descriptive title. Your title should tell the reader what the issue is and where it applies. Avoid vague titles like 'A Policy Brief on Migration.'",
+    target: null,
+    fields: [
+      { id: "briefTitle", label: "Brief Title", type: "text", placeholder: "e.g. Addressing Youth Unemployment in Northern Cyprus: A Skills-Based Approach" },
+      { id: "briefTopic", label: "Policy Area", type: "select", options: ["","Security & Conflict","Environment & Climate","Human Rights & Governance","Migration & Displacement","Technology & Digital Policy","Economic Development","Health Policy","Other (approved by instructor)"] },
+      { id: "briefAudience", label: "Who is this brief addressed to?", type: "text", placeholder: "e.g. The European Commission, TRNC Ministry of Education, UNHCR" }
+    ]
+  },
+  {
+    id: "execsummary",
+    tab: "Exec. Summary",
+    title: "Executive Summary",
+    guidance: "Write this section LAST, even though it appears first. A senior official should be able to read only this and understand: (a) the problem, (b) your key finding, and (c) your recommendation. Keep it tight — every word counts here.",
+    target: "~100 words",
+    fields: [
+      { id: "execSummary", label: "Executive Summary", type: "textarea", placeholder: "This brief examines... The evidence suggests... We recommend...", rows: 6 }
+    ]
+  },
+  {
+    id: "problem",
+    tab: "Problem",
+    title: "1. Problem Statement",
+    guidance: "What is the problem? Who is affected and how many? What is the scale? Why is action needed now — what happens if nothing changes? Be specific: 'Youth unemployment in Northern Cyprus exceeds 30%' is better than 'Unemployment is a problem.'",
+    target: "~150 words",
+    fields: [
+      { id: "problemStatement", label: "Problem Statement", type: "textarea", placeholder: "Define the issue, its scope, who is affected, and why action is urgent...", rows: 8 }
+    ]
+  },
+  {
+    id: "background",
+    tab: "Background",
+    title: "2. Background & Context",
+    guidance: "What has already been tried or proposed? What is the legal, institutional, or political framework? Who are the key actors and what are their positions? This section shows you have researched the issue, not just formed an opinion about it.",
+    target: "~150 words",
+    fields: [
+      { id: "background", label: "Background & Context", type: "textarea", placeholder: "Provide the political, historical, or institutional context...", rows: 8 }
+    ]
+  },
+  {
+    id: "evidence",
+    tab: "Evidence",
+    title: "3. Evidence & Data",
+    guidance: "Present at least two pieces of credible evidence: statistics, case studies, IGO/NGO reports, or peer-reviewed research. Integrate the evidence into your analysis — don't just list facts. Every claim must be cited. You may include a small chart or table from your Week 4 skills (optional but encouraged).",
+    target: "~150 words",
+    fields: [
+      { id: "evidence", label: "Evidence & Data", type: "textarea", placeholder: "The evidence shows that... According to [source]... Data from [report] indicates...", rows: 8 }
+    ]
+  },
+  {
+    id: "options",
+    tab: "Options",
+    title: "4. Policy Options",
+    guidance: "Present at least TWO distinct, realistic policy options. For each: describe what it involves, its advantages, its disadvantages, and its feasibility. Be fair — do not set up one option just to knock it down. The quality of your comparison is worth 20% of your grade.",
+    target: "~200 words",
+    fields: [
+      { id: "optionA", label: "Option A", type: "textarea", placeholder: "Option A: [Name]\nDescription: ...\nAdvantages: ...\nDisadvantages: ...", rows: 7 },
+      { id: "optionB", label: "Option B", type: "textarea", placeholder: "Option B: [Name]\nDescription: ...\nAdvantages: ...\nDisadvantages: ...", rows: 7 }
+    ]
+  },
+  {
+    id: "recommendation",
+    tab: "Recommendation",
+    title: "5. Recommendation",
+    guidance: "Which option do you recommend and why? Be specific: who should act, what exactly should they do, and over what timeframe? Acknowledge at least one limitation or trade-off — this strengthens your credibility, it doesn't weaken it.",
+    target: "~120 words",
+    fields: [
+      { id: "recommendation", label: "Recommendation", type: "textarea", placeholder: "We recommend that [actor] should [specific action] because... One limitation is...", rows: 7 }
+    ]
+  },
+  {
+    id: "references",
+    tab: "References",
+    title: "References & AI Disclosure",
+    guidance: "List all your sources using APA 7th or Harvard format — be consistent. You need at least 5 sources, with at least 3 academic or institutional (journals, books, IGO/NGO reports, government documents). If you used any AI tools, include a brief disclosure.",
+    target: "Min. 5 sources",
+    fields: [
+      { id: "references", label: "References", type: "textarea", placeholder: "Author, A. (Year). Title. Publisher.\n\nOrganisation. (Year). Report Title. URL.", rows: 8 },
+      { id: "aiDisclosure", label: "AI Use Disclosure (if applicable)", type: "textarea", placeholder: "e.g. I used Claude to brainstorm policy options and check grammar. All analysis and recommendations are my own.", rows: 3 }
+    ]
+  }
+];
+
+const CHECKLIST_ITEMS = [
+  "Topic is specific, not just a broad theme",
+  "Executive summary makes sense on its own",
+  "Problem identifies who is affected and why it's urgent",
+  "Background shows genuine research",
+  "At least 2 credible evidence sources, cited",
+  "At least 2 options compared fairly",
+  "Recommendation is specific: who, what, when, why",
+  "At least one limitation acknowledged",
+  "5+ references (3+ academic/institutional)",
+  "Consistent APA or Harvard referencing",
+  "Word count is 900–1,100",
+  "AI disclosure included (if applicable)"
+];
+
+const WORD_FIELDS = ["execSummary","problemStatement","background","evidence","optionA","optionB","recommendation"];
+const STORAGE_KEY = "psir172_policybrief_v1";
+
+let state = {};
+let currentSection = 0;
+
+// ── STATE ──
+function defaultState(){ return { fields:{}, checks:[] } }
+function load(){ try{ const s=localStorage.getItem(STORAGE_KEY); state=s?{...defaultState(),...JSON.parse(s)}:defaultState() }catch(e){ state=defaultState() } }
+function save(){ try{ localStorage.setItem(STORAGE_KEY,JSON.stringify(state)) }catch(e){} }
+let saveTimer;
+function autoSave(){ clearTimeout(saveTimer); saveTimer=setTimeout(()=>{ gather(); save() },400) }
+
+function toast(msg,type="success"){
+  const c=document.getElementById("toasts"),t=document.createElement("div");
+  t.className="toast "+type;t.textContent=msg;c.appendChild(t);
+  setTimeout(()=>{t.style.transition="opacity .3s";t.style.opacity="0";setTimeout(()=>t.remove(),300)},2400);
+}
+
+// ── BUILD UI ──
+function buildUI(){
+  // Nav
+  const nav=document.getElementById("sectionNav");
+  nav.innerHTML=SECTIONS.map((s,i)=>`<button data-idx="${i}" class="${i===0?"active":""}">${s.tab}<span class="dot empty" id="navdot${i}"></span></button>`).join("");
+  nav.addEventListener("click",e=>{const btn=e.target.closest("button[data-idx]");if(btn)goToSection(parseInt(btn.dataset.idx))});
+
+  // Panels
+  const panels=document.getElementById("sectionPanels");
+  panels.innerHTML=SECTIONS.map((s,i)=>{
+    let html=`<div class="section-panel${i===0?" active":""}" data-idx="${i}">`;
+    html+=`<h2>${s.title}</h2>`;
+    html+=`<div class="guidance">${s.guidance}</div>`;
+    if(s.target) html+=`<div class="target">Target: <strong>${s.target}</strong></div>`;
+
+    s.fields.forEach(f=>{
+      html+=`<div class="field">`;
+      html+=`<label for="${f.id}">${f.label}</label>`;
+      if(f.type==="textarea"){
+        html+=`<textarea id="${f.id}" rows="${f.rows||6}" placeholder="${f.placeholder||""}"></textarea>`;
+        if(WORD_FIELDS.includes(f.id)){
+          html+=`<div class="wc-bar"><span class="words" id="wc-${f.id}">0 words</span><span class="hint" id="hint-${f.id}"></span></div>`;
+        }
+      } else if(f.type==="select"){
+        html+=`<select id="${f.id}">${f.options.map(o=>`<option value="${o}">${o||"— Select —"}</option>`).join("")}</select>`;
+      } else {
+        html+=`<input type="text" id="${f.id}" placeholder="${f.placeholder||""}"/>`;
+      }
+      html+=`</div>`;
+    });
+
+    html+=`<div class="nav-buttons">`;
+    html+=i>0?`<button class="btn" onclick="goToSection(${i-1})">← ${SECTIONS[i-1].tab}</button>`:`<span></span>`;
+    html+=i<SECTIONS.length-1?`<button class="btn primary" onclick="goToSection(${i+1})">${SECTIONS[i+1].tab} →</button>`:`<button class="btn primary" onclick="openPreview()">Preview & Export</button>`;
+    html+=`</div>`;
+    html+=`</div>`;
+    return html;
+  }).join("");
+
+  // Dots
+  const dots=document.getElementById("sectionDots");
+  dots.innerHTML=SECTIONS.map((s,i)=>`<div class="section-dot" data-idx="${i}" title="${s.tab}" onclick="goToSection(${i})"></div>`).join("");
+
+  // Checklist
+  const cl=document.getElementById("checklist");
+  cl.innerHTML=CHECKLIST_ITEMS.map((item,i)=>{
+    const ch=state.checks.includes(i)?"checked":"";
+    return `<label class="check-item ${ch?"checked":""}"><input type="checkbox" data-ci="${i}" ${ch}/><span>${item}</span></label>`;
+  }).join("");
+
+  // Events
+  document.addEventListener("input",e=>{
+    if(e.target.matches("textarea,input[type='text'],select")){autoSave();updateProgress()}
+  });
+  document.addEventListener("change",e=>{
+    if(e.target.dataset.ci!==undefined){
+      const i=parseInt(e.target.dataset.ci);
+      const item=e.target.closest(".check-item");
+      if(e.target.checked){if(!state.checks.includes(i))state.checks.push(i);item.classList.add("checked")}
+      else{state.checks=state.checks.filter(x=>x!==i);item.classList.remove("checked")}
+      autoSave();
+    }
+  });
+
+  document.getElementById("importFile").addEventListener("change",function(e){
+    const f=e.target.files[0];if(!f)return;
+    const r=new FileReader();
+    r.onload=ev=>{try{state={...defaultState(),...JSON.parse(ev.target.result)};save();restore();updateProgress();toast("Backup loaded")}catch(err){toast("Invalid file","error")}};
+    r.readAsText(f);this.value="";
+  });
+}
+
+function goToSection(idx){
+  currentSection=idx;
+  document.querySelectorAll(".section-panel").forEach((p,i)=>p.classList.toggle("active",i===idx));
+  document.querySelectorAll(".section-nav button").forEach((b,i)=>b.classList.toggle("active",i===idx));
+  document.querySelectorAll(".section-dot").forEach((d,i)=>d.classList.toggle("active",i===idx));
+  document.querySelector(".writer").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+// ── WORD COUNT ──
+function wc(s){return s.trim()?s.trim().split(/\s+/).length:0}
+function updateProgress(){
+  let total=0;
+  WORD_FIELDS.forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    const c=wc(el.value);
+    total+=c;
+    const wcEl=document.getElementById("wc-"+id);
+    if(wcEl){wcEl.textContent=c+" word"+(c!==1?"s":"");wcEl.className="words"+(c>0?"":" empty")}
+  });
+
+  // Total
+  document.getElementById("totalWords").textContent=total;
+  document.getElementById("totalWords").className=total>1100?"count over":"count";
+
+  // Progress bar
+  const pct=Math.min(Math.round(total/1000*100),120);
+  const bar=document.getElementById("progressBar");
+  bar.style.width=Math.min(pct,100)+"%";
+  bar.className="progress-bar-fill"+(total>1100?" over":"");
+
+  // Section fill
+  let filledCount=0;
+  SECTIONS.forEach((s,i)=>{
+    const filled=s.fields.some(f=>{const el=document.getElementById(f.id);return el&&el.value.trim()});
+    const dot=document.getElementById("navdot"+i);
+    if(dot)dot.className="dot "+(filled?"filled":"empty");
+    const sDot=document.querySelector(`.section-dot[data-idx="${i}"]`);
+    if(sDot&&!sDot.classList.contains("active"))sDot.classList.toggle("filled",filled);
+    if(filled)filledCount++;
+  });
+  document.getElementById("sectionCount").textContent=filledCount+"/"+SECTIONS.length;
+}
+
+// ── GATHER / RESTORE ──
+function gather(){
+  state.fields={};
+  SECTIONS.forEach(s=>s.fields.forEach(f=>{const el=document.getElementById(f.id);if(el)state.fields[f.id]=el.value}));
+}
+function restore(){
+  SECTIONS.forEach(s=>s.fields.forEach(f=>{const el=document.getElementById(f.id);if(el&&state.fields[f.id]!==undefined)el.value=state.fields[f.id]}));
+  // Checklist
+  document.querySelectorAll("[data-ci]").forEach(cb=>{
+    const i=parseInt(cb.dataset.ci);
+    cb.checked=state.checks.includes(i);
+    const item=cb.closest(".check-item");
+    if(item)item.classList.toggle("checked",cb.checked);
+  });
+}
+
+// ── PREVIEW ──
+function compileBrief(){
+  const g=id=>(document.getElementById(id)?.value?.trim()||"");
+  let out="";
+  if(g("briefTitle")) out+=g("briefTitle").toUpperCase()+"\n"+"─".repeat(50)+"\n\n";
+  if(g("briefTopic")) out+="Policy Area: "+g("briefTopic")+"\n";
+  if(g("briefAudience")) out+="Addressed to: "+g("briefAudience")+"\n";
+  if(g("briefTopic")||g("briefAudience")) out+="\n";
+  if(g("execSummary")) out+="EXECUTIVE SUMMARY\n"+g("execSummary")+"\n\n";
+  if(g("problemStatement")) out+="1. PROBLEM STATEMENT\n"+g("problemStatement")+"\n\n";
+  if(g("background")) out+="2. BACKGROUND & CONTEXT\n"+g("background")+"\n\n";
+  if(g("evidence")) out+="3. EVIDENCE & DATA\n"+g("evidence")+"\n\n";
+  const oA=g("optionA"),oB=g("optionB");
+  if(oA||oB){
+    out+="4. POLICY OPTIONS\n";
+    if(oA) out+=oA+"\n\n";
+    if(oB) out+=oB+"\n\n";
+  }
+  if(g("recommendation")) out+="5. RECOMMENDATION\n"+g("recommendation")+"\n\n";
+  if(g("references")) out+="REFERENCES\n"+g("references")+"\n\n";
+  if(g("aiDisclosure")) out+="AI USE DISCLOSURE\n"+g("aiDisclosure")+"\n";
+  return out;
+}
+
+function openPreview(){
+  const content=compileBrief();
+  if(!content.trim()){toast("Nothing to preview yet","error");return}
+  document.getElementById("previewContent").textContent=content;
+  document.getElementById("previewModal").classList.add("show");
+}
+function closePreview(){document.getElementById("previewModal").classList.remove("show")}
+
+function copyPreview(){
+  const text=document.getElementById("previewContent").textContent;
+  navigator.clipboard.writeText(text).then(()=>toast("Copied")).catch(()=>toast("Copy failed","error"));
+}
+function downloadTxt(){
+  const text=compileBrief();
+  if(!text.trim()){toast("Nothing to download","error");return}
+  const b=new Blob([text],{type:"text/plain"}),a=document.createElement("a");
+  a.href=URL.createObjectURL(b);
+  a.download="PSIR172_PolicyBrief_DRAFT_"+new Date().toISOString().slice(0,10)+".txt";
+  a.click();toast("Draft downloaded");
+}
+
+function exportJSON(){
+  gather();
+  const b=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),a=document.createElement("a");
+  a.href=URL.createObjectURL(b);
+  a.download="PSIR172_PolicyBrief_backup_"+new Date().toISOString().slice(0,10)+".json";
+  a.click();toast("Backup saved");
+}
+
+// ── COUNTDOWN ──
+function updateCountdown(){
+  const due=new Date("2026-04-06T23:59:00");
+  const now=new Date();
+  const diff=due-now;
+  const el=document.getElementById("countdown");
+  if(diff<=0){el.textContent="Deadline has passed";el.style.color="var(--danger)";return}
+  const days=Math.floor(diff/(1000*60*60*24));
+  const hours=Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+  if(days>1) el.textContent=days+" days remaining";
+  else if(days===1) el.textContent="1 day, "+hours+" hours remaining";
+  else el.textContent=hours+" hours remaining";
+  if(days<=3){el.style.color="var(--danger)"}else if(days<=7){el.style.color="var(--warn)"}
+}
+
+// ── INIT ──
+load();
+buildUI();
+restore();
+updateProgress();
+updateCountdown();
+setInterval(updateCountdown,60000);
+</script>
+</body>
+</html>
