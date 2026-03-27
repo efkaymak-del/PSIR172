@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>PSIR 172 — Week 6: Campaign Communication Lab</title>
+<meta name="description" content="Interactive lab for PSIR 172 Week 6: Framing, audience analysis, and campaign communication.">
+<meta name="theme-color" content="#4361ee">
+<style>
+/* ===== RESET & BASE ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f8f9fa;--surface:#fff;--text:#1a1a2e;--muted:#6c757d;
+  --accent:#4361ee;--accent2:#3a0ca3;--accent-light:#e8ebff;
+  --success:#2d6a4f;--warn:#e9c46a;--danger:#e63946;
+  --radius:12px;--shadow:0 2px 12px rgba(0,0,0,.08);
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;-webkit-tap-highlight-color:transparent}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ===== HEADER ===== */
+.header{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff;padding:1.25rem 1rem;text-align:center;
+  position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 20px rgba(67,97,238,.3);
+}
+.header h1{font-size:1.15rem;font-weight:700;letter-spacing:.3px}
+.header p{font-size:.8rem;opacity:.85;margin-top:.2rem}
+
+/* ===== NAV TABS ===== */
+.nav{
+  display:flex;overflow-x:auto;gap:.35rem;padding:.6rem .75rem;
+  background:var(--surface);border-bottom:1px solid #e9ecef;
+  position:sticky;top:62px;z-index:99;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;
+}
+.nav::-webkit-scrollbar{display:none}
+.nav button{
+  flex-shrink:0;padding:.45rem .85rem;border:none;border-radius:20px;
+  font-size:.78rem;font-weight:600;cursor:pointer;
+  background:var(--accent-light);color:var(--accent);
+  transition:all .2s;white-space:nowrap;
+}
+.nav button.active{background:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(67,97,238,.3)}
+.nav button:hover:not(.active){background:#d4daff}
+
+/* ===== PANELS ===== */
+.panel{display:none;padding:1rem;max-width:720px;margin:0 auto}
+.panel.active{display:block;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ===== CARDS ===== */
+.card{
+  background:var(--surface);border-radius:var(--radius);
+  padding:1.25rem;margin-bottom:1rem;
+  box-shadow:var(--shadow);border:1px solid #e9ecef;
+}
+.card h2{font-size:1.05rem;color:var(--accent2);margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem}
+.card h3{font-size:.92rem;color:var(--accent);margin:.8rem 0 .4rem}
+.card p,.card li{font-size:.88rem;line-height:1.65;color:#333}
+.card ul{padding-left:1.2rem;margin:.4rem 0}
+.card li{margin-bottom:.3rem}
+
+/* ===== INFO BLOCKS ===== */
+.info-block{
+  background:#f0f3ff;border-left:3px solid var(--accent);
+  padding:.75rem 1rem;border-radius:0 8px 8px 0;
+  margin:.6rem 0;font-size:.85rem;
+}
+.warn-block{
+  background:#fff8e1;border-left:3px solid var(--warn);
+  padding:.75rem 1rem;border-radius:0 8px 8px 0;
+  margin:.6rem 0;font-size:.85rem;
+}
+
+/* ===== FORM ELEMENTS ===== */
+label{font-size:.82rem;font-weight:600;color:var(--text);display:block;margin:.6rem 0 .25rem}
+textarea,input[type="text"],select{
+  width:100%;padding:.6rem .75rem;border:1.5px solid #d0d5dd;
+  border-radius:8px;font-size:.88rem;font-family:var(--font);
+  transition:border-color .2s;background:#fff;resize:vertical;
+}
+textarea:focus,input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(67,97,238,.12)}
+textarea{min-height:70px}
+
+/* ===== BUTTONS ===== */
+.btn{
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.55rem 1.1rem;border:none;border-radius:8px;
+  font-size:.85rem;font-weight:600;cursor:pointer;
+  transition:all .2s;font-family:var(--font);
+}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent2);transform:translateY(-1px)}
+.btn-secondary{background:#e9ecef;color:var(--text)}
+.btn-secondary:hover{background:#dee2e6}
+.btn-success{background:var(--success);color:#fff}
+.btn-success:hover{background:#1b4332}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-danger:hover{background:#c1121f}
+.btn-sm{padding:.4rem .75rem;font-size:.78rem}
+.btn-block{width:100%;justify-content:center;margin-top:.5rem}
+
+/* ===== RADIO/CHECK PILLS ===== */
+.pill-group{display:flex;flex-wrap:wrap;gap:.4rem;margin:.4rem 0}
+.pill-group label{
+  display:flex;align-items:center;gap:.3rem;
+  padding:.4rem .75rem;border-radius:20px;
+  background:#f0f3ff;font-size:.82rem;font-weight:500;
+  cursor:pointer;transition:all .2s;margin:0;
+  border:1.5px solid transparent;
+}
+.pill-group input{display:none}
+.pill-group input:checked+span{color:var(--accent)}
+.pill-group label:has(input:checked){background:var(--accent);color:#fff;border-color:var(--accent)}
+.pill-group label:has(input:checked) span{color:#fff}
+
+/* ===== FRAMING COMPARISON ===== */
+.frame-compare{
+  display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin:.75rem 0;
+}
+@media(max-width:600px){.frame-compare{grid-template-columns:1fr}}
+.frame-box{
+  padding:1rem;border-radius:8px;font-size:.84rem;line-height:1.6;
+}
+.frame-a{background:#fff0f0;border:1px solid #fcc}
+.frame-b{background:#f0fff4;border:1px solid #b7e4c7}
+.frame-label{font-weight:700;font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem;display:block}
+
+/* ===== FEEDBACK CARD ===== */
+.feedback-entry{
+  background:#fafbff;border:1px solid #e0e4f0;
+  border-radius:8px;padding:.75rem;margin-bottom:.6rem;
+}
+.feedback-entry h4{font-size:.85rem;color:var(--accent);margin-bottom:.4rem}
+
+/* ===== MESSAGE BOX GRID ===== */
+.msg-box-grid{
+  display:grid;grid-template-columns:auto 1fr 1fr;gap:0;
+  border:2px solid var(--accent);border-radius:8px;overflow:hidden;
+  margin:.75rem 0;font-size:.82rem;
+}
+.msg-box-grid .corner{background:var(--accent);color:#fff;padding:.5rem;font-weight:700;font-size:.75rem}
+.msg-box-grid .col-head{background:var(--accent);color:#fff;padding:.5rem;text-align:center;font-weight:600;font-size:.78rem}
+.msg-box-grid .row-head{background:var(--accent-light);padding:.5rem;font-weight:600;writing-mode:horizontal-tb;display:flex;align-items:center}
+.msg-box-grid textarea{border:none;border-radius:0;min-height:60px;font-size:.82rem;border-right:1px solid #e0e4f0;border-bottom:1px solid #e0e4f0}
+.msg-box-grid textarea:focus{box-shadow:inset 0 0 0 2px rgba(67,97,238,.2)}
+
+/* ===== VIDEO CARD ===== */
+.video-card{
+  display:flex;gap:.75rem;align-items:center;
+  padding:.75rem;background:#f8f9fa;border-radius:8px;
+  margin:.5rem 0;cursor:pointer;transition:background .2s;
+  border:1px solid #e9ecef;
+}
+.video-card:hover{background:#e8ebff}
+.video-icon{font-size:1.8rem;flex-shrink:0}
+.video-info{flex:1}
+.video-info strong{font-size:.88rem;display:block}
+.video-info span{font-size:.78rem;color:var(--muted)}
+
+/* ===== QR CODE ===== */
+.qr-container{text-align:center;padding:1.5rem 0}
+.qr-container canvas{border:8px solid #fff;box-shadow:var(--shadow);border-radius:8px}
+.qr-url{font-size:.75rem;color:var(--muted);margin-top:.5rem;word-break:break-all}
+
+/* ===== TOAST ===== */
+.toast{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:#333;color:#fff;padding:.6rem 1.2rem;border-radius:8px;
+  font-size:.85rem;z-index:1000;opacity:0;
+  transition:all .3s ease;pointer-events:none;
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* ===== PROGRESS DOTS ===== */
+.progress-dots{display:flex;gap:.35rem;justify-content:center;margin:.75rem 0}
+.progress-dots .dot{
+  width:10px;height:10px;border-radius:50%;
+  background:#d0d5dd;transition:all .3s;
+}
+.progress-dots .dot.done{background:var(--success)}
+.progress-dots .dot.current{background:var(--accent);transform:scale(1.3)}
+
+/* ===== INSTRUCTOR BADGE ===== */
+.instructor-mode{
+  position:fixed;bottom:16px;right:16px;z-index:200;
+}
+.instructor-mode .btn{
+  border-radius:50%;width:48px;height:48px;
+  padding:0;justify-content:center;font-size:1.2rem;
+  box-shadow:0 4px 16px rgba(0,0,0,.2);
+}
+
+/* ===== PRINT ===== */
+@media print{
+  .header,.nav,.toast,.instructor-mode{display:none!important}
+  .panel{display:block!important;padding:0}
+  .card{break-inside:avoid;box-shadow:none;border:1px solid #ccc}
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:400px){
+  .header h1{font-size:1rem}
+  .nav button{font-size:.72rem;padding:.4rem .65rem}
+  .card{padding:1rem}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>PSIR 172 — Campaign Communication Lab</h1>
+  <p>Week 6 · Thursday, 3 April 2026</p>
+</div>
+
+<div class="nav" id="nav"></div>
+
+<!-- ===== TAB 0: HOME ===== -->
+<div class="panel" id="tab-home">
+  <div class="card">
+    <h2>📡 Welcome</h2>
+    <p>This is your interactive lab for today's session on <strong>framing, audience analysis, and campaign communication</strong>. Everything you need is here — activities, feedback forms, concept notes, and your exit ticket.</p>
+    <div class="info-block">
+      <strong>Today's session (3 blocks × 50 min):</strong><br>
+      Block 1 — The Power of the Frame<br>
+      Block 2 — Policy Brief Pitches &amp; Drafting<br>
+      Block 3 — Campaign Communication &amp; Group Kickoff
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📅 Your Deadlines</h2>
+    <div id="deadline-list"></div>
+  </div>
+
+  <div class="card">
+    <h2>🔗 Quick Links</h2>
+    <p style="margin-bottom:.4rem"><a href="https://efkaymak-del.github.io/PSIR172/policybrief.html" target="_blank">Policy Brief Writer App →</a></p>
+    <p style="margin-bottom:.4rem"><a href="https://efkaymak-del.github.io/PSIR172/" target="_blank">Full PSIR 172 Toolkit →</a></p>
+    <p><a href="https://forms.gle/5SyXqZ281LXryb8f9" target="_blank">Group Project Registration Form →</a></p>
+  </div>
+
+  <div class="card qr-container" id="qr-card">
+    <h2 style="justify-content:center">Share This Page</h2>
+    <div id="qr-code"></div>
+    <p class="qr-url">https://efkaymak-del.github.io/PSIR172/week6.html</p>
+  </div>
+</div>
+
+<!-- ===== TAB 1: FRAMING EXPERIMENT ===== -->
+<div class="panel" id="tab-framing">
+  <div class="card">
+    <h2>🔬 The Framing Experiment</h2>
+    <p>Read the passage below carefully. Then answer the three questions. <strong>Don't scroll past your assigned version — you'll see the other one after the reveal.</strong></p>
+  </div>
+
+  <!-- ASSIGNED VERSION -->
+  <div class="card" id="framing-assigned">
+    <div id="framing-text-container"></div>
+    <hr style="margin:1rem 0;border:none;border-top:1px solid #e9ecef">
+    <h3>Your Reactions</h3>
+
+    <label>1. What should be done about this situation?</label>
+    <div class="pill-group">
+      <label><input type="radio" name="q1" value="stricter_borders"><span>Stricter border controls</span></label>
+      <label><input type="radio" name="q1" value="more_aid"><span>More humanitarian aid</span></label>
+      <label><input type="radio" name="q1" value="legal_pathways"><span>Create legal pathways</span></label>
+      <label><input type="radio" name="q1" value="burden_share"><span>Better EU burden-sharing</span></label>
+      <label><input type="radio" name="q1" value="unsure"><span>Not sure</span></label>
+    </div>
+
+    <label>2. Who bears the most responsibility?</label>
+    <div class="pill-group">
+      <label><input type="radio" name="q2" value="eu_govts"><span>EU governments</span></label>
+      <label><input type="radio" name="q2" value="origin_govts"><span>Countries of origin</span></label>
+      <label><input type="radio" name="q2" value="smugglers"><span>Smugglers &amp; traffickers</span></label>
+      <label><input type="radio" name="q2" value="intl_orgs"><span>International organisations</span></label>
+      <label><input type="radio" name="q2" value="shared"><span>Shared responsibility</span></label>
+    </div>
+
+    <label>3. How urgent is this issue? (1 = low, 5 = crisis)</label>
+    <div class="pill-group">
+      <label><input type="radio" name="q3" value="1"><span>1</span></label>
+      <label><input type="radio" name="q3" value="2"><span>2</span></label>
+      <label><input type="radio" name="q3" value="3"><span>3</span></label>
+      <label><input type="radio" name="q3" value="4"><span>4</span></label>
+      <label><input type="radio" name="q3" value="5"><span>5</span></label>
+    </div>
+
+    <button class="btn btn-primary btn-block" id="framing-submit" onclick="submitFraming()">Lock In My Answers</button>
+  </div>
+
+  <!-- REVEAL (hidden until triggered) -->
+  <div class="card" id="framing-reveal" style="display:none">
+    <h2>🪞 The Reveal</h2>
+    <p>You read <strong id="reveal-which"></strong>. Here are <em>both</em> versions side by side:</p>
+    <div class="frame-compare">
+      <div class="frame-box frame-a">
+        <span class="frame-label" style="color:#c1121f">Version A — "The Economic Burden"</span>
+        The continued flow of irregular migrants across the Mediterranean is placing significant strain on the economies of Southern European states. Government data from Italy and Greece indicate that processing, housing, and providing services to new arrivals cost an estimated €4.2 billion in 2024 alone. Local communities report pressure on housing markets, school systems, and public health infrastructure. Labour economists warn that sudden increases in low-skilled labour supply can depress wages for existing workers in construction, agriculture, and hospitality. Critics argue that current EU burden-sharing mechanisms are inadequate and that frontline states are bearing a disproportionate financial load. Several governments have called for stricter border enforcement and faster processing of asylum claims to reduce costs and restore public confidence in migration management.
+      </div>
+      <div class="frame-box frame-b">
+        <span class="frame-label" style="color:var(--success)">Version B — "The Human Crisis"</span>
+        The Mediterranean remains the world's deadliest migration route, with over 2,500 people drowning in 2024 while attempting to reach safety. The majority of those crossing are fleeing armed conflict in Syria, Sudan, and the Sahel region, or escaping political persecution and economic collapse. UNHCR reports that more than 60% of arrivals qualify for international protection under the 1951 Refugee Convention. Many survivors arrive severely traumatised, having experienced detention, trafficking, and violence along the route through Libya and Tunisia. Humanitarian organisations argue that European states have a legal and moral obligation to provide safe, legal pathways to asylum. The current approach — focused on deterrence and border enforcement — has failed to reduce crossings while increasing the death toll. Aid agencies are calling for expanded search-and-rescue operations and a reformed EU asylum system based on solidarity and human rights.
+      </div>
+    </div>
+    <div class="info-block" id="reveal-answers"></div>
+    <div class="warn-block">
+      <strong>The lesson:</strong> Both texts describe the same situation — Mediterranean migration. Neither is lying. But the frame shaped what you noticed, what you felt, and what you thought should be done. This is how framing works in media, policy, and your own writing.
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB 2: PEER FEEDBACK ===== -->
+<div class="panel" id="tab-feedback">
+  <div class="card">
+    <h2>🗣️ Pitch Feedback</h2>
+    <p>Your group has ~20 minutes. Each person gives a <strong>2-minute pitch</strong> of their policy brief topic. After each pitch, fill in the feedback card below. You can give multiple feedbacks — one per speaker.</p>
+    <div class="info-block">
+      <strong>Pitch structure (2 min):</strong><br>
+      1. What is the problem? (30 sec)<br>
+      2. Why should we care? (30 sec)<br>
+      3. What might be done about it? (30 sec)<br>
+      4. Who are you writing this for? (30 sec)
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Give Feedback</h3>
+    <label>Speaker's name</label>
+    <input type="text" id="fb-name" placeholder="e.g. Ayşe">
+
+    <label>Their topic (brief)</label>
+    <input type="text" id="fb-topic" placeholder="e.g. EU migration policy">
+
+    <label>I understood the problem clearly</label>
+    <div class="pill-group">
+      <label><input type="radio" name="fb-clear" value="yes"><span>Yes, clearly</span></label>
+      <label><input type="radio" name="fb-clear" value="mostly"><span>Mostly</span></label>
+      <label><input type="radio" name="fb-clear" value="not_quite"><span>Not quite</span></label>
+    </div>
+
+    <label>The frame was…</label>
+    <div class="pill-group">
+      <label><input type="radio" name="fb-frame" value="positive"><span>Positive</span></label>
+      <label><input type="radio" name="fb-frame" value="negative"><span>Negative</span></label>
+      <label><input type="radio" name="fb-frame" value="both"><span>Both</span></label>
+      <label><input type="radio" name="fb-frame" value="unclear"><span>Unclear</span></label>
+    </div>
+
+    <label>The strongest part was…</label>
+    <textarea id="fb-strength" rows="2" placeholder="What worked well?"></textarea>
+
+    <label>I wanted to know more about…</label>
+    <textarea id="fb-more" rows="2" placeholder="What was missing or unclear?"></textarea>
+
+    <label>One suggestion</label>
+    <textarea id="fb-suggestion" rows="2" placeholder="One concrete thing they could improve"></textarea>
+
+    <button class="btn btn-primary btn-block" onclick="saveFeedback()">Save This Feedback</button>
+  </div>
+
+  <div class="card" id="fb-history-card" style="display:none">
+    <h3>Your Saved Feedback</h3>
+    <p style="font-size:.82rem;color:var(--muted);margin-bottom:.5rem">Share these with each speaker — screenshot or read aloud.</p>
+    <div id="fb-history"></div>
+    <button class="btn btn-secondary btn-sm" onclick="copyAllFeedback()" style="margin-top:.5rem">Copy All as Text</button>
+  </div>
+</div>
+
+<!-- ===== TAB 3: CONCEPTS ===== -->
+<div class="panel" id="tab-concepts">
+  <div class="card">
+    <h2>🎯 Target Audience Analysis</h2>
+    <p>Every message has an intended receiver. Before you write or speak, answer three questions about your audience:</p>
+    <p><strong>1. What do they already believe?</strong> You're not starting from zero — your audience has existing views. Work with them or deliberately challenge them.</p>
+    <p><strong>2. What do they care about?</strong> A finance minister cares about costs. An NGO director cares about rights. Frame your message around their priorities, not yours.</p>
+    <p><strong>3. What would move them to act?</strong> Information alone rarely works. You need an emotional hook — urgency, moral obligation, political opportunity — that connects evidence to action.</p>
+    <div class="info-block">
+      <strong>For your policy brief:</strong> Your brief is addressed to a specific decision-maker. Name them. Then rewrite your executive summary as if that person is the only reader. Does it speak to what <em>they</em> care about?
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🎭 Emotional Framing: Ethos, Pathos, Logos</h2>
+    <p><strong>Ethos</strong> = credibility. Why should the audience trust you? Use credentials, cite authoritative sources, demonstrate expertise.</p>
+    <p><strong>Pathos</strong> = emotion. Why should the audience care? Use vivid examples, human stories, striking data. Pathos gets people to read past the first paragraph.</p>
+    <p><strong>Logos</strong> = logic and evidence. Why should the audience believe your argument? Use data, research, cause-and-effect reasoning.</p>
+    <div class="warn-block">
+      <strong>Example:</strong> "200,000 refugees crossed the Mediterranean last year" is <em>logos</em>. "A three-year-old boy washed up on a beach in Turkey" is <em>pathos</em>. Both are about the same crisis. One changed European policy overnight.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>⚖️ Positive vs. Negative Framing</h2>
+    <p>The same policy can be sold in two completely different ways:</p>
+    <div class="frame-compare">
+      <div class="frame-box frame-b">
+        <span class="frame-label" style="color:var(--success)">Positive Frame</span>
+        <strong>Emotion:</strong> Hope, opportunity<br>
+        <strong>Logic:</strong> "If we do X, we gain Y"<br>
+        <strong>Best for:</strong> Inspiring action, building coalitions<br>
+        <strong>Example:</strong> "Investing in renewable energy will create 50,000 new jobs."
+      </div>
+      <div class="frame-box frame-a">
+        <span class="frame-label" style="color:#c1121f">Negative Frame</span>
+        <strong>Emotion:</strong> Fear, urgency<br>
+        <strong>Logic:</strong> "If we don't do X, we lose Y"<br>
+        <strong>Best for:</strong> Mobilising against threats, creating urgency<br>
+        <strong>Example:</strong> "If we don't act on climate change, coastal cities will flood within 30 years."
+      </div>
+    </div>
+    <p>Research shows negative frames grab attention faster, but positive frames sustain engagement longer. Good policy briefs use <strong>both</strong>: negative to open (the problem), positive to close (the recommendation).</p>
+  </div>
+
+  <div class="card">
+    <h2>📦 The Message Box</h2>
+    <p>A tool used by political campaigns to map out messaging strategy. It forces you to think about what the other side will say — not just your own argument.</p>
+    <div class="msg-box-grid" style="pointer-events:none;opacity:.85">
+      <div class="corner"></div>
+      <div class="col-head">What WE say about US</div>
+      <div class="col-head">What WE say about THEM</div>
+      <div class="row-head">What THEY say about THEM</div>
+      <div style="padding:.5rem;background:#f8f9fa;font-size:.82rem;border-right:1px solid #e0e4f0;border-bottom:1px solid #e0e4f0">"We promote jobs and growth"</div>
+      <div style="padding:.5rem;background:#f8f9fa;font-size:.82rem;border-bottom:1px solid #e0e4f0">"They ignore environmental costs"</div>
+      <div class="row-head">What THEY say about US</div>
+      <div style="padding:.5rem;background:#f8f9fa;font-size:.82rem;border-right:1px solid #e0e4f0">"They say we're idealistic — but the evidence is on our side"</div>
+      <div style="padding:.5rem;background:#f8f9fa;font-size:.82rem">"They claim to care about workers but oppose renewable investment"</div>
+    </div>
+    <p style="margin-top:.5rem;font-size:.85rem">You'll fill in your own Message Box in the <strong>Campaign Lab</strong> tab.</p>
+  </div>
+
+  <div class="card">
+    <h2>📚 Further Reading (Optional)</h2>
+    <p><strong>McNair, B.</strong> <em>An Introduction to Political Communication</em> — available in Teams files. Focus on chapters covering framing and media effects.</p>
+    <p style="margin-top:.4rem"><a href="https://activelearningps.com/2014/02/27/exercise-on-framing/" target="_blank">Active Learning PS: Framing Exercise →</a></p>
+    <p><a href="https://www.frameworksinstitute.org/app/uploads/2020/07/FramingPublicIssuesfinal.pdf" target="_blank">FrameWorks Institute: Framing Public Issues (PDF) →</a></p>
+  </div>
+</div>
+
+<!-- ===== TAB 4: CAMPAIGN LAB ===== -->
+<div class="panel" id="tab-campaign">
+  <div class="card">
+    <h2>📣 Campaign Communication Lab</h2>
+    <p>This is for your <strong>group project</strong>. Work with your group to fill in the tools below. Everything auto-saves to your device.</p>
+  </div>
+
+  <div class="card">
+    <h3>Your Message Box</h3>
+    <p style="font-size:.84rem;color:var(--muted);margin-bottom:.5rem">Fill in each cell. Think about what the opposing side would say.</p>
+    <div class="msg-box-grid">
+      <div class="corner"></div>
+      <div class="col-head">What WE say about US</div>
+      <div class="col-head">What WE say about THEM</div>
+      <div class="row-head">THEY about THEM</div>
+      <textarea id="mb-ww" placeholder="Our positive case..."></textarea>
+      <textarea id="mb-wt" placeholder="Our critique of them..."></textarea>
+      <div class="row-head">THEY about US</div>
+      <textarea id="mb-tw" placeholder="Their attack on us — and our response..."></textarea>
+      <textarea id="mb-tt" placeholder="Their self-defence — and our counter..."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>30-Second Pitch Builder</h3>
+    <label>Target audience (one specific group)</label>
+    <input type="text" id="pitch-audience" placeholder="e.g. university students aged 18-22 in North Cyprus">
+
+    <label>Issue (one sentence)</label>
+    <input type="text" id="pitch-issue" placeholder="e.g. Lack of mental health services on campus">
+
+    <label>Emotional hook (pick one)</label>
+    <div class="pill-group">
+      <label><input type="radio" name="pitch-emotion" value="fear"><span>Fear / Urgency</span></label>
+      <label><input type="radio" name="pitch-emotion" value="hope"><span>Hope / Opportunity</span></label>
+      <label><input type="radio" name="pitch-emotion" value="anger"><span>Anger / Injustice</span></label>
+      <label><input type="radio" name="pitch-emotion" value="solidarity"><span>Solidarity</span></label>
+      <label><input type="radio" name="pitch-emotion" value="guilt"><span>Guilt / Responsibility</span></label>
+    </div>
+
+    <label>Frame</label>
+    <div class="pill-group">
+      <label><input type="radio" name="pitch-frame" value="positive"><span>Positive — "If we act…"</span></label>
+      <label><input type="radio" name="pitch-frame" value="negative"><span>Negative — "If we don't act…"</span></label>
+    </div>
+
+    <label>The ask (one concrete action)</label>
+    <input type="text" id="pitch-ask" placeholder="e.g. Sign this petition to the university senate">
+
+    <label>Your 30-second pitch (write it out)</label>
+    <textarea id="pitch-script" rows="4" placeholder="Combine the above into a short spoken pitch. Read it aloud — does it take 30 seconds?"></textarea>
+
+    <div style="display:flex;gap:.5rem;margin-top:.5rem">
+      <button class="btn btn-secondary btn-sm" onclick="copyPitch()">Copy Pitch</button>
+      <button class="btn btn-secondary btn-sm" onclick="clearPitch()">Clear</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Ethics Quick-Check</h3>
+    <p style="font-size:.84rem;margin-bottom:.5rem">Before you present, run through these:</p>
+    <div id="ethics-checks"></div>
+  </div>
+</div>
+
+<!-- ===== TAB 5: VIDEOS ===== -->
+<div class="panel" id="tab-videos">
+  <div class="card">
+    <h2>🎬 Session Videos</h2>
+    <p>The clips used in today's session. You can rewatch them here.</p>
+  </div>
+
+  <div class="card">
+    <h3>Block 1: The Daisy Ad (1964)</h3>
+    <p style="font-size:.84rem;color:var(--muted);margin-bottom:.5rem">LBJ's presidential campaign. Aired once. Changed political advertising forever.</p>
+    <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;margin-bottom:.5rem">
+      <iframe src="https://www.youtube.com/embed/riDypP1KfOU" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allowfullscreen loading="lazy"></iframe>
+    </div>
+    <div class="info-block">
+      <strong>Watch for:</strong> Who is the audience? What emotion is triggered? The opponent is never named — why does it work?
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Block 3: Zelensky's EU Parliament Address (March 2022)</h3>
+    <p style="font-size:.84rem;color:var(--muted);margin-bottom:.5rem">Delivered under bombardment. A masterclass in ethos and pathos.</p>
+    <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;margin-bottom:.5rem">
+      <iframe src="https://www.youtube.com/embed/MApJr4qNBh8" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allowfullscreen loading="lazy"></iframe>
+    </div>
+    <div class="info-block">
+      <strong>Watch for:</strong> Who is his audience? What is his emotional strategy? What is he asking them to do? How does his credibility (ethos) amplify his emotional appeal (pathos)?
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Backup: Obama "Yes We Can" (2008)</h3>
+    <p style="font-size:.84rem;color:var(--muted);margin-bottom:.5rem">The speech that launched a movement. Pure positive framing.</p>
+    <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;margin-bottom:.5rem">
+      <iframe src="https://www.youtube.com/embed/Fe751kMBwms" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allowfullscreen loading="lazy"></iframe>
+    </div>
+    <div class="info-block">
+      <strong>Watch for:</strong> Repetition as a rhetorical device. How does "Yes we can" function as both a slogan and an emotional frame?
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB 6: EXIT TICKET ===== -->
+<div class="panel" id="tab-exit">
+  <div class="card">
+    <h2>🎫 Exit Ticket</h2>
+    <p>Before you leave, answer these two quick questions. This is <strong>not graded</strong> — it helps Dr. Kaymak see where the class stands.</p>
+  </div>
+
+  <div class="card">
+    <label>1. What is the frame of your policy brief — positive, negative, or both?</label>
+    <div class="pill-group">
+      <label><input type="radio" name="exit-frame" value="positive"><span>Positive</span></label>
+      <label><input type="radio" name="exit-frame" value="negative"><span>Negative</span></label>
+      <label><input type="radio" name="exit-frame" value="both"><span>Both</span></label>
+      <label><input type="radio" name="exit-frame" value="not_sure"><span>Haven't decided yet</span></label>
+    </div>
+
+    <label>2. In one sentence, what is the most useful thing you learned today?</label>
+    <textarea id="exit-learning" rows="3" placeholder="Be honest — there's no wrong answer."></textarea>
+
+    <label>3. Anything you're confused about or want covered next week?</label>
+    <textarea id="exit-confused" rows="2" placeholder="Optional"></textarea>
+
+    <button class="btn btn-success btn-block" onclick="submitExit()">Submit Exit Ticket ✓</button>
+    <div id="exit-confirmation" style="display:none;margin-top:.75rem">
+      <div class="info-block" style="border-left-color:var(--success)">
+        <strong>Saved!</strong> Your exit ticket is stored on your device. Show this screen to Dr. Kaymak on your way out if asked. See you next week.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== INSTRUCTOR FAB ===== -->
+<div class="instructor-mode">
+  <button class="btn btn-primary" onclick="toggleInstructor()" title="Instructor Panel">⚙</button>
+</div>
+
+<!-- ===== INSTRUCTOR PANEL (hidden) ===== -->
+<div class="panel" id="tab-instructor" style="display:none">
+  <div class="card">
+    <h2>⚙ Instructor Controls</h2>
+    <p style="font-size:.84rem;color:var(--muted)">These controls are for Dr. Kaymak only. Students can access this panel but there's nothing harmful here.</p>
+  </div>
+
+  <div class="card">
+    <h3>Framing Experiment — Reveal</h3>
+    <p style="font-size:.84rem">Tell students to tap "Lock In My Answers" first. Then tell them to scroll down — the reveal appears automatically after they submit. Alternatively, project this page and click reveal here for the whole class.</p>
+    <button class="btn btn-danger" onclick="forceReveal()">Force Reveal (shows both versions for everyone)</button>
+  </div>
+
+  <div class="card">
+    <h3>Timing Guide</h3>
+    <div class="info-block" style="font-size:.82rem;line-height:1.8">
+      <strong>Block 1 (50 min)</strong><br>
+      0:00 — Housekeeping (2 min)<br>
+      0:02 — Daisy Ad clip + discussion (6 min)<br>
+      0:08 — Mini-lecture: audience, framing, pos/neg (17 min)<br>
+      0:25 — Framing experiment on phones (20 min)<br>
+      0:45 — Bridge to Block 2 (5 min)<br><br>
+      <strong>Block 2 (50 min)</strong><br>
+      0:00 — Pitch setup, form groups of 5 (5 min)<br>
+      0:05 — Small-group pitches, 7 groups × 5 students (20 min)<br>
+      0:25 — Whole-class debrief (8 min)<br>
+      0:33 — Structured drafting in Policy Brief Writer app (15 min)<br>
+      0:48 — Close (2 min)<br><br>
+      <strong>Block 3 (50 min)</strong><br>
+      0:00 — Zelensky clip + discussion (5 min)<br>
+      0:05 — Campaign communication lecture (15 min)<br>
+      0:20 — Group activity: Message Box + 30-sec pitch (18 min)<br>
+      0:38 — Housekeeping & deadlines (10 min)<br>
+      0:48 — Exit ticket (2 min)
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Group Formation (35 students)</h3>
+    <p style="font-size:.84rem">For Block 2 pitches: count off 1–7 around the room. All 1s together, all 2s, etc. = 7 groups of 5. If anyone is absent, some groups will have 4 — that's fine, it runs faster.</p>
+    <p style="font-size:.84rem;margin-top:.4rem">For Block 3 campaign activity: let students sit with their actual project groups if formed. Ungrouped students join any table with space.</p>
+  </div>
+
+  <div class="card">
+    <h3>Data Export</h3>
+    <button class="btn btn-secondary btn-sm" onclick="exportAllData()">Export All Saved Data (JSON)</button>
+    <button class="btn btn-danger btn-sm" onclick="resetAllData()" style="margin-left:.5rem">Reset Everything</button>
+  </div>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div class="toast" id="toast"></div>
+
+<!-- ===== QR CODE LIBRARY ===== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+
+<script>
+/* ================================================
+   PSIR 172 — Week 6 Campaign Communication Lab
+   Single-file app · No dependencies except QR lib
+   ================================================ */
+
+// ===== CONFIGURATION =====
+const STORE_KEY = 'psir172_week6_v1';
+const APP_URL = 'https://efkaymak-del.github.io/PSIR172/week6.html';
+
+const TABS = [
+  { id: 'home', label: 'Home', icon: '🏠' },
+  { id: 'framing', label: 'Framing Lab', icon: '🔬' },
+  { id: 'feedback', label: 'Pitch Feedback', icon: '🗣️' },
+  { id: 'concepts', label: 'Key Concepts', icon: '📖' },
+  { id: 'campaign', label: 'Campaign Lab', icon: '📣' },
+  { id: 'videos', label: 'Videos', icon: '🎬' },
+  { id: 'exit', label: 'Exit Ticket', icon: '🎫' }
+];
+
+const DEADLINES = [
+  { label: 'Data Visualisation Report', date: '2026-04-01T23:59:00', note: 'Moodle' },
+  { label: 'Policy Brief', date: '2026-04-09T23:59:00', note: 'Moodle, ~1000 words' },
+  { label: 'Group Registration Form', date: '2026-04-09T23:59:00', note: 'Google Form' }
+];
+
+const ETHICS_ITEMS = [
+  'All facts and statistics are verified from credible sources',
+  'No fabricated quotes, data, or endorsements',
+  'No impersonation of real individuals or organisations',
+  'No deepfakes, manipulated images, or misleading visuals',
+  'The emotional appeal is honest — not manipulative',
+  'You could explain your methods publicly without embarrassment',
+  'Opposing views are represented fairly, not as strawmen'
+];
+
+const VERSION_A = `<span class="frame-label" style="color:#c1121f">Your Reading</span>
+<p style="font-size:.88rem;line-height:1.7"><strong>Mediterranean Migration: Costs Mount for Receiving States</strong></p>
+<p style="font-size:.88rem;line-height:1.7;margin-top:.4rem">The continued flow of irregular migrants across the Mediterranean is placing significant strain on the economies of Southern European states. Government data from Italy and Greece indicate that processing, housing, and providing services to new arrivals cost an estimated €4.2 billion in 2024 alone. Local communities report pressure on housing markets, school systems, and public health infrastructure. Labour economists warn that sudden increases in low-skilled labour supply can depress wages for existing workers in construction, agriculture, and hospitality. Critics argue that current EU burden-sharing mechanisms are inadequate and that frontline states are bearing a disproportionate financial load. Several governments have called for stricter border enforcement and faster processing of asylum claims to reduce costs and restore public confidence in migration management.</p>`;
+
+const VERSION_B = `<span class="frame-label" style="color:var(--success)">Your Reading</span>
+<p style="font-size:.88rem;line-height:1.7"><strong>Mediterranean Migration: A Humanitarian Emergency</strong></p>
+<p style="font-size:.88rem;line-height:1.7;margin-top:.4rem">The Mediterranean remains the world's deadliest migration route, with over 2,500 people drowning in 2024 while attempting to reach safety. The majority of those crossing are fleeing armed conflict in Syria, Sudan, and the Sahel region, or escaping political persecution and economic collapse. UNHCR reports that more than 60% of arrivals qualify for international protection under the 1951 Refugee Convention. Many survivors arrive severely traumatised, having experienced detention, trafficking, and violence along the route through Libya and Tunisia. Humanitarian organisations argue that European states have a legal and moral obligation to provide safe, legal pathways to asylum. The current approach — focused on deterrence and border enforcement — has failed to reduce crossings while increasing the death toll. Aid agencies are calling for expanded search-and-rescue operations and a reformed EU asylum system based on solidarity and human rights.</p>`;
+
+// ===== STATE =====
+let state = loadState();
+
+function defaultState() {
+  return {
+    version: Math.random() < 0.5 ? 'A' : 'B',
+    framing: { q1: null, q2: null, q3: null, submitted: false, revealed: false },
+    feedback: [],
+    campaign: { mb_ww: '', mb_wt: '', mb_tw: '', mb_tt: '',
+                pitch_audience: '', pitch_issue: '', pitch_emotion: null,
+                pitch_frame: null, pitch_ask: '', pitch_script: '' },
+    ethics: Array(ETHICS_ITEMS.length).fill(false),
+    exit: { frame: null, learning: '', confused: '', submitted: false },
+    activeTab: 'home'
+  };
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) {
+      const s = JSON.parse(raw);
+      // Merge with defaults for any missing keys
+      return { ...defaultState(), ...s };
+    }
+  } catch(e) {}
+  return defaultState();
+}
+
+function saveState() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+// ===== TOAST =====
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+// ===== NAVIGATION =====
+function buildNav() {
+  const nav = document.getElementById('nav');
+  nav.innerHTML = TABS.map(t =>
+    `<button data-tab="${t.id}" onclick="switchTab('${t.id}')">${t.icon} ${t.label}</button>`
+  ).join('');
+}
+
+function switchTab(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+  const panel = document.getElementById('tab-' + id);
+  const btn = document.querySelector(`.nav button[data-tab="${id}"]`);
+  if (panel) panel.classList.add('active');
+  if (btn) btn.classList.add('active');
+  state.activeTab = id;
+  saveState();
+  // Scroll nav to make active button visible
+  if (btn) btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===== DEADLINES =====
+function renderDeadlines() {
+  const container = document.getElementById('deadline-list');
+  const now = new Date();
+  container.innerHTML = DEADLINES.map(d => {
+    const dt = new Date(d.date);
+    const diff = dt - now;
+    const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+    let color = 'var(--success)';
+    let urgency = `${days} days left`;
+    if (days <= 0) { color = 'var(--muted)'; urgency = 'Past due'; }
+    else if (days <= 3) { color = 'var(--danger)'; urgency = `${days} day${days===1?'':'s'} left — urgent!`; }
+    else if (days <= 7) { color = '#e76f51'; urgency = `${days} days left`; }
+    const dateStr = dt.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid #f0f0f0;font-size:.85rem">
+      <div><strong>${d.label}</strong><br><span style="color:var(--muted);font-size:.78rem">${dateStr} · ${d.note}</span></div>
+      <span style="color:${color};font-weight:600;font-size:.82rem;white-space:nowrap">${urgency}</span>
+    </div>`;
+  }).join('');
+}
+
+// ===== QR CODE =====
+function renderQR() {
+  const container = document.getElementById('qr-code');
+  if (typeof qrcode === 'undefined') {
+    container.innerHTML = '<p style="font-size:.82rem;color:var(--muted)">QR library loading…</p>';
+    setTimeout(renderQR, 500);
+    return;
+  }
+  const qr = qrcode(0, 'M');
+  qr.addData(APP_URL);
+  qr.make();
+  container.innerHTML = qr.createSvgTag({ cellSize: 5, margin: 4 });
+}
+
+// ===== FRAMING EXPERIMENT =====
+function initFraming() {
+  const container = document.getElementById('framing-text-container');
+  container.innerHTML = state.version === 'A' ? VERSION_A : VERSION_B;
+
+  // Restore answers
+  if (state.framing.q1) {
+    const r = document.querySelector(`input[name="q1"][value="${state.framing.q1}"]`);
+    if (r) r.checked = true;
+  }
+  if (state.framing.q2) {
+    const r = document.querySelector(`input[name="q2"][value="${state.framing.q2}"]`);
+    if (r) r.checked = true;
+  }
+  if (state.framing.q3) {
+    const r = document.querySelector(`input[name="q3"][value="${state.framing.q3}"]`);
+    if (r) r.checked = true;
+  }
+
+  if (state.framing.submitted) {
+    document.getElementById('framing-submit').disabled = true;
+    document.getElementById('framing-submit').textContent = 'Answers Locked ✓';
+    document.getElementById('framing-submit').classList.remove('btn-primary');
+    document.getElementById('framing-submit').classList.add('btn-secondary');
+  }
+
+  if (state.framing.revealed) {
+    showReveal();
+  }
+}
+
+function submitFraming() {
+  const q1 = document.querySelector('input[name="q1"]:checked');
+  const q2 = document.querySelector('input[name="q2"]:checked');
+  const q3 = document.querySelector('input[name="q3"]:checked');
+
+  if (!q1 || !q2 || !q3) {
+    toast('Please answer all three questions first');
+    return;
+  }
+
+  state.framing.q1 = q1.value;
+  state.framing.q2 = q2.value;
+  state.framing.q3 = q3.value;
+  state.framing.submitted = true;
+  saveState();
+
+  document.getElementById('framing-submit').disabled = true;
+  document.getElementById('framing-submit').textContent = 'Answers Locked ✓';
+  document.getElementById('framing-submit').classList.remove('btn-primary');
+  document.getElementById('framing-submit').classList.add('btn-secondary');
+
+  toast('Answers locked! Wait for the reveal…');
+  // Auto-reveal after a short pause (instructor can also force it)
+  // We'll show a "Tap to Reveal" button instead
+  const revealBtn = document.createElement('button');
+  revealBtn.className = 'btn btn-danger btn-block';
+  revealBtn.style.marginTop = '1rem';
+  revealBtn.textContent = '🪞 Tap to See the Reveal';
+  revealBtn.onclick = function() {
+    state.framing.revealed = true;
+    saveState();
+    showReveal();
+    this.remove();
+  };
+  document.getElementById('framing-assigned').appendChild(revealBtn);
+}
+
+function showReveal() {
+  const revealDiv = document.getElementById('framing-reveal');
+  revealDiv.style.display = 'block';
+  document.getElementById('reveal-which').textContent =
+    state.version === 'A' ? 'Version A — "The Economic Burden"' : 'Version B — "The Human Crisis"';
+
+  // Show their answers
+  const labels = {
+    q1: { stricter_borders: 'Stricter border controls', more_aid: 'More humanitarian aid',
+          legal_pathways: 'Create legal pathways', burden_share: 'Better EU burden-sharing', unsure: 'Not sure' },
+    q2: { eu_govts: 'EU governments', origin_govts: 'Countries of origin',
+          smugglers: 'Smugglers & traffickers', intl_orgs: 'International organisations', shared: 'Shared responsibility' },
+    q3: { '1': '1 (Low)', '2': '2', '3': '3', '4': '4', '5': '5 (Crisis)' }
+  };
+
+  document.getElementById('reveal-answers').innerHTML =
+    `<strong>Your answers:</strong><br>
+     What should be done: <strong>${labels.q1[state.framing.q1] || '—'}</strong><br>
+     Who's responsible: <strong>${labels.q2[state.framing.q2] || '—'}</strong><br>
+     Urgency: <strong>${labels.q3[state.framing.q3] || '—'}</strong><br><br>
+     <em>Now think: would your answers have been different if you'd read the other version?</em>`;
+
+  revealDiv.scrollIntoView({ behavior: 'smooth' });
+}
+
+function forceReveal() {
+  state.framing.revealed = true;
+  saveState();
+  showReveal();
+  toast('Reveal activated');
+  switchTab('framing');
+}
+
+// ===== PEER FEEDBACK =====
+function saveFeedback() {
+  const name = document.getElementById('fb-name').value.trim();
+  const topic = document.getElementById('fb-topic').value.trim();
+  const clear = document.querySelector('input[name="fb-clear"]:checked');
+  const frame = document.querySelector('input[name="fb-frame"]:checked');
+  const strength = document.getElementById('fb-strength').value.trim();
+  const more = document.getElementById('fb-more').value.trim();
+  const suggestion = document.getElementById('fb-suggestion').value.trim();
+
+  if (!name) { toast("Enter the speaker's name"); return; }
+
+  const entry = {
+    name, topic,
+    clear: clear ? clear.value : 'n/a',
+    frame: frame ? frame.value : 'n/a',
+    strength, more, suggestion,
+    time: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+  };
+
+  state.feedback.push(entry);
+  saveState();
+
+  // Clear form
+  document.getElementById('fb-name').value = '';
+  document.getElementById('fb-topic').value = '';
+  document.querySelectorAll('input[name="fb-clear"]').forEach(r => r.checked = false);
+  document.querySelectorAll('input[name="fb-frame"]').forEach(r => r.checked = false);
+  document.getElementById('fb-strength').value = '';
+  document.getElementById('fb-more').value = '';
+  document.getElementById('fb-suggestion').value = '';
+
+  renderFeedbackHistory();
+  toast(`Feedback for ${name} saved`);
+}
+
+function renderFeedbackHistory() {
+  const container = document.getElementById('fb-history');
+  const card = document.getElementById('fb-history-card');
+  if (state.feedback.length === 0) { card.style.display = 'none'; return; }
+  card.style.display = 'block';
+
+  container.innerHTML = state.feedback.map((f, i) =>
+    `<div class="feedback-entry">
+      <h4>${f.name} ${f.topic ? '— ' + f.topic : ''} <span style="float:right;font-weight:400;color:var(--muted);font-size:.75rem">${f.time}</span></h4>
+      <p style="font-size:.82rem">
+        Clear: <strong>${f.clear}</strong> · Frame: <strong>${f.frame}</strong><br>
+        ${f.strength ? '✓ Strength: ' + f.strength + '<br>' : ''}
+        ${f.more ? '? Wanted more on: ' + f.more + '<br>' : ''}
+        ${f.suggestion ? '→ Suggestion: ' + f.suggestion : ''}
+      </p>
+      <button class="btn btn-sm btn-secondary" onclick="deleteFeedback(${i})" style="margin-top:.3rem;font-size:.72rem">Remove</button>
+    </div>`
+  ).join('');
+}
+
+function deleteFeedback(i) {
+  state.feedback.splice(i, 1);
+  saveState();
+  renderFeedbackHistory();
+  toast('Feedback removed');
+}
+
+function copyAllFeedback() {
+  const text = state.feedback.map(f =>
+    `Speaker: ${f.name}\nTopic: ${f.topic}\nClear: ${f.clear} | Frame: ${f.frame}\nStrength: ${f.strength}\nWanted more: ${f.more}\nSuggestion: ${f.suggestion}\n`
+  ).join('\n---\n');
+  navigator.clipboard.writeText(text).then(() => toast('Copied to clipboard'));
+}
+
+// ===== CAMPAIGN LAB =====
+function initCampaign() {
+  // Restore message box
+  document.getElementById('mb-ww').value = state.campaign.mb_ww;
+  document.getElementById('mb-wt').value = state.campaign.mb_wt;
+  document.getElementById('mb-tw').value = state.campaign.mb_tw;
+  document.getElementById('mb-tt').value = state.campaign.mb_tt;
+
+  // Restore pitch
+  document.getElementById('pitch-audience').value = state.campaign.pitch_audience;
+  document.getElementById('pitch-issue').value = state.campaign.pitch_issue;
+  document.getElementById('pitch-ask').value = state.campaign.pitch_ask;
+  document.getElementById('pitch-script').value = state.campaign.pitch_script;
+
+  if (state.campaign.pitch_emotion) {
+    const r = document.querySelector(`input[name="pitch-emotion"][value="${state.campaign.pitch_emotion}"]`);
+    if (r) r.checked = true;
+  }
+  if (state.campaign.pitch_frame) {
+    const r = document.querySelector(`input[name="pitch-frame"][value="${state.campaign.pitch_frame}"]`);
+    if (r) r.checked = true;
+  }
+
+  // Wire auto-save
+  ['mb-ww','mb-wt','mb-tw','mb-tt','pitch-audience','pitch-issue','pitch-ask','pitch-script'].forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener('input', () => {
+      const key = id.replace(/-/g, '_');
+      state.campaign[key] = el.value;
+      saveState();
+    });
+  });
+
+  document.querySelectorAll('input[name="pitch-emotion"]').forEach(r => {
+    r.addEventListener('change', () => { state.campaign.pitch_emotion = r.value; saveState(); });
+  });
+  document.querySelectorAll('input[name="pitch-frame"]').forEach(r => {
+    r.addEventListener('change', () => { state.campaign.pitch_frame = r.value; saveState(); });
+  });
+}
+
+function copyPitch() {
+  const script = document.getElementById('pitch-script').value;
+  if (!script) { toast('Write your pitch first'); return; }
+  navigator.clipboard.writeText(script).then(() => toast('Pitch copied'));
+}
+
+function clearPitch() {
+  if (!confirm('Clear the pitch builder?')) return;
+  ['pitch-audience','pitch-issue','pitch-ask','pitch-script'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.querySelectorAll('input[name="pitch-emotion"],input[name="pitch-frame"]').forEach(r => r.checked = false);
+  state.campaign.pitch_audience = '';
+  state.campaign.pitch_issue = '';
+  state.campaign.pitch_emotion = null;
+  state.campaign.pitch_frame = null;
+  state.campaign.pitch_ask = '';
+  state.campaign.pitch_script = '';
+  saveState();
+  toast('Pitch cleared');
+}
+
+// ===== ETHICS CHECKLIST =====
+function renderEthics() {
+  const container = document.getElementById('ethics-checks');
+  container.innerHTML = ETHICS_ITEMS.map((item, i) =>
+    `<label style="display:flex;align-items:flex-start;gap:.5rem;margin:.4rem 0;font-weight:400;cursor:pointer">
+      <input type="checkbox" ${state.ethics[i] ? 'checked' : ''} onchange="toggleEthics(${i})"
+        style="display:inline-block;width:18px;height:18px;margin-top:2px;flex-shrink:0;accent-color:var(--success)">
+      <span style="font-size:.84rem;${state.ethics[i] ? 'text-decoration:line-through;color:var(--muted)' : ''}">${item}</span>
+    </label>`
+  ).join('');
+}
+
+function toggleEthics(i) {
+  state.ethics[i] = !state.ethics[i];
+  saveState();
+  renderEthics();
+}
+
+// ===== EXIT TICKET =====
+function initExit() {
+  if (state.exit.frame) {
+    const r = document.querySelector(`input[name="exit-frame"][value="${state.exit.frame}"]`);
+    if (r) r.checked = true;
+  }
+  document.getElementById('exit-learning').value = state.exit.learning;
+  document.getElementById('exit-confused').value = state.exit.confused;
+
+  // Auto-save
+  document.getElementById('exit-learning').addEventListener('input', function() {
+    state.exit.learning = this.value; saveState();
+  });
+  document.getElementById('exit-confused').addEventListener('input', function() {
+    state.exit.confused = this.value; saveState();
+  });
+  document.querySelectorAll('input[name="exit-frame"]').forEach(r => {
+    r.addEventListener('change', () => { state.exit.frame = r.value; saveState(); });
+  });
+
+  if (state.exit.submitted) {
+    showExitConfirmation();
+  }
+}
+
+function submitExit() {
+  const frame = document.querySelector('input[name="exit-frame"]:checked');
+  const learning = document.getElementById('exit-learning').value.trim();
+  if (!frame || !learning) {
+    toast('Please answer at least questions 1 and 2');
+    return;
+  }
+  state.exit.frame = frame.value;
+  state.exit.learning = learning;
+  state.exit.confused = document.getElementById('exit-confused').value.trim();
+  state.exit.submitted = true;
+  saveState();
+  showExitConfirmation();
+  toast('Exit ticket submitted!');
+}
+
+function showExitConfirmation() {
+  document.getElementById('exit-confirmation').style.display = 'block';
+  const btn = document.querySelector('#tab-exit .btn-success');
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'Submitted ✓';
+    btn.classList.remove('btn-success');
+    btn.classList.add('btn-secondary');
+  }
+}
+
+// ===== INSTRUCTOR =====
+let instructorVisible = false;
+function toggleInstructor() {
+  instructorVisible = !instructorVisible;
+  const panel = document.getElementById('tab-instructor');
+  if (instructorVisible) {
+    // Hide all other panels
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+    panel.style.display = 'block';
+    panel.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    panel.style.display = 'none';
+    panel.classList.remove('active');
+    switchTab(state.activeTab || 'home');
+  }
+}
+
+function exportAllData() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'psir172_week6_data.json';
+  a.click();
+  toast('Data exported');
+}
+
+function resetAllData() {
+  if (!confirm('This will erase ALL your work from today. Are you sure?')) return;
+  if (!confirm('Really? This cannot be undone.')) return;
+  state = defaultState();
+  saveState();
+  location.reload();
+}
+
+// ===== AUTO-SAVE FRAMING RADIOS =====
+function wireFramingRadios() {
+  ['q1','q2','q3'].forEach(name => {
+    document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+      r.addEventListener('change', () => {
+        if (!state.framing.submitted) {
+          state.framing[name] = r.value;
+          saveState();
+        }
+      });
+    });
+  });
+}
+
+// ===== INIT =====
+function init() {
+  buildNav();
+  renderDeadlines();
+  renderQR();
+  initFraming();
+  wireFramingRadios();
+  renderFeedbackHistory();
+  initCampaign();
+  renderEthics();
+  initExit();
+  switchTab(state.activeTab || 'home');
+
+  // Update deadlines every minute
+  setInterval(renderDeadlines, 60000);
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>
