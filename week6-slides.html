@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PSIR 172 — Week 6 Slides: Campaign Communication</title>
+<style>
+/* ===== RESET ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f172a;--surface:#1e293b;--text:#f1f5f9;
+  --accent:#60a5fa;--accent2:#818cf8;--accent3:#34d399;
+  --warn:#fbbf24;--danger:#f87171;--muted:#94a3b8;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+html,body{height:100%;overflow:hidden;font-family:var(--font);background:var(--bg);color:var(--text)}
+
+/* ===== SLIDE CONTAINER ===== */
+.deck{position:relative;width:100%;height:100%}
+.slide{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  display:none;flex-direction:column;justify-content:center;align-items:center;
+  padding:4vh 6vw;text-align:center;
+  opacity:0;transition:opacity .4s ease;
+}
+.slide.active{display:flex;opacity:1}
+.slide.left{text-align:left;align-items:flex-start}
+
+/* ===== TYPOGRAPHY ===== */
+.slide h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:800;line-height:1.15;margin-bottom:.5em;letter-spacing:-.5px}
+.slide h2{font-size:clamp(1.5rem,3.5vw,2.5rem);font-weight:700;line-height:1.2;margin-bottom:.6em}
+.slide h3{font-size:clamp(1.1rem,2.5vw,1.6rem);font-weight:600;line-height:1.3;margin-bottom:.5em;color:var(--accent)}
+.slide p{font-size:clamp(.95rem,2vw,1.35rem);line-height:1.65;max-width:52em;margin-bottom:.5em;color:#cbd5e1}
+.slide .big{font-size:clamp(1.2rem,3vw,2rem);line-height:1.5;color:var(--text);font-weight:500}
+.slide .huge{font-size:clamp(2rem,6vw,4.5rem);font-weight:900;line-height:1.1}
+.slide .accent{color:var(--accent)}
+.slide .accent2{color:var(--accent2)}
+.slide .accent3{color:var(--accent3)}
+.slide .warn{color:var(--warn)}
+.slide .danger{color:var(--danger)}
+.slide .muted{color:var(--muted);font-size:.85em}
+.slide strong{color:var(--text)}
+.slide em{color:var(--accent);font-style:normal;font-weight:600}
+
+/* ===== LAYOUT HELPERS ===== */
+.cols{display:flex;gap:3vw;width:100%;text-align:left;margin:.5em 0}
+.cols>div{flex:1}
+@media(max-width:700px){.cols{flex-direction:column}}
+.spacer{height:1.5em}
+.tag{display:inline-block;padding:.25em .7em;border-radius:6px;font-size:.85em;font-weight:700;margin:.15em}
+.tag-blue{background:rgba(96,165,250,.2);color:var(--accent)}
+.tag-purple{background:rgba(129,140,248,.2);color:var(--accent2)}
+.tag-green{background:rgba(52,211,153,.2);color:var(--accent3)}
+.tag-yellow{background:rgba(251,191,36,.2);color:var(--warn)}
+.tag-red{background:rgba(248,113,113,.2);color:var(--danger)}
+
+/* ===== BOXES ===== */
+.box{
+  background:var(--surface);border-radius:12px;padding:1.2em 1.5em;
+  margin:.5em 0;text-align:left;width:100%;max-width:52em;
+  border:1px solid rgba(255,255,255,.08);
+}
+.box h3{margin-top:0}
+.box p{font-size:clamp(.85rem,1.6vw,1.1rem)}
+
+.quote{
+  border-left:4px solid var(--accent);padding:.8em 1.2em;
+  background:rgba(96,165,250,.08);border-radius:0 8px 8px 0;
+  font-size:clamp(1rem,2.2vw,1.5rem);font-style:italic;
+  margin:.6em 0;text-align:left;max-width:48em;
+}
+
+/* ===== TABLE ===== */
+.slide table{
+  border-collapse:collapse;margin:.6em auto;font-size:clamp(.8rem,1.6vw,1.1rem);
+  max-width:50em;width:100%;text-align:left;
+}
+.slide th{background:var(--accent);color:var(--bg);padding:.6em .8em;font-weight:700}
+.slide td{padding:.6em .8em;border-bottom:1px solid rgba(255,255,255,.08)}
+.slide tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+
+/* ===== MESSAGE BOX (2x2) ===== */
+.msgbox{
+  display:grid;grid-template-columns:auto 1fr 1fr;
+  border:2px solid var(--accent);border-radius:10px;overflow:hidden;
+  max-width:48em;width:100%;margin:.6em auto;font-size:clamp(.75rem,1.5vw,1rem);text-align:left;
+}
+.msgbox .corner{background:var(--accent);padding:.5em .7em;font-weight:700;color:var(--bg);font-size:.9em}
+.msgbox .ch{background:var(--accent);color:var(--bg);padding:.5em .7em;text-align:center;font-weight:600}
+.msgbox .rh{background:rgba(96,165,250,.15);padding:.5em .7em;font-weight:600;display:flex;align-items:center}
+.msgbox .cell{padding:.6em .7em;border-right:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)}
+
+/* ===== LISTS ===== */
+.slide ul,.slide ol{text-align:left;max-width:48em;margin:.3em 0;padding-left:1.3em}
+.slide li{font-size:clamp(.9rem,1.8vw,1.2rem);line-height:1.6;margin-bottom:.3em;color:#cbd5e1}
+.slide li strong{color:var(--text)}
+
+/* ===== CONTROLS ===== */
+.controls{
+  position:fixed;bottom:0;left:0;right:0;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.6em 1.5em;background:rgba(15,23,42,.85);
+  backdrop-filter:blur(8px);z-index:100;
+  font-size:.85rem;color:var(--muted);
+}
+.controls button{
+  background:none;border:none;color:var(--muted);cursor:pointer;
+  font-size:1.2rem;padding:.3em .6em;border-radius:6px;transition:all .2s;
+}
+.controls button:hover{color:var(--text);background:rgba(255,255,255,.08)}
+.slide-num{font-variant-numeric:tabular-nums}
+.progress-bar{
+  position:fixed;top:0;left:0;height:3px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transition:width .3s ease;z-index:101;
+}
+
+/* ===== SPEAKER NOTES ===== */
+.notes{
+  display:none;position:fixed;bottom:48px;left:0;right:0;
+  max-height:30vh;overflow-y:auto;
+  background:rgba(30,41,59,.95);backdrop-filter:blur(8px);
+  padding:.8em 1.5em;font-size:.85rem;line-height:1.6;
+  color:var(--warn);border-top:2px solid var(--warn);z-index:99;
+}
+.notes.show{display:block}
+.notes strong{color:var(--text)}
+.notes-label{font-size:.7rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:.3em;display:block}
+
+/* ===== TITLE SLIDE SPECIAL ===== */
+.slide.title-slide{background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%)}
+.slide.title-slide h1{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.slide.section-slide{background:linear-gradient(135deg,rgba(96,165,250,.1),rgba(129,140,248,.05))}
+.slide.section-slide h2{color:var(--accent)}
+
+/* ===== PRINT ===== */
+@media print{
+  .slide{position:relative!important;display:flex!important;opacity:1!important;
+    page-break-after:always;height:auto;min-height:90vh;padding:2cm}
+  .controls,.progress-bar,.notes{display:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="deck" id="deck">
+
+<!-- ========== SLIDE 1: TITLE ========== -->
+<div class="slide title-slide">
+  <p class="muted" style="margin-bottom:.5em">PSIR 172 · Applied Skills in Political Science &amp; International Relations</p>
+  <h1>The Power of the Frame</h1>
+  <p class="big" style="margin-top:.3em">Public Speaking &amp; Campaign Communication</p>
+  <div class="spacer"></div>
+  <p class="muted">Week 6 · Thursday, 3 April 2026 · Dr. Erol Kaymak</p>
+  <div data-notes>
+    <strong>BLOCK 1 BEGINS.</strong> Welcome students. Housekeeping: data vis due yesterday — check who submitted. Policy brief due Wed 9 April. "Today we learn the single most important skill in political communication."
+    Open the Week 6 app on your laptop for the QR code — project it briefly so latecomers can scan.
+  </div>
+</div>
+
+<!-- ========== SLIDE 2: TODAY'S PLAN ========== -->
+<div class="slide left">
+  <h2>Today's Plan</h2>
+  <div class="spacer"></div>
+  <div class="cols">
+    <div>
+      <span class="tag tag-blue">Block 1 · 50 min</span>
+      <h3>The Power of the Frame</h3>
+      <p>Audience analysis, emotional framing, positive vs. negative framing, interactive experiment</p>
+    </div>
+    <div>
+      <span class="tag tag-purple">Block 2 · 50 min</span>
+      <h3>Policy Brief Workshop</h3>
+      <p>Small-group pitches, peer feedback, structured drafting time</p>
+    </div>
+    <div>
+      <span class="tag tag-green">Block 3 · 50 min</span>
+      <h3>Campaign Communication</h3>
+      <p>Message box, 30-second pitches, group project kickoff, exit ticket</p>
+    </div>
+  </div>
+  <div data-notes>
+    Walk through the three blocks briefly. Mention that everything is in the Week 6 app — project the QR code from the Home tab if you haven't already.
+  </div>
+</div>
+
+<!-- ========== SLIDE 3: DEADLINES ========== -->
+<div class="slide left">
+  <h2>Your Deadlines</h2>
+  <div class="spacer"></div>
+  <table>
+    <tr><th>What</th><th>When</th><th>Where</th></tr>
+    <tr><td><strong>Data Visualisation Report</strong></td><td class="danger">1 April (yesterday!)</td><td>Moodle</td></tr>
+    <tr><td><strong>Policy Brief (~1,000 words)</strong></td><td class="warn">Wed 9 April, 23:59</td><td>Moodle</td></tr>
+    <tr><td><strong>Group Project Registration</strong></td><td class="warn">Wed 9 April</td><td>Google Form</td></tr>
+    <tr><td><strong>Policy Brief Topic Form</strong></td><td class="danger">Today if not done</td><td>Google Form</td></tr>
+  </table>
+  <div data-notes>
+    Pause here. Ask: "Who has NOT submitted the data visualisation?" Emphasise: do it today, no further extensions. Topic form: fill it before you leave.
+  </div>
+</div>
+
+<!-- ========== SLIDE 4: THE DAISY AD ========== -->
+<div class="slide">
+  <p class="muted" style="margin-bottom:.3em">Block 1</p>
+  <h2>Let's Watch Something</h2>
+  <div class="spacer"></div>
+  <p class="big">This is a real political ad from 1964.</p>
+  <p class="big">It aired <em>once</em>.</p>
+  <div class="spacer"></div>
+  <p>As you watch, ask yourself: <strong>what is this ad actually about?</strong></p>
+  <div data-notes>
+    <strong>PLAY THE DAISY AD.</strong> YouTube: https://www.youtube.com/watch?v=riDypP1KfOU (1 min).
+    Say nothing before playing it. Let it land. Then move to next slide for discussion.
+  </div>
+</div>
+
+<!-- ========== SLIDE 5: DAISY DISCUSSION ========== -->
+<div class="slide left">
+  <h3>Three Questions</h3>
+  <div class="spacer"></div>
+  <p class="big" style="margin-bottom:.8em">1. What is the ad <em>selling</em>?</p>
+  <p class="big" style="margin-bottom:.8em">2. Who is the <em>target audience</em>?</p>
+  <p class="big" style="margin-bottom:.8em">3. The ad never names the opponent. <br>Why does it <em>work anyway</em>?</p>
+  <div data-notes>
+    Cold-call if needed. Expected answers: (1) Not a policy — a feeling. Fear of nuclear war. (2) Undecided voters worried about Goldwater's hawkishness. (3) Implication is enough — the viewer fills in the blank.
+    LAND THE POINT: "Political communication is rarely about information. It's about framing — choosing what to show, what to hide, and what emotion to trigger."
+    Spend 3-4 minutes here.
+  </div>
+</div>
+
+<!-- ========== SLIDE 6: CONCEPT 1 — AUDIENCE ========== -->
+<div class="slide section-slide">
+  <p class="muted">Concept 1 of 3</p>
+  <h2>Target Audience Analysis</h2>
+  <div data-notes>
+    Transition slide. Move quickly to the next one.
+  </div>
+</div>
+
+<!-- ========== SLIDE 7: AUDIENCE DETAIL ========== -->
+<div class="slide left">
+  <h3>Know Your Audience</h3>
+  <div class="spacer"></div>
+  <p class="big">Every message is for <em>someone specific</em>.</p>
+  <div class="spacer"></div>
+  <div class="cols">
+    <div class="box">
+      <h3>1. What do they already believe?</h3>
+      <p>You're not starting from zero. Work with their existing views — or deliberately challenge them.</p>
+    </div>
+    <div class="box">
+      <h3>2. What do they care about?</h3>
+      <p>A finance minister cares about costs. An NGO director cares about rights. Frame around <em>their</em> priorities.</p>
+    </div>
+    <div class="box">
+      <h3>3. What would move them?</h3>
+      <p>Information alone rarely works. You need an emotional hook that connects evidence to action.</p>
+    </div>
+  </div>
+  <div data-notes>
+    Interactive moment: "Who is your policy brief addressed to? Give me an example." Take 2-3 answers. For each, ask: "What does that person care about most — money, votes, lives, reputation?"
+    5 minutes on this slide.
+  </div>
+</div>
+
+<!-- ========== SLIDE 8: CONCEPT 2 — EMOTION ========== -->
+<div class="slide section-slide">
+  <p class="muted">Concept 2 of 3</p>
+  <h2>Emotional Framing</h2>
+  <p class="big" style="margin-top:.3em">Ethos · Pathos · Logos</p>
+  <div data-notes>
+    Transition. Move to next slide.
+  </div>
+</div>
+
+<!-- ========== SLIDE 9: EPL DETAIL ========== -->
+<div class="slide left">
+  <h3>The Three Engines of Persuasion</h3>
+  <div class="spacer"></div>
+  <div class="cols">
+    <div class="box">
+      <h3><span class="accent">Ethos</span> — Credibility</h3>
+      <p>Why should I <em>listen</em> to you?</p>
+      <p>Credentials, authoritative sources, demonstrated expertise.</p>
+    </div>
+    <div class="box">
+      <h3><span class="accent2">Pathos</span> — Emotion</h3>
+      <p>Why should I <em>care</em>?</p>
+      <p>Vivid examples, human stories, striking data. The hook that gets people to read past the first paragraph.</p>
+    </div>
+    <div class="box">
+      <h3><span class="accent3">Logos</span> — Evidence</h3>
+      <p>Why should I <em>believe</em> you?</p>
+      <p>Data, research, cause-and-effect reasoning.</p>
+    </div>
+  </div>
+  <div data-notes>
+    5 minutes. Emphasise: a good policy brief uses all three, but pathos is the hook. Move to next slide for the killer example.
+  </div>
+</div>
+
+<!-- ========== SLIDE 10: PATHOS EXAMPLE ========== -->
+<div class="slide">
+  <h3>Same Crisis. Two Sentences.</h3>
+  <div class="spacer"></div>
+  <div class="quote">
+    "200,000 refugees crossed the Mediterranean last year."
+  </div>
+  <p><span class="tag tag-green">Logos</span></p>
+  <div class="spacer"></div>
+  <div class="quote" style="border-left-color:var(--danger)">
+    "A three-year-old boy washed up on a beach in Turkey."
+  </div>
+  <p><span class="tag tag-red">Pathos</span></p>
+  <div class="spacer"></div>
+  <p class="big">One of these changed European policy overnight.</p>
+  <p class="muted">That's framing.</p>
+  <div data-notes>
+    Let this sink in for a moment. The Alan Kurdi photo (2015) shifted European migration debate more than years of statistics. This is what framing does. Both are true. Neither is lying. But one moves people to act.
+  </div>
+</div>
+
+<!-- ========== SLIDE 11: CONCEPT 3 — POS/NEG ========== -->
+<div class="slide section-slide">
+  <p class="muted">Concept 3 of 3</p>
+  <h2>Positive vs. Negative Framing</h2>
+  <div data-notes>
+    Transition. This is the most directly useful concept for their briefs.
+  </div>
+</div>
+
+<!-- ========== SLIDE 12: POS/NEG DETAIL ========== -->
+<div class="slide left">
+  <h3>Same Policy, Two Angles</h3>
+  <div class="spacer"></div>
+  <div class="cols">
+    <div class="box" style="border:1px solid var(--accent3)">
+      <h3><span class="accent3">Positive Frame</span></h3>
+      <p><strong>Emotion:</strong> Hope, opportunity</p>
+      <p><strong>Logic:</strong> "If we do X, we gain Y"</p>
+      <p><strong>Best for:</strong> Inspiring action, building coalitions</p>
+      <div class="spacer"></div>
+      <p><em>"Investing in renewable energy will create 50,000 new jobs."</em></p>
+    </div>
+    <div class="box" style="border:1px solid var(--danger)">
+      <h3><span class="danger">Negative Frame</span></h3>
+      <p><strong>Emotion:</strong> Fear, urgency</p>
+      <p><strong>Logic:</strong> "If we don't do X, we lose Y"</p>
+      <p><strong>Best for:</strong> Mobilising against threats</p>
+      <div class="spacer"></div>
+      <p><em>"If we don't act on climate change, coastal cities will flood within 30 years."</em></p>
+    </div>
+  </div>
+  <div data-notes>
+    7 minutes on this slide. Key insight: negative frames grab attention faster, but positive frames sustain engagement. Good briefs use BOTH: negative for the problem, positive for the recommendation. Write the table on the board if needed.
+  </div>
+</div>
+
+<!-- ========== SLIDE 13: THE RULE ========== -->
+<div class="slide">
+  <h2>The Rule for Your Policy Brief</h2>
+  <div class="spacer"></div>
+  <p class="huge"><span class="danger">Problem</span> → negative frame</p>
+  <p class="huge"><span class="accent3">Recommendation</span> → positive frame</p>
+  <div class="spacer"></div>
+  <p class="muted">Scare them into reading. Inspire them into acting.</p>
+  <div data-notes>
+    Simple takeaway. This directly maps to their brief structure. Pause, let them absorb it, then move to the framing experiment.
+  </div>
+</div>
+
+<!-- ========== SLIDE 14: FRAMING EXPERIMENT ========== -->
+<div class="slide">
+  <p class="muted">Interactive Activity · 20 minutes</p>
+  <h2>🔬 The Framing Experiment</h2>
+  <div class="spacer"></div>
+  <p class="big">Open the <em>Week 6 app</em> on your phone.</p>
+  <p class="big">Go to the <em>Framing Lab</em> tab.</p>
+  <p class="big">Read the passage. Answer three questions. Lock in.</p>
+  <div class="spacer"></div>
+  <p class="muted"><strong>Do NOT scroll past your version yet.</strong></p>
+  <div data-notes>
+    <strong>THE EXPERIMENT.</strong> Students open the app → Framing Lab tab. Each phone randomly got Version A (economic burden) or Version B (humanitarian crisis). Give them 3 min to read, 2 min to answer, then lock in.
+    Let discussion develop for 5-8 minutes: "What should be done?" — you'll hear divergent answers. DON'T reveal the trick yet.
+    After discussion, tell them: "Scroll down and tap the Reveal button." Or force-reveal from the instructor panel.
+    Debrief (4 min): "You were reading about the exact same situation. The frame shaped what you noticed, felt, and recommended. Media does this. Governments do this. And you will do this in your policy briefs."
+    TOTAL: ~20 min.
+  </div>
+</div>
+
+<!-- ========== SLIDE 15: BRIDGE ========== -->
+<div class="slide">
+  <h2>Now <em>you</em> frame something.</h2>
+  <div class="spacer"></div>
+  <p class="big">In Block 2, you'll pitch your policy brief topic to a small group.</p>
+  <p class="big">Your job: make them <em>care</em> about the problem.</p>
+  <div class="spacer"></div>
+  <p>Think about: <em>audience</em> · <em>emotion</em> · <em>positive or negative frame?</em></p>
+  <div class="spacer"></div>
+  <p class="muted">5-minute break. ☕</p>
+  <div data-notes>
+    <strong>END OF BLOCK 1.</strong> 5-minute break. During break, mentally note which students looked engaged vs. lost — check in with the quiet ones during Block 2.
+  </div>
+</div>
+
+<!-- ========== SLIDE 16: BLOCK 2 TITLE ========== -->
+<div class="slide section-slide">
+  <p class="muted">Block 2 · 50 min</p>
+  <h2>Policy Brief Workshop</h2>
+  <p class="big">Pitches · Feedback · Drafting</p>
+  <div data-notes>
+    <strong>BLOCK 2 BEGINS.</strong> Distribute nothing — everything is in the app.
+  </div>
+</div>
+
+<!-- ========== SLIDE 17: PITCH FORMAT ========== -->
+<div class="slide left">
+  <h3>Your 2-Minute Pitch</h3>
+  <div class="spacer"></div>
+  <div class="box">
+    <table style="margin:0">
+      <tr><td style="width:3em"><strong>0:00</strong></td><td>What is the <em>problem</em>?</td><td class="muted">30 sec</td></tr>
+      <tr><td><strong>0:30</strong></td><td>Why should we <em>care</em>?</td><td class="muted">30 sec</td></tr>
+      <tr><td><strong>1:00</strong></td><td>What might be <em>done</em> about it?</td><td class="muted">30 sec</td></tr>
+      <tr><td><strong>1:30</strong></td><td>Who are you <em>writing this for</em>?</td><td class="muted">30 sec</td></tr>
+    </table>
+  </div>
+  <div class="spacer"></div>
+  <p><strong>Listeners:</strong> Open the <em>Pitch Feedback</em> tab in the app. Fill in one feedback card per speaker.</p>
+  <div data-notes>
+    Project this while explaining. Count off 1–7 around the room. All 1s together, all 2s, etc. = 7 groups of 5 (35 students). If absences, some groups of 4 — runs faster. Give groups 20 minutes. Circulate — listen to at least one pitch per group. Make notes on common issues.
+  </div>
+</div>
+
+<!-- ========== SLIDE 18: GO ========== -->
+<div class="slide">
+  <p class="huge accent">Go.</p>
+  <div class="spacer"></div>
+  <p class="big">Groups of 5 · 2 minutes each · Feedback in the app</p>
+  <p class="muted">I'm walking around. Start with whoever's name comes first alphabetically.</p>
+  <div data-notes>
+    <strong>LET THEM RUN.</strong> 20 minutes. Circulate. Don't intervene during pitches — save observations for the debrief. Common issues to watch for: vague topics ("I'm writing about climate change" — too broad), no clear audience, problem statement that's actually an opinion.
+  </div>
+</div>
+
+<!-- ========== SLIDE 19: DEBRIEF ========== -->
+<div class="slide left">
+  <h3>Debrief</h3>
+  <div class="spacer"></div>
+  <p class="big">What was the <em>best piece of feedback</em> you received?</p>
+  <div class="spacer"></div>
+  <p class="big">Did anyone notice their <em>framing</em> — positive or negative?</p>
+  <div class="spacer"></div>
+  <p class="big">The strongest pitches were the ones where I could answer <em>"so what?"</em> in one sentence.</p>
+  <div data-notes>
+    8 minutes. Ask 2-3 volunteers for best feedback received. Share your own observations from walking around. Normalise peer feedback — "This is exactly what happens in MUN negotiations. You present, people push back, you refine."
+  </div>
+</div>
+
+<!-- ========== SLIDE 20: DRAFTING TIME ========== -->
+<div class="slide">
+  <h2>Drafting Time</h2>
+  <div class="spacer"></div>
+  <p class="big">Open the <em>Policy Brief Writer</em>:</p>
+  <p class="big"><span class="accent">efkaymak-del.github.io/PSIR172/policybrief.html</span></p>
+  <div class="spacer"></div>
+  <p>Write your <strong>Executive Summary</strong> and <strong>Problem Statement</strong>.</p>
+  <p>Use the feedback you just received. 15 minutes. I'll come around.</p>
+  <div data-notes>
+    <strong>15 min structured writing.</strong> Project the URL. Walk around, do 1-on-1 check-ins. Focus on students who seemed lost during pitches. The app auto-saves. Even 15 minutes means they've started — that's the point.
+    After 15 min: "Whatever you wrote is saved. Keep going this weekend. Due Wednesday midnight."
+    <strong>END OF BLOCK 2.</strong> Break.
+  </div>
+</div>
+
+<!-- ========== SLIDE 21: BLOCK 3 TITLE ========== -->
+<div class="slide section-slide">
+  <p class="muted">Block 3 · 50 min</p>
+  <h2>Campaign Communication</h2>
+  <p class="big">From briefs to campaigns</p>
+  <div data-notes>
+    <strong>BLOCK 3 BEGINS.</strong> This bridges individual briefs to the group project. Open with Zelensky clip.
+  </div>
+</div>
+
+<!-- ========== SLIDE 22: ZELENSKY ========== -->
+<div class="slide">
+  <h2>Watch This.</h2>
+  <div class="spacer"></div>
+  <p class="big">March 2022. Zelensky addresses the European Parliament.</p>
+  <p class="big">Under bombardment. Via video link.</p>
+  <div class="spacer"></div>
+  <p>As you watch: <em>Who is his audience? What is his emotional strategy? What is he asking them to do?</em></p>
+  <div data-notes>
+    <strong>PLAY ZELENSKY CLIP.</strong> YouTube: https://www.youtube.com/watch?v=MApJr4qNBh8 — play first 3 minutes only.
+    After clip, quick 2-min debrief: Audience = MEPs who control EU membership + sanctions. Emotion = guilt + solidarity + urgency. Ask = EU membership, arms.
+    Key point: "This is pathos and ethos working together. He's credible BECAUSE he's speaking under bombardment. His situation IS his argument."
+  </div>
+</div>
+
+<!-- ========== SLIDE 23: CAMPAIGN TOOLKIT ========== -->
+<div class="slide left">
+  <h3>Your Campaign Toolkit</h3>
+  <div class="spacer"></div>
+  <p class="big">Four tools for your group project:</p>
+  <div class="spacer"></div>
+  <div class="cols">
+    <div>
+      <p><span class="tag tag-blue">1</span> <strong>The Message Box</strong></p>
+      <p class="muted">Map your messaging against the opposition</p>
+      <div class="spacer"></div>
+      <p><span class="tag tag-purple">2</span> <strong>The Elevator Pitch</strong></p>
+      <p class="muted">30 seconds: problem → why now → proposal → ask</p>
+    </div>
+    <div>
+      <p><span class="tag tag-green">3</span> <strong>Choose Your Medium</strong></p>
+      <p class="muted">Poster, social media, video, op-ed, petition — each reaches different audiences</p>
+      <div class="spacer"></div>
+      <p><span class="tag tag-yellow">4</span> <strong>Ethics of Persuasion</strong></p>
+      <p class="muted">Where's the line between framing and manipulation?</p>
+    </div>
+  </div>
+  <div data-notes>
+    15-minute mini-lecture covering all four. Spend most time on the message box (next slide). Elevator pitch — they just practised this in Block 2. Medium — quick overview. Ethics — three rules of thumb.
+  </div>
+</div>
+
+<!-- ========== SLIDE 24: MESSAGE BOX ========== -->
+<div class="slide left">
+  <h3>The Message Box</h3>
+  <p class="muted" style="margin-bottom:.5em">How campaigns think about messaging</p>
+  <div class="msgbox">
+    <div class="corner"></div>
+    <div class="ch">What WE say about US</div>
+    <div class="ch">What WE say about THEM</div>
+    <div class="rh">What THEY say about THEM</div>
+    <div class="cell">"We promote clean energy and jobs"</div>
+    <div class="cell">"They ignore environmental costs"</div>
+    <div class="rh">What THEY say about US</div>
+    <div class="cell">"They call us idealistic — but the evidence supports us"</div>
+    <div class="cell">"They claim to support workers but oppose renewable investment"</div>
+  </div>
+  <p>Your group project has an opponent — not a person, but a <em>position</em> or <em>status quo</em>. Fill this in and you'll know your messaging strategy.</p>
+  <div data-notes>
+    Walk through the example. Emphasise: "opponent" doesn't have to be a person — it can be the status quo, a competing policy, public apathy. The box forces you to anticipate the counter-argument, which makes your campaign stronger.
+  </div>
+</div>
+
+<!-- ========== SLIDE 25: ETHICS ========== -->
+<div class="slide">
+  <h3>Three Rules of Ethical Persuasion</h3>
+  <div class="spacer"></div>
+  <p class="big"><span class="tag tag-red">1</span> Don't fabricate evidence.</p>
+  <div class="spacer"></div>
+  <p class="big"><span class="tag tag-red">2</span> Don't impersonate or misrepresent.</p>
+  <div class="spacer"></div>
+  <p class="big"><span class="tag tag-red">3</span> If you'd be embarrassed to explain your method publicly, don't use it.</p>
+  <div data-notes>
+    Quick — 2 minutes. The group project includes an ethics self-assessment in the app. Take it seriously. These rules apply to their briefs too.
+  </div>
+</div>
+
+<!-- ========== SLIDE 26: GROUP ACTIVITY ========== -->
+<div class="slide">
+  <p class="muted">Group Activity · 18 minutes</p>
+  <h2>📣 Build a 30-Second Campaign</h2>
+  <div class="spacer"></div>
+  <p class="big">Get into your project groups.</p>
+  <p class="big">Open the <em>Campaign Lab</em> tab in the app.</p>
+  <div class="spacer"></div>
+  <p>Fill in the <strong>Message Box</strong> and <strong>30-Second Pitch Builder</strong>.</p>
+  <p>One person fills it in. The whole group contributes.</p>
+  <div class="spacer"></div>
+  <p class="muted">No group yet? Join any table with space.</p>
+  <div data-notes>
+    18 minutes total. 3 min setup, 10 min working, 5 min sharing. Let students sit with their actual groups if formed. Ungrouped students join any table.
+    After 10 min, ask 2-3 groups to read their 30-second pitch. After each: "What was the emotion? What was the frame? Would it work on the target audience?"
+  </div>
+</div>
+
+<!-- ========== SLIDE 27: HOUSEKEEPING ========== -->
+<div class="slide left">
+  <h2>Before You Leave</h2>
+  <div class="spacer"></div>
+  <div class="box">
+    <h3 class="danger">Due Now</h3>
+    <p>Data visualisation — if not submitted, do it today.</p>
+    <p>Topic registration form — fill it before you leave.</p>
+  </div>
+  <div class="box">
+    <h3 class="warn">Due Wednesday 9 April</h3>
+    <p><strong>Policy Brief</strong> — ~1,000 words, Moodle, 23:59.</p>
+    <p><strong>Group Registration Form</strong> — one per group.</p>
+  </div>
+  <div class="box">
+    <h3 class="accent">Tools</h3>
+    <p>Policy Brief Writer: <em>efkaymak-del.github.io/PSIR172/policybrief.html</em></p>
+    <p>Full Toolkit: <em>efkaymak-del.github.io/PSIR172/</em></p>
+    <p>McNair reading: Teams files.</p>
+  </div>
+  <div data-notes>
+    10 minutes for housekeeping. Go through each item. Emphasise the policy brief deadline. Remind: group form — if you don't register, I assign you.
+  </div>
+</div>
+
+<!-- ========== SLIDE 28: EXIT TICKET ========== -->
+<div class="slide">
+  <h2>🎫 Exit Ticket</h2>
+  <div class="spacer"></div>
+  <p class="big">Open the <em>Exit Ticket</em> tab in the app.</p>
+  <p class="big">Two quick questions. Not graded.</p>
+  <div class="spacer"></div>
+  <p>Submit it, then you're free to go.</p>
+  <p class="muted">See you next Thursday.</p>
+  <div data-notes>
+    2 minutes. Students open Exit Ticket tab, answer, submit. They can show you the confirmation on the way out. Glance at answers during the week to gauge comprehension — the "anything confusing?" field is gold for planning Week 7.
+    <strong>END OF SESSION.</strong>
+  </div>
+</div>
+
+<!-- ========== SLIDE 29: THANK YOU ========== -->
+<div class="slide title-slide">
+  <h1>See you Week 7.</h1>
+  <div class="spacer"></div>
+  <p class="big">Policy brief due <em>Wednesday 9 April</em>.</p>
+  <p class="big">Start writing tonight.</p>
+  <div class="spacer"></div>
+  <p class="muted">Dr. Erol Kaymak · BE 154 · erol.kaymak@emu.edu.tr</p>
+  <div data-notes>
+    Leave this up as students file out. Answer any last questions.
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<!-- ===== SPEAKER NOTES ===== -->
+<div class="notes" id="notes">
+  <span class="notes-label">Speaker Notes (press N to toggle)</span>
+  <div id="notesContent"></div>
+</div>
+
+<!-- ===== CONTROLS ===== -->
+<div class="controls">
+  <button onclick="prevSlide()" title="Previous (← or ↑)">◀</button>
+  <span>
+    <span class="slide-num" id="slideNum">1</span> / <span id="slideTotal"></span>
+    &nbsp;·&nbsp;
+    <button onclick="toggleNotes()" style="font-size:.8rem;padding:.2em .5em" title="Speaker notes (N)">Notes</button>
+    <button onclick="goFullscreen()" style="font-size:.8rem;padding:.2em .5em" title="Fullscreen (F)">⛶</button>
+  </span>
+  <button onclick="nextSlide()" title="Next (→ or ↓ or Space)">▶</button>
+</div>
+
+<script>
+/* ===== SLIDE ENGINE ===== */
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let current = 0;
+let notesVisible = false;
+
+document.getElementById('slideTotal').textContent = total;
+
+function showSlide(n) {
+  if (n < 0 || n >= total) return;
+  slides[current].classList.remove('active');
+  current = n;
+  slides[current].classList.add('active');
+  document.getElementById('slideNum').textContent = current + 1;
+  document.getElementById('progressBar').style.width = ((current + 1) / total * 100) + '%';
+  updateNotes();
+  // Save position
+  try { sessionStorage.setItem('psir172_slide', current); } catch(e) {}
+}
+
+function nextSlide() { showSlide(current + 1); }
+function prevSlide() { showSlide(current - 1); }
+
+function updateNotes() {
+  const noteEl = slides[current].querySelector('[data-notes]');
+  const content = document.getElementById('notesContent');
+  if (noteEl) {
+    content.innerHTML = noteEl.innerHTML;
+  } else {
+    content.innerHTML = '<em style="color:var(--muted)">No notes for this slide.</em>';
+  }
+}
+
+function toggleNotes() {
+  notesVisible = !notesVisible;
+  document.getElementById('notes').classList.toggle('show', notesVisible);
+}
+
+function goFullscreen() {
+  if (document.fullscreenElement) {
+    document.exitFullscreen();
+  } else {
+    document.documentElement.requestFullscreen().catch(() => {});
+  }
+}
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') {
+    e.preventDefault(); nextSlide();
+  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') {
+    e.preventDefault(); prevSlide();
+  } else if (e.key === 'n' || e.key === 'N') {
+    toggleNotes();
+  } else if (e.key === 'f' || e.key === 'F') {
+    goFullscreen();
+  } else if (e.key === 'Home') {
+    showSlide(0);
+  } else if (e.key === 'End') {
+    showSlide(total - 1);
+  }
+});
+
+// Touch swipe
+let touchStartX = 0;
+let touchStartY = 0;
+document.addEventListener('touchstart', e => {
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+    if (dx < 0) nextSlide(); else prevSlide();
+  }
+}, { passive: true });
+
+// Click sides (left 30% = prev, right 70% = next, but not on buttons/links)
+document.querySelector('.deck').addEventListener('click', e => {
+  if (e.target.closest('button, a, input, .controls')) return;
+  const x = e.clientX / window.innerWidth;
+  if (x < 0.3) prevSlide(); else nextSlide();
+});
+
+// Restore position
+try {
+  const saved = parseInt(sessionStorage.getItem('psir172_slide'));
+  if (!isNaN(saved) && saved >= 0 && saved < total) current = saved;
+} catch(e) {}
+showSlide(current);
+</script>
+
+</body>
+</html>
