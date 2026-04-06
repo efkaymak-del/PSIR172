@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Week 7 — Campaign Strategy &amp; Persuasion | PSIR 172</title>
+<meta name="description" content="PSIR 172 Week 7 interactive session app: Ad Autopsy, group pitches, campaign workshop, midterm review.">
+<meta name="theme-color" content="#4361ee">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f8f9fa;--surface:#fff;--text:#1a1a2e;--muted:#6c757d;
+  --accent:#4361ee;--accent2:#3a0ca3;--accent-light:#e8ebff;
+  --success:#2d6a4f;--warn:#e9c46a;--danger:#e63946;
+  --radius:12px;--shadow:0 2px 12px rgba(0,0,0,.08);
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;padding-bottom:80px}
+
+/* HEADER */
+.header{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff;padding:1.25rem 1rem;text-align:center;
+  position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 20px rgba(67,97,238,.3);
+}
+.header h1{font-size:1.15rem;font-weight:700}
+.header p{font-size:.8rem;opacity:.85;margin-top:.2rem}
+
+/* NAV */
+.nav{
+  display:flex;overflow-x:auto;gap:.35rem;padding:.6rem .75rem;
+  background:var(--surface);border-bottom:1px solid #e9ecef;
+  position:sticky;top:62px;z-index:99;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;
+}
+.nav::-webkit-scrollbar{display:none}
+.nav button{
+  flex-shrink:0;padding:.45rem .85rem;border:none;border-radius:20px;
+  font-size:.78rem;font-weight:600;cursor:pointer;
+  background:var(--accent-light);color:var(--accent);
+  transition:all .2s;white-space:nowrap;
+}
+.nav button.active{background:var(--accent);color:#fff}
+
+/* PANELS */
+.panel{display:none;padding:1rem;max-width:720px;margin:0 auto}
+.panel.active{display:block;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* CARDS */
+.card{
+  background:var(--surface);border-radius:var(--radius);
+  padding:1.25rem;margin-bottom:1rem;
+  box-shadow:var(--shadow);border:1px solid #e9ecef;
+}
+.card h2{font-size:1.05rem;color:var(--accent2);margin-bottom:.6rem}
+.card h3{font-size:.92rem;color:var(--accent);margin:.8rem 0 .4rem}
+.card p,.card li{font-size:.88rem;line-height:1.65;color:#333}
+.card ul{padding-left:1.2rem;margin:.4rem 0}
+.card li{margin-bottom:.3rem}
+
+/* BLOCKS */
+.info-block{
+  background:#f0f3ff;border-left:3px solid var(--accent);
+  padding:.75rem 1rem;border-radius:0 8px 8px 0;
+  margin:.6rem 0;font-size:.85rem;
+}
+.warn-block{
+  background:#fff8e1;border-left:3px solid var(--warn);
+  padding:.75rem 1rem;border-radius:0 8px 8px 0;
+  margin:.6rem 0;font-size:.85rem;
+}
+.success-block{
+  background:#f0fff4;border-left:3px solid var(--success);
+  padding:.75rem 1rem;border-radius:0 8px 8px 0;
+  margin:.6rem 0;font-size:.85rem;
+}
+.danger-block{
+  background:#fff0f0;border-left:3px solid var(--danger);
+  padding:.75rem 1rem;border-radius:0 8px 8px 0;
+  margin:.6rem 0;font-size:.85rem;
+}
+
+/* BUTTONS */
+.btn{
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.55rem 1.1rem;border:none;border-radius:8px;
+  font-size:.85rem;font-weight:600;cursor:pointer;
+  transition:all .2s;font-family:var(--font);
+}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent2)}
+.btn-secondary{background:#e9ecef;color:var(--text)}
+.btn-success{background:var(--success);color:#fff}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-sm{padding:.4rem .75rem;font-size:.78rem}
+.btn-block{width:100%;justify-content:center;margin-top:.5rem}
+
+/* FORMS */
+textarea,input[type=text],select{
+  width:100%;padding:.6rem .75rem;border:1.5px solid #d0d5dd;
+  border-radius:8px;font-size:.88rem;font-family:var(--font);
+  transition:border-color .2s;background:#fff;resize:vertical;
+}
+textarea:focus,input[type=text]:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(67,97,238,.12)}
+textarea{min-height:90px}
+label{display:block;font-size:.82rem;font-weight:600;margin-bottom:.3rem;color:var(--text)}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:.85rem;margin:.6rem 0}
+.tbl th,.tbl td{padding:.55rem .65rem;text-align:left;border-bottom:1px solid #e9ecef}
+.tbl th{color:var(--accent);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px}
+
+/* VIDEO CARD */
+.video-card{
+  background:#f8f9ff;border:1px solid #e0e5ff;border-radius:var(--radius);
+  padding:1rem;margin:.6rem 0;
+}
+.video-card h3{margin-top:0}
+.video-card iframe{width:100%;aspect-ratio:16/9;border:none;border-radius:8px;margin-top:.5rem}
+
+/* AUTOPSY FORM */
+.autopsy-row{display:flex;gap:.5rem;flex-wrap:wrap;margin:.3rem 0}
+.autopsy-chip{
+  padding:.35rem .7rem;border-radius:20px;font-size:.78rem;font-weight:600;
+  cursor:pointer;border:1.5px solid #d0d5dd;background:#fff;transition:all .2s;
+}
+.autopsy-chip.selected{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* MODEL ANSWER */
+.model-answer{
+  display:none;background:#f8f9ff;border:1px solid var(--accent);
+  border-radius:8px;padding:1rem;margin-top:.75rem;font-size:.85rem;line-height:1.7;
+}
+.model-answer.show{display:block}
+.model-answer h4{color:var(--accent);margin-bottom:.5rem;font-size:.9rem}
+
+/* TAGS */
+.tag{display:inline-block;padding:.15rem .5rem;border-radius:10px;font-size:.7rem;font-weight:600;margin-right:.3rem}
+.tag-blue{background:#e3f2fd;color:#1565c0}
+.tag-pink{background:#fce4ec;color:#c62828}
+.tag-green{background:#e8f5e9;color:#2e7d32}
+.tag-orange{background:#fff3e0;color:#e65100}
+
+/* SHARE BOX */
+.share-box{
+  background:var(--accent-light);border-radius:8px;padding:.75rem;
+  display:flex;gap:.5rem;align-items:center;margin:.6rem 0;
+}
+.share-box input{flex:1;font-size:.82rem;border:1px solid var(--accent);background:#fff}
+.share-box button{flex-shrink:0}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:#333;color:#fff;padding:.6rem 1.2rem;border-radius:8px;
+  font-size:.85rem;z-index:1000;opacity:0;transition:all .3s;pointer-events:none;
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* QR */
+#qr-container{text-align:center;margin:.6rem 0}
+#qr-container canvas{border-radius:8px}
+
+/* RESPONSIVE */
+@media(max-width:400px){
+  .header h1{font-size:1rem}
+  .card{padding:1rem}
+}
+@media print{
+  .header,.nav,.toast{display:none!important}
+  .panel{display:block!important}
+  .card{break-inside:avoid;box-shadow:none;border:1px solid #ccc}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Week 7 — Campaign Strategy &amp; Persuasion</h1>
+  <p>PSIR 172 · Thursday 9 April 2026 · Dr. Erol Kaymak</p>
+</div>
+<div class="nav" id="nav"></div>
+
+<!-- ===== TAB: HOME ===== -->
+<div class="panel" id="tab-home">
+  <div class="card">
+    <h2>Welcome</h2>
+    <p>This is your interactive session app for Week 7. All activities, notes, feedback forms, and the midterm practice exercise are here. Everything auto-saves to your phone.</p>
+    <div class="danger-block"><strong>Policy Brief due tonight at 23:59.</strong> Submit via email as PDF.</div>
+  </div>
+  <div class="card">
+    <h2>Today's Schedule</h2>
+    <table class="tbl">
+      <tr><th>Block</th><th>Topic</th><th>Time</th></tr>
+      <tr><td>1</td><td>Ad Autopsy + Mini-Lecture</td><td>50 min</td></tr>
+      <tr><td>2</td><td>Group Campaign Pitches + Workshop</td><td>40 min</td></tr>
+      <tr><td>3</td><td>Midterm Review + Practice</td><td>60 min</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Share This Page</h2>
+    <div class="share-box">
+      <input type="text" value="https://efkaymak-del.github.io/PSIR172/week7.html" readonly id="share-url">
+      <button class="btn btn-sm btn-primary" onclick="navigator.clipboard.writeText(document.getElementById('share-url').value);toast('Link copied!')">Copy</button>
+    </div>
+    <div id="qr-container"></div>
+  </div>
+</div>
+
+<!-- ===== TAB: AD AUTOPSY ===== -->
+<div class="panel" id="tab-autopsy">
+  <div class="card">
+    <h2>Ad Autopsy</h2>
+    <p>For each campaign clip, identify the <strong>target audience</strong>, <strong>framing type</strong>, <strong>persuasion modes</strong>, and <strong>medium strategy</strong>. Tap your answers, then compare with the class discussion.</p>
+  </div>
+
+  <!-- CLIP 1 -->
+  <div class="card" id="clip1">
+    <h3><span class="tag tag-blue">Clip 1</span> "Hello Türkiye" — Nation Rebranding (2022)</h3>
+    <div class="video-card">
+      <iframe src="https://www.youtube.com/embed/Skq62zB750Y" allowfullscreen loading="lazy"></iframe>
+    </div>
+    <p><strong>Context:</strong> Turkey's Communications Directorate launched this campaign to get the world to use "Türkiye" instead of "Turkey." The UN accepted the change in June 2022.</p>
+
+    <label>Target Audience:</label>
+    <div class="autopsy-row" data-group="c1aud">
+      <span class="autopsy-chip" onclick="chipSelect(this)">Turkish citizens</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">International media</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Tourists</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Diplomats / UN</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">All of the above</span>
+    </div>
+
+    <label>Framing:</label>
+    <div class="autopsy-row" data-group="c1frame">
+      <span class="autopsy-chip" onclick="chipSelect(this)">Positive</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Negative</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Both</span>
+    </div>
+
+    <label>Persuasion Modes (select all that apply):</label>
+    <div class="autopsy-row" data-group="c1pers" data-multi="true">
+      <span class="autopsy-chip" onclick="chipToggle(this)">Ethos</span>
+      <span class="autopsy-chip" onclick="chipToggle(this)">Pathos</span>
+      <span class="autopsy-chip" onclick="chipToggle(this)">Logos</span>
+    </div>
+
+    <label>Medium Strategy:</label>
+    <div class="autopsy-row" data-group="c1med">
+      <span class="autopsy-chip" onclick="chipSelect(this)">Paid</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Earned</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Owned</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Owned → Earned</span>
+    </div>
+
+    <label>Your notes on this clip:</label>
+    <textarea id="clip1-notes" placeholder="What stood out to you?" oninput="autoSave()"></textarea>
+
+    <button class="btn btn-sm btn-secondary" style="margin-top:.5rem" onclick="document.getElementById('model-c1').classList.toggle('show')">Show / Hide Analysis</button>
+    <div class="model-answer" id="model-c1">
+      <h4>Analysis: "Hello Türkiye"</h4>
+      <p><strong>Target Audience:</strong> International media, diplomats, and the global public — NOT Turkish citizens. The campaign was in English and aimed outward.</p>
+      <p><strong>Framing:</strong> Positive — national pride, modernity, identity. No attack on anyone; purely aspirational.</p>
+      <p><strong>Persuasion:</strong> Ethos (government authority, official UN process) + Pathos (national pride, emotional music, diverse voices saying "Hello Türkiye").</p>
+      <p><strong>Medium:</strong> Owned (official government video) → Generated massive earned media because the name change itself was newsworthy. Global news covered it for free.</p>
+      <p><strong>Key lesson:</strong> If you make the message itself the story, earned media follows without a big advertising budget.</p>
+    </div>
+  </div>
+
+  <!-- CLIP 2 -->
+  <div class="card" id="clip2">
+    <h3><span class="tag tag-pink">Clip 2</span> Yeşilay "Their Gain, Our Loss" — Anti-Tobacco (2019)</h3>
+    <div class="video-card">
+      <iframe src="https://www.youtube.com/embed/erPKsNgVfrI" allowfullscreen loading="lazy"></iframe>
+    </div>
+    <p><strong>Context:</strong> Produced by the Turkish Green Crescent (Yeşilay) with Vital Strategies. Turkey has one of Europe's highest smoking rates. Tobacco kills ~300 people per day in Turkey.</p>
+
+    <label>Target Audience:</label>
+    <div class="autopsy-row" data-group="c2aud">
+      <span class="autopsy-chip" onclick="chipSelect(this)">Turkish smokers</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Young people</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Policymakers</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">General public</span>
+    </div>
+
+    <label>Framing:</label>
+    <div class="autopsy-row" data-group="c2frame">
+      <span class="autopsy-chip" onclick="chipSelect(this)">Positive</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Negative</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Both</span>
+    </div>
+
+    <label>Persuasion Modes:</label>
+    <div class="autopsy-row" data-group="c2pers" data-multi="true">
+      <span class="autopsy-chip" onclick="chipToggle(this)">Ethos</span>
+      <span class="autopsy-chip" onclick="chipToggle(this)">Pathos</span>
+      <span class="autopsy-chip" onclick="chipToggle(this)">Logos</span>
+    </div>
+
+    <label>Who is the "villain" in this campaign?</label>
+    <div class="autopsy-row" data-group="c2villain">
+      <span class="autopsy-chip" onclick="chipSelect(this)">Smokers</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">The tobacco industry</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">The government</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">No clear villain</span>
+    </div>
+
+    <label>Your notes:</label>
+    <textarea id="clip2-notes" placeholder="What emotion did this create?" oninput="autoSave()"></textarea>
+
+    <button class="btn btn-sm btn-secondary" style="margin-top:.5rem" onclick="document.getElementById('model-c2').classList.toggle('show')">Show / Hide Analysis</button>
+    <div class="model-answer" id="model-c2">
+      <h4>Analysis: Yeşilay Anti-Tobacco</h4>
+      <p><strong>Target Audience:</strong> Turkish smokers and the general public, but also policymakers (supporting continued regulation).</p>
+      <p><strong>Framing:</strong> Strongly negative — loss, death, exploitation. "Their gain" = industry profits; "our loss" = Turkish lives.</p>
+      <p><strong>Persuasion:</strong> Pathos (suffering, death imagery) + Logos (300 deaths/day, industry profit data) + Ethos (Yeşilay is a century-old institution).</p>
+      <p><strong>Villain:</strong> The tobacco industry — framed as profiting from Turkish deaths. This "villain framing" is a classic negative-campaign technique: give the audience someone to blame.</p>
+      <p><strong>Ethics question:</strong> Is fear-based health messaging manipulation or justified public health communication? The line is debatable. Yeşilay stays on the right side because they use real data, not fabricated emotion.</p>
+    </div>
+  </div>
+
+  <!-- CLIP 3 -->
+  <div class="card" id="clip3">
+    <h3><span class="tag tag-green">Clip 3</span> North Cyprus Tourism Ad — UK Controversy (2022)</h3>
+    <div class="video-card">
+      <iframe src="https://www.youtube.com/embed/pJPUl2Wg46E" allowfullscreen loading="lazy"></iframe>
+    </div>
+    <p><strong>Context:</strong> The North Cyprus Tourist Board placed this ad on ITV in the UK. It became the 3rd most complained-about ad in Britain in 2022 — 394 complaints to the Advertising Standards Authority. Greek Cypriot diaspora organisations argued it promoted tourism to occupied territory. The ASA investigated and ruled the ad did <em>not</em> break any advertising rules.</p>
+
+    <label>Intended audience:</label>
+    <div class="autopsy-row" data-group="c3aud">
+      <span class="autopsy-chip" onclick="chipSelect(this)">British holidaymakers</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Turkish Cypriots</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Greek Cypriots</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">International diplomats</span>
+    </div>
+
+    <label>Who actually responded?</label>
+    <div class="autopsy-row" data-group="c3resp">
+      <span class="autopsy-chip" onclick="chipSelect(this)">British holidaymakers</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Greek Cypriot diaspora</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Turkish media</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">No one</span>
+    </div>
+
+    <label>What happened to the ad's reach?</label>
+    <div class="autopsy-row" data-group="c3reach">
+      <span class="autopsy-chip" onclick="chipSelect(this)">It was banned</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">It was ignored</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Complaints amplified it</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">It went viral for the wrong reasons</span>
+    </div>
+
+    <label>Your notes:</label>
+    <textarea id="clip3-notes" placeholder="What does this case teach about audience analysis?" oninput="autoSave()"></textarea>
+
+    <button class="btn btn-sm btn-secondary" style="margin-top:.5rem" onclick="document.getElementById('model-c3').classList.toggle('show')">Show / Hide Analysis</button>
+    <div class="model-answer" id="model-c3">
+      <h4>Analysis: TRNC Tourism Ad</h4>
+      <p><strong>Intended Audience:</strong> British holidaymakers looking for a Mediterranean destination. The ad was a straightforward tourism promotion — sun, sea, culture.</p>
+      <p><strong>Actual Respondents:</strong> Greek Cypriot diaspora organisations in the UK, who viewed it as promoting tourism to occupied territory. 394 formal complaints.</p>
+      <p><strong>Framing:</strong> Positive — relaxation, natural beauty, cultural heritage. There was nothing aggressive or political in the ad itself.</p>
+      <p><strong>Outcome:</strong> The ASA ruled no rules were broken. But the complaints generated significant news coverage — articles in national UK media, social media debate, even parliamentary discussion. The ad arguably reached MORE people because of the controversy than it would have through its paid TV slot alone.</p>
+      <p><strong>Key lesson:</strong> Your target audience is not the only audience. Campaign strategy must account for hostile audiences who may respond to your message in ways you didn't intend. The complaints created a "Streisand effect" — trying to suppress the ad made it more visible.</p>
+    </div>
+  </div>
+
+  <!-- CLIP 4 -->
+  <div class="card" id="clip4">
+    <h3><span class="tag tag-orange">Clip 4</span> Nike "Dream Crazy" / Kaepernick (2018)</h3>
+    <div class="video-card">
+      <iframe src="https://www.youtube.com/embed/ekZRoSCINLA" allowfullscreen loading="lazy"></iframe>
+    </div>
+    <p><strong>Context:</strong> Nike featured Colin Kaepernick — an American football player who knelt during the national anthem to protest police brutality — as the face of their "Just Do It" anniversary campaign. Some consumers burned their Nikes in protest. Nike's stock rose.</p>
+
+    <label>Target Audience:</label>
+    <div class="autopsy-row" data-group="c4aud">
+      <span class="autopsy-chip" onclick="chipSelect(this)">All Americans</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Young, diverse, progressive consumers</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Conservative sports fans</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Athletes only</span>
+    </div>
+
+    <label>Framing:</label>
+    <div class="autopsy-row" data-group="c4frame">
+      <span class="autopsy-chip" onclick="chipSelect(this)">Positive</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Negative</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Both</span>
+    </div>
+
+    <label>Persuasion Modes:</label>
+    <div class="autopsy-row" data-group="c4pers" data-multi="true">
+      <span class="autopsy-chip" onclick="chipToggle(this)">Ethos</span>
+      <span class="autopsy-chip" onclick="chipToggle(this)">Pathos</span>
+      <span class="autopsy-chip" onclick="chipToggle(this)">Logos</span>
+    </div>
+
+    <label>Your notes:</label>
+    <textarea id="clip4-notes" placeholder="Why would a shoe company take a political position?" oninput="autoSave()"></textarea>
+
+    <button class="btn btn-sm btn-secondary" style="margin-top:.5rem" onclick="document.getElementById('model-c4').classList.toggle('show')">Show / Hide Analysis</button>
+    <div class="model-answer" id="model-c4">
+      <h4>Analysis: Nike "Dream Crazy"</h4>
+      <p><strong>Target Audience:</strong> Young, diverse, progressive consumers — specifically NOT conservative older sports fans. Nike deliberately chose their future customer base over their current one.</p>
+      <p><strong>Framing:</strong> Positive — aspiration, courage, sacrifice, defiance. "Believe in something, even if it means sacrificing everything."</p>
+      <p><strong>Persuasion:</strong> Pathos (emotional storytelling, inspiring music, underdog narratives) + Ethos (Kaepernick's personal sacrifice gives him credibility on the topic of standing up for beliefs).</p>
+      <p><strong>Medium:</strong> Paid (TV/digital ad) → generated enormous earned media. The controversy — people burning Nikes, politicians condemning it — became the story. Nike got billions in free media coverage.</p>
+      <p><strong>Key lesson:</strong> If you try to speak to everyone, you speak to no one. Nike knew exactly who their audience was AND who it wasn't. The backlash was part of the strategy.</p>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="card">
+    <h2>Four Campaigns, Four Lessons</h2>
+    <table class="tbl">
+      <tr><th>Campaign</th><th>Core Lesson</th></tr>
+      <tr><td>Hello Türkiye</td><td>Make the message the story → earned media follows</td></tr>
+      <tr><td>Yeşilay Anti-Tobacco</td><td>Negative framing creates urgency — but watch the ethics line</td></tr>
+      <tr><td>TRNC Tourism Ad</td><td>Hostile audiences exist — plan for backlash</td></tr>
+      <tr><td>Nike "Dream Crazy"</td><td>Know who you're NOT talking to</td></tr>
+    </table>
+    <div class="info-block"><strong>Common thread:</strong> In every case, the earned media response was bigger than the paid ad. Strategy matters more than budget.</div>
+  </div>
+</div>
+
+<!-- ===== TAB: KEY CONCEPTS ===== -->
+<div class="panel" id="tab-concepts">
+  <div class="card">
+    <h2>Key Concepts: Campaign Strategy</h2>
+    <p>Reference notes from today's mini-lecture. Use these for your group project and midterm revision.</p>
+  </div>
+  <div class="card">
+    <h3>Professionalisation of Campaigns</h3>
+    <p>McNair's key argument (Ch 6–7): political communication has become a professional industry. Modern campaigns use pollsters, media consultants, data analysts, and PR strategists. Communication is planned, tested, and disciplined — not improvised. Even "spontaneous" moments are often scripted.</p>
+    <div class="info-block"><strong>For your group project:</strong> You don't need a big budget. But you DO need a clear strategy before you choose a medium. Message → Audience → Goal → Medium → Tool.</div>
+  </div>
+  <div class="card">
+    <h3>Paid vs. Earned vs. Owned Media</h3>
+    <table class="tbl">
+      <tr><th>Type</th><th>Definition</th><th>Example</th></tr>
+      <tr><td><strong>Paid</strong></td><td>You buy placement. Full message control, but audience knows it's an ad.</td><td>TV ads, sponsored social posts, billboards</td></tr>
+      <tr><td><strong>Earned</strong></td><td>Others tell your story. Most credible, but you can't control it.</td><td>News coverage, social media shares, word of mouth</td></tr>
+      <tr><td><strong>Owned</strong></td><td>Your platforms. You control message + timing, but limited reach.</td><td>Website, social accounts, newsletter, app</td></tr>
+    </table>
+    <div class="info-block"><strong>The sweet spot:</strong> Use owned media to create something newsworthy → earn media coverage → amplify with paid if needed.</div>
+  </div>
+  <div class="card">
+    <h3>Negative Campaigning</h3>
+    <table class="tbl">
+      <tr><th>Type</th><th>Method</th><th>Risk</th></tr>
+      <tr><td><strong>Direct Attack</strong></td><td>Target the opponent's record with facts</td><td>Can seem aggressive</td></tr>
+      <tr><td><strong>Contrast</strong></td><td>Compare your position vs. theirs</td><td>Safest form</td></tr>
+      <tr><td><strong>Fear Appeal</strong></td><td>Emotional threat, often without specific evidence</td><td>Highest boomerang risk</td></tr>
+    </table>
+    <div class="warn-block"><strong>Boomerang effect:</strong> If the attack seems unfair, people sympathise with the target and turn against the attacker.</div>
+  </div>
+  <div class="card">
+    <h3>Message Discipline</h3>
+    <p>Everyone on the campaign team says the same thing, the same way, every time. If a journalist asks five people the same question, they give the same answer. Inconsistency confuses audiences and undermines trust.</p>
+  </div>
+  <div class="card">
+    <h3>Ethics of Persuasion — Three Rules</h3>
+    <p><strong>1.</strong> Don't fabricate evidence.<br><strong>2.</strong> Don't impersonate or misrepresent.<br><strong>3.</strong> If you'd be embarrassed to explain your method publicly, don't use it.</p>
+  </div>
+</div>
+
+<!-- ===== TAB: PITCH FEEDBACK ===== -->
+<div class="panel" id="tab-feedback">
+  <div class="card">
+    <h2>Group Pitch Feedback</h2>
+    <p>Use this form to take notes on each group's pitch. You can submit multiple feedbacks — one per group.</p>
+  </div>
+  <div class="card">
+    <label>Group name or number:</label>
+    <input type="text" id="fb-group" placeholder="e.g. Group 3 — Water Scarcity" oninput="autoSave()">
+
+    <label style="margin-top:.6rem">Their issue (one sentence):</label>
+    <input type="text" id="fb-issue" placeholder="What problem are they addressing?" oninput="autoSave()">
+
+    <label style="margin-top:.6rem">Was the audience clear?</label>
+    <div class="autopsy-row" data-group="fb-aud">
+      <span class="autopsy-chip" onclick="chipSelect(this)">Yes, specific</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Somewhat</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Too vague</span>
+    </div>
+
+    <label>Was the message clear?</label>
+    <div class="autopsy-row" data-group="fb-msg">
+      <span class="autopsy-chip" onclick="chipSelect(this)">Yes, memorable</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Decent</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Unclear</span>
+    </div>
+
+    <label>The strongest part was:</label>
+    <textarea id="fb-strength" rows="2" placeholder="What worked well?" oninput="autoSave()"></textarea>
+
+    <label>One suggestion:</label>
+    <textarea id="fb-suggest" rows="2" placeholder="How could they improve?" oninput="autoSave()"></textarea>
+
+    <button class="btn btn-primary btn-block" onclick="saveFeedback()">Save &amp; Start Next</button>
+  </div>
+  <div class="card">
+    <h3>Your Saved Feedbacks</h3>
+    <div id="fb-list"><p class="subtitle">No feedbacks saved yet.</p></div>
+  </div>
+</div>
+
+<!-- ===== TAB: WORKSHOP ===== -->
+<div class="panel" id="tab-workshop">
+  <div class="card">
+    <h2>Campaign Workshop</h2>
+    <p>Work with your group. Apply what you learned in Block 1 to sharpen your campaign strategy. Everything auto-saves.</p>
+  </div>
+  <div class="card">
+    <h3>1. Target Audience</h3>
+    <p>Who exactly? Demographics, values, media habits. NOT "everyone."</p>
+    <textarea id="ws-audience" rows="3" placeholder="e.g. University students aged 18–25 in Famagusta who use Instagram daily and are concerned about..." oninput="autoSave()"></textarea>
+  </div>
+  <div class="card">
+    <h3>2. Key Message</h3>
+    <p>One sentence. If your audience remembers nothing else, what do they remember?</p>
+    <textarea id="ws-message" rows="2" placeholder="e.g. 'Every drop counts — and your campus wastes 10,000 litres a day.'" oninput="autoSave()"></textarea>
+  </div>
+  <div class="card">
+    <h3>3. Framing Strategy</h3>
+    <label>Primary frame:</label>
+    <div class="autopsy-row" data-group="ws-frame">
+      <span class="autopsy-chip" onclick="chipSelect(this)">Positive</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Negative</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Both</span>
+    </div>
+    <label>Explain why:</label>
+    <textarea id="ws-frame-why" rows="2" placeholder="Why this framing for this audience?" oninput="autoSave()"></textarea>
+  </div>
+  <div class="card">
+    <h3>4. Medium &amp; Tools</h3>
+    <label>Primary medium:</label>
+    <div class="autopsy-row" data-group="ws-medium">
+      <span class="autopsy-chip" onclick="chipSelect(this)">Social media (paid)</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Social media (organic)</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Poster / flyer</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Video</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Event / stunt</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Press / earned media</span>
+    </div>
+    <label>Why this medium for this audience?</label>
+    <textarea id="ws-medium-why" rows="2" placeholder="How does your medium choice connect to your audience's media habits?" oninput="autoSave()"></textarea>
+  </div>
+  <div class="card">
+    <h3>5. Ethics Quick-Check</h3>
+    <div id="ws-ethics-list"></div>
+  </div>
+</div>
+
+<!-- ===== TAB: MIDTERM REVIEW ===== -->
+<div class="panel" id="tab-midterm">
+  <div class="card">
+    <h2>Midterm Exam Overview</h2>
+    <p><strong>Closed book · 80 minutes · 20 marks · 20% of your final grade</strong></p>
+    <p>Date: Week 8 (TBD by administration). Check Teams for the confirmed date and room.</p>
+  </div>
+  <div class="card">
+    <h3>Exam Structure</h3>
+    <table class="tbl">
+      <tr><th>Section</th><th>What</th><th>Marks</th><th>Time</th></tr>
+      <tr><td>A</td><td>8 multiple choice questions</td><td>8</td><td>~15 min</td></tr>
+      <tr><td>B</td><td>Short analysis — read a passage, 2 questions</td><td>4</td><td>~15 min</td></tr>
+      <tr><td>C</td><td>Applied scenario — write a campaign plan (300–400 words)</td><td>8</td><td>~40 min</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h3>Section C Breakdown</h3>
+    <table class="tbl">
+      <tr><th>Part</th><th>What to write</th><th>Marks</th></tr>
+      <tr><td>(a)</td><td>Target audience — specific group, demographics, why</td><td>2</td></tr>
+      <tr><td>(b)</td><td>Framing strategy — positive/negative/both + example message</td><td>2</td></tr>
+      <tr><td>(c)</td><td>Key message — 3–4 sentences, using ≥2 persuasion modes</td><td>2</td></tr>
+      <tr><td>(d)</td><td>Ethical awareness — one risk + how to avoid it</td><td>2</td></tr>
+    </table>
+    <div class="warn-block"><strong>Common mistake:</strong> vague audience. "Young people" = weak. "University students aged 18–25 in Northern Cyprus who use Instagram daily" = strong.</div>
+  </div>
+  <div class="card">
+    <h3>What to Study</h3>
+    <div class="info-block">
+      <strong>Weeks 1–3:</strong> Research question · Literature review · Primary vs secondary sources · Citation · Thesis statement · Essay structure
+    </div>
+    <div class="info-block">
+      <strong>Week 4:</strong> Quantitative vs qualitative · Chart types (bar, line, pie, scatter) · Correlation vs causation · Misleading visualisations
+    </div>
+    <div class="info-block">
+      <strong>Week 5:</strong> Policy brief structure · Brief vs essay · Evidence-based argument
+    </div>
+    <div class="info-block">
+      <strong>Weeks 6–7:</strong> Target audience · Positive/negative framing · Ethos/pathos/logos · Paid/earned/owned media · Message discipline · Negative campaigning · Boomerang effect · Ethics of persuasion · Professionalisation
+    </div>
+  </div>
+  <div class="card">
+    <h3>Study Tips</h3>
+    <p><strong>1.</strong> Use the Midterm Review App — it has flashcards, practice MCQs, and practice scenarios with model answers.</p>
+    <p><strong>2.</strong> For Section C: practise writing one scenario at home. Pick any topic, write a 300-word campaign plan with audience, framing, message, and ethics. Time yourself — 40 minutes.</p>
+    <p><strong>3.</strong> Know these key differences: research question vs recommendation · positive vs negative framing · ethos vs pathos vs logos · correlation vs causation · policy brief vs essay · paid vs earned media.</p>
+    <p><strong>4.</strong> Don't memorise McNair. Understand the ideas.</p>
+    <p><strong>5.</strong> Read exam questions carefully. In Section C, marks are given for each part (a–d). Don't skip any part.</p>
+  </div>
+</div>
+
+<!-- ===== TAB: PRACTICE ===== -->
+<div class="panel" id="tab-practice">
+  <div class="card">
+    <h2>Practice: Section C</h2>
+    <p>This is the same format as the exam. Write your answer <strong>before</strong> looking at the model answer. Time yourself — aim for 15–20 minutes.</p>
+  </div>
+  <div class="card">
+    <div class="warn-block">
+      <strong>Scenario:</strong> A local animal shelter is struggling. Fewer people are adopting pets, and the shelter is running out of space and funding. The shelter director has asked you to design a short communication campaign to encourage more adoptions.
+    </div>
+
+    <h3>(a) Target Audience (2 marks)</h3>
+    <p>Who is your campaign aimed at? Choose a specific group and explain why.</p>
+    <textarea id="prac-a" rows="3" placeholder="Write here..." oninput="autoSave()"></textarea>
+
+    <h3>(b) Framing Strategy (2 marks)</h3>
+    <p>Positive, negative, or both? Explain your choice and give an example message.</p>
+    <textarea id="prac-b" rows="3" placeholder="Write here..." oninput="autoSave()"></textarea>
+
+    <h3>(c) Key Message (2 marks)</h3>
+    <p>Write 3–4 sentences for a poster, social post, or video. Use at least 2 persuasion modes.</p>
+    <textarea id="prac-c" rows="4" placeholder="Write here..." oninput="autoSave()"></textarea>
+
+    <h3>(d) Ethical Awareness (2 marks)</h3>
+    <p>Identify one ethical risk and explain how you would avoid it.</p>
+    <textarea id="prac-d" rows="3" placeholder="Write here..." oninput="autoSave()"></textarea>
+
+    <button class="btn btn-primary btn-block" onclick="document.getElementById('model-prac').classList.toggle('show')">Show / Hide Model Answer</button>
+    <div class="model-answer" id="model-prac">
+      <h4>Model Answer</h4>
+      <p><strong>(a) Target Audience:</strong> Young adults aged 20–30 living near the shelter, especially university students and young professionals living alone or in shared housing. This group is more likely to have flexible schedules and living situations that allow pet ownership, and they are heavy social media users, making them easy to reach online.</p>
+      <p><strong>(b) Framing Strategy:</strong> Both. Open with negative framing to create urgency: "Every week, the shelter takes in more animals than it can hold. Without new adoptions, healthy animals face being put down." Then shift to positive framing for the solution: "One visit could change two lives — yours and theirs." The negative frame establishes the problem; the positive frame makes the action feel rewarding rather than burdensome.</p>
+      <p><strong>(c) Key Message:</strong> "Right now, 47 dogs and cats at the Famagusta City Shelter are waiting for a home. Each one is healthy, vaccinated, and ready to be part of your family. Dr. Ayşe Polat, the shelter's head veterinarian, says: 'These animals have so much love to give — they just need someone to give them a chance.' Visit us this Saturday. Your new best friend is already here."</p>
+      <p>This uses <strong>logos</strong> (47 animals, vaccinated, healthy — concrete facts), <strong>ethos</strong> (Dr. Polat, head veterinarian — expert credibility), and <strong>pathos</strong> ("so much love to give," "your new best friend" — emotional connection).</p>
+      <p><strong>(d) Ethical Risk:</strong> The campaign could use guilt-tripping language ("these animals will die because of you") or show distressing images of suffering animals to manipulate emotions. This crosses the line from persuasion into manipulation. To avoid it, I would focus on hopeful, positive images of healthy animals and use factual urgency (shelter capacity numbers) rather than graphic emotional pressure. The message should motivate action through hope, not guilt.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB: VIDEOS ===== -->
+<div class="panel" id="tab-videos">
+  <div class="card">
+    <h2>Session Videos</h2>
+    <p>All the clips from today's session. Rewatch them here for revision or your group project.</p>
+  </div>
+  <div class="video-card">
+    <h3><span class="tag tag-blue">Clip 1</span> "Hello Türkiye" (2022)</h3>
+    <p>Nation rebranding campaign by Turkey's Communications Directorate.</p>
+    <iframe src="https://www.youtube.com/embed/Skq62zB750Y" allowfullscreen loading="lazy"></iframe>
+  </div>
+  <div class="video-card">
+    <h3><span class="tag tag-pink">Clip 2</span> Yeşilay "Their Gain, Our Loss" (2019)</h3>
+    <p>Turkish Green Crescent anti-tobacco campaign.</p>
+    <iframe src="https://www.youtube.com/embed/erPKsNgVfrI" allowfullscreen loading="lazy"></iframe>
+  </div>
+  <div class="video-card">
+    <h3><span class="tag tag-green">Clip 3</span> North Cyprus Tourism Ad</h3>
+    <p>TRNC Tourist Board ad on ITV — 3rd most complained-about ad in UK, 2022.</p>
+    <iframe src="https://www.youtube.com/embed/pJPUl2Wg46E" allowfullscreen loading="lazy"></iframe>
+  </div>
+  <div class="video-card">
+    <h3><span class="tag tag-orange">Clip 4</span> Nike "Dream Crazy" (2018)</h3>
+    <p>Colin Kaepernick and corporate advocacy.</p>
+    <iframe src="https://www.youtube.com/embed/ekZRoSCINLA" allowfullscreen loading="lazy"></iframe>
+  </div>
+  <div class="video-card">
+    <h3><span class="tag tag-blue">Backup</span> 60 Years of Attack Ads</h3>
+    <p>History of negative campaigning in US elections. Play first 4 minutes.</p>
+    <iframe src="https://www.youtube.com/embed/LcjEe9guEIA" allowfullscreen loading="lazy"></iframe>
+  </div>
+</div>
+
+<!-- ===== TAB: EXIT TICKET ===== -->
+<div class="panel" id="tab-exit">
+  <div class="card">
+    <h2>Exit Ticket</h2>
+    <p>Before you leave, answer these quick questions. <strong>Not graded</strong> — this helps Dr. Kaymak see where the class stands.</p>
+  </div>
+  <div class="card">
+    <label>1. Which campaign from today's Ad Autopsy taught you the most?</label>
+    <div class="autopsy-row" data-group="exit-fav">
+      <span class="autopsy-chip" onclick="chipSelect(this)">Hello Türkiye</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Yeşilay Anti-Tobacco</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">TRNC Tourism Ad</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">Nike Dream Crazy</span>
+    </div>
+
+    <label style="margin-top:.8rem">2. How confident do you feel about the midterm? (1 = not at all, 5 = very)</label>
+    <div class="autopsy-row" data-group="exit-conf">
+      <span class="autopsy-chip" onclick="chipSelect(this)">1</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">2</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">3</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">4</span>
+      <span class="autopsy-chip" onclick="chipSelect(this)">5</span>
+    </div>
+
+    <label style="margin-top:.8rem">3. What concept are you MOST unsure about going into the midterm?</label>
+    <textarea id="exit-unsure" rows="2" placeholder="e.g. correlation vs causation, policy brief structure..." oninput="autoSave()"></textarea>
+
+    <label style="margin-top:.8rem">4. One thing you want Dr. Kaymak to know:</label>
+    <textarea id="exit-note" rows="2" placeholder="Anything — feedback, questions, concerns..." oninput="autoSave()"></textarea>
+
+    <button class="btn btn-success btn-block" onclick="toast('Exit ticket saved! Thanks.')">Save Exit Ticket</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================
+   PSIR 172 — WEEK 7 SESSION APP
+   ============================ */
+const STORE='psir172_week7_v1';
+const TABS=[
+  {id:'home',label:'Home',icon:'📡'},
+  {id:'autopsy',label:'Ad Autopsy',icon:'🔬'},
+  {id:'concepts',label:'Concepts',icon:'📚'},
+  {id:'feedback',label:'Pitch Feedback',icon:'🗣️'},
+  {id:'workshop',label:'Workshop',icon:'🛠️'},
+  {id:'midterm',label:'Midterm Review',icon:'📝'},
+  {id:'practice',label:'Practice Exam',icon:'✍️'},
+  {id:'videos',label:'Videos',icon:'🎬'},
+  {id:'exit',label:'Exit Ticket',icon:'🎫'}
+];
+
+const ETHICS_CHECKS=[
+  'All factual claims can be verified',
+  'No fabricated data or fake sources',
+  'No misleading images or deepfake-style content',
+  'No impersonation or misrepresentation',
+  'AI tools disclosed where used',
+  'Message is accessible (captions, contrast, plain language)',
+  'Would you be comfortable explaining your methods publicly?'
+];
+
+// STATE
+let state;
+try{state=JSON.parse(localStorage.getItem(STORE))||{}}catch(e){state={}}
+if(!state.tab)state.tab='home';
+if(!state.chips)state.chips={};
+if(!state.texts)state.texts={};
+if(!state.feedbacks)state.feedbacks=[];
+if(!state.ethics)state.ethics={};
+function save(){try{localStorage.setItem(STORE,JSON.stringify(state))}catch(e){}}
+
+// TOAST
+let tt;
+function toast(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>e.classList.remove('show'),2200)}
+
+// NAV
+function buildNav(){
+  document.getElementById('nav').innerHTML=TABS.map(t=>`<button data-t="${t.id}" onclick="go('${t.id}')">${t.icon} ${t.label}</button>`).join('');
+}
+function go(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  const p=document.getElementById('tab-'+id);
+  const b=document.querySelector(`[data-t="${id}"]`);
+  if(p)p.classList.add('active');
+  if(b){b.classList.add('active');b.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'})}
+  state.tab=id;save();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// CHIP SELECT (single)
+function chipSelect(el){
+  const row=el.parentElement;
+  row.querySelectorAll('.autopsy-chip').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  const group=row.getAttribute('data-group');
+  if(group){state.chips[group]=el.textContent;save()}
+}
+
+// CHIP TOGGLE (multi)
+function chipToggle(el){
+  el.classList.toggle('selected');
+  const row=el.parentElement;
+  const group=row.getAttribute('data-group');
+  if(group){
+    const selected=Array.from(row.querySelectorAll('.selected')).map(c=>c.textContent);
+    state.chips[group]=selected;save();
+  }
+}
+
+// AUTO-SAVE TEXTAREAS
+function autoSave(){
+  document.querySelectorAll('textarea[id],input[type=text][id]').forEach(el=>{
+    if(el.id)state.texts[el.id]=el.value;
+  });
+  save();
+}
+
+// RESTORE TEXTAREAS
+function restoreTexts(){
+  if(!state.texts)return;
+  Object.keys(state.texts).forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.value=state.texts[id]||'';
+  });
+}
+
+// RESTORE CHIPS
+function restoreChips(){
+  if(!state.chips)return;
+  Object.keys(state.chips).forEach(group=>{
+    const row=document.querySelector(`[data-group="${group}"]`);
+    if(!row)return;
+    const val=state.chips[group];
+    if(Array.isArray(val)){
+      row.querySelectorAll('.autopsy-chip').forEach(c=>{
+        if(val.includes(c.textContent))c.classList.add('selected');
+      });
+    }else{
+      row.querySelectorAll('.autopsy-chip').forEach(c=>{
+        if(c.textContent===val)c.classList.add('selected');
+      });
+    }
+  });
+}
+
+// FEEDBACK SYSTEM
+function saveFeedback(){
+  const group=document.getElementById('fb-group').value.trim();
+  const issue=document.getElementById('fb-issue').value.trim();
+  const strength=document.getElementById('fb-strength').value.trim();
+  const suggest=document.getElementById('fb-suggest').value.trim();
+  if(!group){toast('Enter the group name first');return}
+  const audRow=document.querySelector('[data-group="fb-aud"] .selected');
+  const msgRow=document.querySelector('[data-group="fb-msg"] .selected');
+  state.feedbacks.push({
+    group,issue,
+    audience:audRow?audRow.textContent:'',
+    message:msgRow?msgRow.textContent:'',
+    strength,suggest,
+    time:new Date().toLocaleTimeString()
+  });
+  save();
+  renderFeedbacks();
+  // Reset form
+  document.getElementById('fb-group').value='';
+  document.getElementById('fb-issue').value='';
+  document.getElementById('fb-strength').value='';
+  document.getElementById('fb-suggest').value='';
+  document.querySelectorAll('[data-group="fb-aud"] .autopsy-chip,[data-group="fb-msg"] .autopsy-chip').forEach(c=>c.classList.remove('selected'));
+  delete state.texts['fb-group'];delete state.texts['fb-issue'];
+  delete state.texts['fb-strength'];delete state.texts['fb-suggest'];
+  delete state.chips['fb-aud'];delete state.chips['fb-msg'];
+  save();
+  toast('Feedback saved!');
+}
+
+function renderFeedbacks(){
+  const list=document.getElementById('fb-list');
+  if(!state.feedbacks||state.feedbacks.length===0){
+    list.innerHTML='<p class="subtitle">No feedbacks saved yet.</p>';return;
+  }
+  list.innerHTML=state.feedbacks.map((f,i)=>`
+    <div style="padding:.5rem 0;border-bottom:1px solid #eee;font-size:.85rem">
+      <strong>${f.group}</strong> <span style="color:var(--muted);font-size:.75rem">${f.time}</span><br>
+      ${f.issue?'Issue: '+f.issue+'<br>':''}
+      ${f.audience?'Audience clarity: '+f.audience+' · ':''}${f.message?'Message clarity: '+f.message:''}
+      ${f.strength?'<br>Strength: '+f.strength:''}
+      ${f.suggest?'<br>Suggestion: '+f.suggest:''}
+    </div>
+  `).join('');
+}
+
+// ETHICS CHECKLIST
+function buildEthics(){
+  const container=document.getElementById('ws-ethics-list');
+  container.innerHTML=ETHICS_CHECKS.map((item,i)=>{
+    const checked=state.ethics&&state.ethics[i]?'checked':'';
+    return `<div style="display:flex;align-items:flex-start;gap:.5rem;padding:.4rem 0;border-bottom:1px solid #f0f0f0">
+      <input type="checkbox" ${checked} style="width:18px;height:18px;margin-top:2px;accent-color:var(--success);cursor:pointer" onchange="state.ethics[${i}]=this.checked;save()">
+      <span style="font-size:.85rem;cursor:pointer">${item}</span>
+    </div>`;
+  }).join('');
+}
+
+// QR CODE (using qrcode-generator from cdnjs)
+function loadQR(){
+  const s=document.createElement('script');
+  s.src='https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js';
+  s.onload=()=>{
+    try{
+      const qr=qrcode(0,'M');
+      qr.addData('https://efkaymak-del.github.io/PSIR172/week7.html');
+      qr.make();
+      document.getElementById('qr-container').innerHTML=qr.createSvgTag(5,0);
+    }catch(e){}
+  };
+  document.head.appendChild(s);
+}
+
+// INIT
+function init(){
+  buildNav();
+  buildEthics();
+  restoreTexts();
+  restoreChips();
+  renderFeedbacks();
+  go(state.tab||'home');
+  loadQR();
+}
+init();
+</script>
+</body>
+</html>
