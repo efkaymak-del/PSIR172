@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Week 7 — Campaign Strategy &amp; Persuasion | PSIR 172</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f1729;--text:#e8ecf1;--accent:#4cc9f0;--accent2:#f72585;--muted:#8892a4;--slide-bg:#1a2238;--font:system-ui,-apple-system,sans-serif}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--font)}
+.deck{position:relative;width:100%;height:100%}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:6vh 8vw;opacity:0;pointer-events:none;transition:opacity .45s ease}
+.slide.active{opacity:1;pointer-events:auto}
+.slide h1{font-size:clamp(1.8rem,4.5vw,3.2rem);font-weight:800;line-height:1.15;margin-bottom:.6em;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.slide h2{font-size:clamp(1.3rem,3vw,2.2rem);font-weight:700;margin-bottom:.5em;color:var(--accent)}
+.slide h3{font-size:clamp(1rem,2.2vw,1.5rem);font-weight:600;margin-bottom:.4em;color:var(--accent2)}
+.slide p,.slide li{font-size:clamp(.95rem,1.8vw,1.35rem);line-height:1.65;color:var(--text);margin-bottom:.4em}
+.slide ul{list-style:none;padding:0}
+.slide li::before{content:"→ ";color:var(--accent);font-weight:700}
+.slide .big-number{font-size:clamp(3rem,10vw,7rem);font-weight:900;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.slide .subtitle{font-size:clamp(.85rem,1.5vw,1.1rem);color:var(--muted);margin-top:.3em}
+.slide .card-row{display:flex;gap:2vw;flex-wrap:wrap;margin-top:1.5em}
+.slide .card{flex:1;min-width:200px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:1.5em;transition:transform .2s}
+.slide .card h3{margin-bottom:.3em}
+.slide .highlight{background:rgba(76,201,240,.12);border-left:4px solid var(--accent);padding:.8em 1.2em;border-radius:0 8px 8px 0;margin:.8em 0;font-size:clamp(.9rem,1.6vw,1.15rem)}
+.slide .warn{background:rgba(247,37,133,.1);border-left:4px solid var(--accent2);padding:.8em 1.2em;border-radius:0 8px 8px 0;margin:.8em 0}
+.slide .vs{display:flex;gap:3vw;align-items:stretch;margin-top:1em}
+.slide .vs>div{flex:1;padding:1.2em;border-radius:12px;background:rgba(255,255,255,.05)}
+.slide .vs .label{font-weight:700;font-size:clamp(1rem,2vw,1.4rem);margin-bottom:.4em}
+.slide table{width:100%;border-collapse:collapse;margin-top:.8em;font-size:clamp(.85rem,1.5vw,1.1rem)}
+.slide th,.slide td{text-align:left;padding:.6em .8em;border-bottom:1px solid rgba(255,255,255,.1)}
+.slide th{color:var(--accent);font-weight:700}
+.slide .center{text-align:center}
+.slide .emoji{font-size:clamp(2rem,5vw,4rem);margin-bottom:.4em}
+.slide .video-placeholder{background:rgba(255,255,255,.08);border:2px dashed var(--accent);border-radius:12px;padding:2em;text-align:center;margin:1em 0;font-size:clamp(.9rem,1.6vw,1.15rem);color:var(--muted)}
+.slide .video-placeholder a{color:var(--accent);text-decoration:underline}
+
+/* NAV */
+.nav-bar{position:fixed;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:.6em 2em;background:rgba(15,23,41,.92);backdrop-filter:blur(8px);border-top:1px solid rgba(255,255,255,.08);z-index:100;font-size:.85rem}
+.nav-bar .counter{color:var(--muted)}
+.nav-bar button{background:none;border:1px solid rgba(255,255,255,.2);color:var(--text);padding:.4em 1em;border-radius:6px;cursor:pointer;font-size:.85rem;transition:all .2s}
+.nav-bar button:hover{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+.progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .3s;z-index:101}
+.notes{position:fixed;bottom:50px;left:0;right:0;background:rgba(0,0,0,.85);color:#ccc;padding:1em 2em;font-size:.82rem;line-height:1.6;display:none;max-height:30vh;overflow-y:auto;z-index:99;border-top:1px solid var(--accent)}
+.notes.show{display:block}
+.notes strong{color:var(--accent)}
+
+@media print{
+  .nav-bar,.progress,.notes{display:none!important}
+  .slide{position:relative!important;opacity:1!important;pointer-events:auto!important;page-break-after:always;min-height:100vh}
+  body{background:#fff;color:#111}
+  .slide h1,.slide .big-number{-webkit-text-fill-color:#111;color:#111;background:none}
+  .slide h2{color:#1a6b8a}
+  .slide h3{color:#a61050}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="deck" id="deck">
+
+<!-- SLIDE 1: TITLE -->
+<div class="slide active" data-notes="Welcome. Check projector, audio, WiFi. QR code for week7.html should be ready. Remind: policy brief due TONIGHT 23:59.">
+  <div class="center">
+    <p class="subtitle">PSIR 172 · Applied Skills · Week 7</p>
+    <h1>Campaign Strategy &amp; Persuasion</h1>
+    <p class="subtitle">Thursday 9 April 2026 · Dr. Erol Kaymak</p>
+    <p style="margin-top:1.5em;color:var(--accent2);font-weight:700;font-size:clamp(1rem,2vw,1.4rem)">⚠ Policy Brief due tonight at 23:59</p>
+  </div>
+</div>
+
+<!-- SLIDE 2: TODAY'S PLAN -->
+<div class="slide" data-notes="Three blocks. Block 1 is the most video-heavy. Block 3 is the longest — 60 min for midterm review. Reassure them: we WILL cover the midterm format in detail today.">
+  <h2>Today's Plan</h2>
+  <div class="card-row">
+    <div class="card"><h3>Block 1</h3><p>Campaign Strategy &amp; Persuasion</p><p class="subtitle">Ad Autopsy + Mini-Lecture (50 min)</p></div>
+    <div class="card"><h3>Block 2</h3><p>Group Campaign Pitches</p><p class="subtitle">Present + Workshop (40 min)</p></div>
+    <div class="card" style="border-color:var(--accent2)"><h3>Block 3</h3><p>Midterm Review</p><p class="subtitle">Format + Practice + Q&amp;A (60 min)</p></div>
+  </div>
+  <p style="margin-top:1em" class="subtitle">Open the session app on your phone → scan the QR code or visit the link on Teams</p>
+</div>
+
+<!-- SLIDE 3: HOUSEKEEPING -->
+<div class="slide" data-notes="Quick reminders. Policy brief: submit by 23:59 tonight via email as PDF. Group registration: check form link on Teams. Midterm: Week 8, date TBD by admin.">
+  <h2>Housekeeping</h2>
+  <ul>
+    <li><strong>Policy Brief</strong> — due tonight, 9 April, 23:59. PDF via email. No extensions.</li>
+    <li><strong>Group Registration</strong> — if your group hasn't registered, do it today.</li>
+    <li><strong>Midterm</strong> — Week 8 (date TBD). Closed book, 80 min, 20 marks. We'll cover the full format in Block 3.</li>
+    <li><strong>Session App</strong> — open it now. All activities, feedback forms, and notes are there.</li>
+  </ul>
+</div>
+
+<!-- SLIDE 4: BLOCK 1 HEADER -->
+<div class="slide" data-notes="Transition to Block 1. We're going to watch three short clips and dissect them like a surgeon — that's the Ad Autopsy.">
+  <div class="center">
+    <p class="emoji">🔬</p>
+    <h1>Block 1: Ad Autopsy</h1>
+    <p>Watch. Dissect. Learn.</p>
+  </div>
+</div>
+
+<!-- SLIDE 5: VIDEO 1 — Hello Türkiye -->
+<div class="slide" data-notes="Play the Hello Türkiye video (1:30). Before playing, ask: 'Who is this ad for?' After playing, ask: 'What was the target audience? What framing was used? What media strategy — paid, earned, owned?' Key point: this is nation branding — the target audience is NOT Turkish citizens, it's the international community. The framing is positive: identity, pride, modernity. It generated massive earned media because the name change itself was news.">
+  <h2>🎬 Clip 1: "Hello Türkiye" (2022)</h2>
+  <div class="video-placeholder">
+    <p>▶ Play: <a href="https://www.youtube.com/watch?v=Skq62zB750Y" target="_blank">youtube.com/watch?v=Skq62zB750Y</a></p>
+    <p>Duration: ~1:30</p>
+  </div>
+  <div class="highlight">
+    <strong>Before playing:</strong> "Who do you think this ad is aimed at?"
+  </div>
+  <p><strong>After:</strong> Target audience? Framing type? Paid, earned, or owned media?</p>
+</div>
+
+<!-- SLIDE 6: DEBRIEF — Hello Türkiye -->
+<div class="slide" data-notes="Walk through the analysis. Audience: international public, media, diplomats, UN. NOT Turkish citizens. Framing: positive — modernity, national identity, pride. Ethos: government authority + tourism sector. Medium: owned (official video) but generated huge earned media because the name change was itself a news story. Discuss: did it work? Most English media now use 'Türkiye.' That's communication power.">
+  <h2>Debrief: "Hello Türkiye"</h2>
+  <table>
+    <tr><th>Element</th><th>Analysis</th></tr>
+    <tr><td>Target Audience</td><td>International media, diplomats, tourism sector — <em>not</em> Turkish citizens</td></tr>
+    <tr><td>Framing</td><td>Positive — pride, identity, modernity</td></tr>
+    <tr><td>Persuasion</td><td>Ethos (government authority) + Pathos (national pride)</td></tr>
+    <tr><td>Medium</td><td>Owned (official video) → massive earned media (global news coverage)</td></tr>
+    <tr><td>Result</td><td>UN, most international media now use "Türkiye"</td></tr>
+  </table>
+  <div class="highlight"><strong>Key lesson:</strong> The name change itself was the message. The campaign turned a bureaucratic request into a story the media wanted to tell.</div>
+</div>
+
+<!-- SLIDE 7: VIDEO 2 — Yeşilay anti-tobacco -->
+<div class="slide" data-notes="Play the Yeşilay 'Their Gain, Our Loss' video (~1:30). This is a pure negative-framing health advocacy campaign. Before playing: 'This one is very different in tone. Pay attention to how it makes you FEEL.' After: What emotion? What data? Who is the 'villain'?">
+  <h2>🎬 Clip 2: Yeşilay "Their Gain, Our Loss" (2019)</h2>
+  <div class="video-placeholder">
+    <p>▶ Play: <a href="https://www.youtube.com/watch?v=erPKsNgVfrI" target="_blank">youtube.com/watch?v=erPKsNgVfrI</a></p>
+    <p>Duration: ~1:30</p>
+  </div>
+  <div class="highlight">
+    <strong>Before playing:</strong> "Pay attention to how this makes you feel. Very different from Clip 1."
+  </div>
+  <p><strong>After:</strong> What emotion? What evidence? Who is the villain in this frame?</p>
+</div>
+
+<!-- SLIDE 8: DEBRIEF — Yeşilay -->
+<div class="slide" data-notes="Audience: Turkish smokers, but also policy-makers and public. Framing: strongly negative — the tobacco industry profits while people die. Classic 'villain' framing. Pathos: images of suffering, 300 deaths per day. Logos: statistics. Ethos: Yeşilay is a century-old institution. Ethics question: is fear-based messaging manipulation or justified public health communication? There's a real debate here.">
+  <h2>Debrief: Yeşilay Anti-Tobacco</h2>
+  <table>
+    <tr><th>Element</th><th>Analysis</th></tr>
+    <tr><td>Target Audience</td><td>Turkish smokers + general public + policymakers</td></tr>
+    <tr><td>Framing</td><td>Negative — loss, death, exploitation by industry</td></tr>
+    <tr><td>Persuasion</td><td>Pathos (suffering) + Logos (300 deaths/day) + Ethos (Yeşilay credibility)</td></tr>
+    <tr><td>Medium</td><td>Paid (TV spots) + earned (viral sharing, news coverage)</td></tr>
+    <tr><td>Villain</td><td>The tobacco industry — "their gain, our loss"</td></tr>
+  </table>
+  <div class="warn"><strong>Ethics question:</strong> Is fear-based health messaging manipulation — or is it justified?</div>
+</div>
+
+<!-- SLIDE 9: VIDEO 3 — TRNC tourism ad -->
+<div class="slide" data-notes="Context: The North Cyprus Tourist Board placed a TV ad on ITV in the UK in 2022 promoting holidays to North Cyprus. It became the 3rd most complained-about ad in the UK that year — 394 complaints to the Advertising Standards Authority. Greek Cypriot diaspora organisations led the complaints, arguing it promoted tourism to an illegally occupied territory. The ASA ruled the ad did NOT break advertising rules. This is a fascinating case of audience, backlash, and unintended earned media. Play the ad if available, or show stills/describe it. Ask: Who was the intended audience? Who actually responded? What went wrong — or did it?">
+  <h2>🎬 Clip 3: North Cyprus Tourism Ad (2022)</h2>
+  <div class="video-placeholder">
+    <p>▶ Play: <a href="https://www.youtube.com/watch?v=pJPUl2Wg46E" target="_blank">youtube.com/watch?v=pJPUl2Wg46E</a></p>
+    <p>North Cyprus Tourist Board ad shown on ITV, UK</p>
+  </div>
+  <div class="highlight">
+    <strong>Context:</strong> This ad became the UK's 3rd most complained-about advert in 2022 — 394 complaints to the Advertising Standards Authority. The ASA ruled it did <em>not</em> break any rules.
+  </div>
+  <p><strong>Discuss:</strong> Who was the intended audience? Who actually responded? What happened?</p>
+</div>
+
+<!-- SLIDE 10: DEBRIEF — TRNC ad -->
+<div class="slide" data-notes="Intended audience: British holidaymakers. Actual respondents: Greek Cypriot diaspora in the UK. The ad generated massive unintended earned media — news articles, social media debate, parliamentary questions. The ASA ruled it was legal. Framing was purely positive (sun, sea, culture). But the controversy shows that audience analysis must account for HOSTILE audiences, not just target audiences. Did it work? Arguably yes — more people heard about North Cyprus tourism because of the complaints than would have from the ad alone. This is the 'Streisand effect.' Great case study.">
+  <h2>Debrief: TRNC Tourism Ad</h2>
+  <table>
+    <tr><th>Element</th><th>Analysis</th></tr>
+    <tr><td>Intended Audience</td><td>British holidaymakers</td></tr>
+    <tr><td>Actual Response</td><td>Greek Cypriot diaspora — 394 complaints</td></tr>
+    <tr><td>Framing</td><td>Positive — sun, sea, culture, relaxation</td></tr>
+    <tr><td>Medium</td><td>Paid (ITV ad buy) → massive unintended earned media</td></tr>
+    <tr><td>ASA Ruling</td><td>No rules broken</td></tr>
+  </table>
+  <div class="highlight"><strong>Key lesson:</strong> Your target audience isn't the only audience. Campaign strategy must account for hostile audiences too. The complaints may have actually increased awareness — the Streisand effect.</div>
+</div>
+
+<!-- SLIDE 11: VIDEO 4 — Nike Dream Crazy -->
+<div class="slide" data-notes="Play the first 2 min of the Nike 'Dream Crazy' / Kaepernick ad. This is corporate advocacy — a brand taking a political position. Before playing: 'This is not a government or NGO — it's a shoe company. Why would a corporation do this?' After: Who is the audience? What's the risk? What framing?">
+  <h2>🎬 Clip 4: Nike "Dream Crazy" (2018)</h2>
+  <div class="video-placeholder">
+    <p>▶ Play: <a href="https://www.youtube.com/watch?v=ekZRoSCINLA" target="_blank">youtube.com/watch?v=ekZRoSCINLA</a></p>
+    <p>Duration: play first 2 min</p>
+  </div>
+  <div class="highlight">
+    <strong>Before playing:</strong> "This is a shoe company. Why would a brand take a political position?"
+  </div>
+  <p><strong>After:</strong> Target audience? Framing? Risk? Ethos, pathos, or logos?</p>
+</div>
+
+<!-- SLIDE 12: DEBRIEF — Nike -->
+<div class="slide" data-notes="Target audience: young, diverse, progressive consumers (not everyone — that's the point). Framing: positive — aspiration, courage, defiance. Heavy pathos. Ethos via Kaepernick's personal sacrifice. Risk: alienated conservative consumers (people burning Nikes). But Nike's stock rose. This is message discipline + knowing your audience. If you try to speak to everyone, you speak to no one.">
+  <h2>Debrief: Nike "Dream Crazy"</h2>
+  <table>
+    <tr><th>Element</th><th>Analysis</th></tr>
+    <tr><td>Target Audience</td><td>Young, diverse, progressive consumers — <em>not everyone</em></td></tr>
+    <tr><td>Framing</td><td>Positive — aspiration, courage, sacrifice</td></tr>
+    <tr><td>Persuasion</td><td>Pathos (emotional storytelling) + Ethos (Kaepernick's sacrifice)</td></tr>
+    <tr><td>Medium</td><td>Paid (TV/digital) → exploded into earned media (controversy = coverage)</td></tr>
+    <tr><td>Risk</td><td>Alienated some consumers. Nike stock rose anyway.</td></tr>
+  </table>
+  <div class="highlight"><strong>Key lesson:</strong> If you try to speak to everyone, you speak to no one. Knowing who your audience is <em>not</em> is as important as knowing who it is.</div>
+</div>
+
+<!-- SLIDE 13: AD AUTOPSY SUMMARY -->
+<div class="slide" data-notes="Bring the four clips together. Each teaches a different lesson. Hello Türkiye: owned media can generate earned media if the story is newsworthy. Yeşilay: negative framing works for urgency but raises ethics questions. TRNC ad: hostile audiences exist and can amplify your message in unexpected ways. Nike: knowing your non-audience is as important as knowing your audience.">
+  <h2>Four Campaigns, Four Lessons</h2>
+  <table>
+    <tr><th>Campaign</th><th>Core Lesson</th></tr>
+    <tr><td>Hello Türkiye</td><td>Make the message the story → earned media follows</td></tr>
+    <tr><td>Yeşilay Anti-Tobacco</td><td>Negative framing creates urgency — but watch the ethics line</td></tr>
+    <tr><td>TRNC Tourism Ad</td><td>Hostile audiences exist — plan for backlash</td></tr>
+    <tr><td>Nike "Dream Crazy"</td><td>Know who you're NOT talking to</td></tr>
+  </table>
+  <div class="highlight"><strong>Common thread:</strong> In every case, the earned media response was bigger than the original ad. Strategy matters more than budget.</div>
+</div>
+
+<!-- SLIDE 14: MINI-LECTURE — Professionalisation -->
+<div class="slide" data-notes="McNair Ch 6-7 territory. Modern campaigns are professional operations — pollsters, media consultants, data analysts, PR teams. Nothing is improvised. Even 'spontaneous' moments are planned. The Hello Türkiye campaign and the Nike ad both show this: they look simple but are the product of sophisticated strategy.">
+  <h2>Professionalisation of Campaigns</h2>
+  <p>McNair's key argument: political communication has become a <strong>professional industry</strong>.</p>
+  <ul>
+    <li>Pollsters, media consultants, data analysts, PR strategists</li>
+    <li>Communication is planned, tested, and disciplined — not improvised</li>
+    <li>Even "spontaneous" moments are often scripted</li>
+    <li>Every clip we watched today was the product of a professional team</li>
+  </ul>
+  <div class="highlight"><strong>For your group project:</strong> You don't need a big budget. But you DO need a clear strategy before you choose a medium.</div>
+</div>
+
+<!-- SLIDE 15: MINI-LECTURE — Media Types -->
+<div class="slide" data-notes="Three types. Paid: you pay for placement, you control the message. Earned: someone else tells your story — news coverage, social shares, word of mouth. More credible but you can't control it. Owned: your own platforms — website, social accounts, newsletter. All four campaigns today used a mix. The TRNC case shows how paid media can generate unwanted earned media.">
+  <h2>Paid vs. Earned vs. Owned Media</h2>
+  <div class="card-row">
+    <div class="card"><h3 style="color:var(--accent)">Paid</h3><p>You buy placement. TV ads, sponsored posts, billboards. Full control, but everyone knows it's an ad.</p></div>
+    <div class="card"><h3 style="color:var(--accent2)">Earned</h3><p>Others tell your story. News coverage, shares, word of mouth. Most credible — but you can't control it.</p></div>
+    <div class="card"><h3 style="color:#2d6a4f">Owned</h3><p>Your platforms. Website, social accounts, newsletter. You control message and timing, but limited reach.</p></div>
+  </div>
+  <div class="highlight"><strong>The sweet spot:</strong> Use owned media to create something newsworthy → earn media coverage → amplify with paid if needed.</div>
+</div>
+
+<!-- SLIDE 16: MINI-LECTURE — Negative Campaigning -->
+<div class="slide" data-notes="McNair Ch 6 covers this. Types of negative campaigning: direct attack (on their record — factual), contrast (compare you vs them), and fear appeal (emotional, no specific evidence). Works because humans have a negativity bias — we pay more attention to threats than opportunities. But it can backfire: if voters think the attack is unfair, they sympathise with the target. That's the boomerang effect. Yeşilay got the balance right: they attacked the tobacco INDUSTRY, not individuals.">
+  <h2>Negative Campaigning</h2>
+  <div class="card-row">
+    <div class="card"><h3>Direct Attack</h3><p>Target the opponent's record with facts. "They voted against X three times."</p></div>
+    <div class="card"><h3>Contrast</h3><p>Compare your position vs. theirs. "We support X; they oppose it."</p></div>
+    <div class="card"><h3>Fear Appeal</h3><p>Emotional threat without specific evidence. "If they win, everything changes."</p></div>
+  </div>
+  <div class="warn"><strong>Boomerang effect:</strong> If the attack seems unfair, voters sympathise with the target and turn against the attacker. This is why contrast ads are safer than personal attacks.</div>
+</div>
+
+<!-- SLIDE 17: TRANSITION TO BLOCK 2 -->
+<div class="slide" data-notes="Transition. Time to hear from the groups. Each group has 3 minutes to pitch their campaign idea. I'll give 1 minute of feedback. Then we'll do a 10-minute workshop to apply what we've just learned.">
+  <div class="center">
+    <p class="emoji">🎤</p>
+    <h1>Block 2: Group Pitches</h1>
+    <p>3 minutes per group + 1 minute feedback</p>
+    <p class="subtitle">Then: 10-minute workshop to sharpen your strategy</p>
+  </div>
+</div>
+
+<!-- SLIDE 18: PITCH FORMAT -->
+<div class="slide" data-notes="Display this while groups present. Each group has 3 minutes. Structure: issue, audience, message, medium. I give 1 minute of verbal feedback focusing on one strength and one question. Remaining groups can take notes on the app's feedback form.">
+  <h2>Pitch Structure (3 min)</h2>
+  <table>
+    <tr><th>Time</th><th>Cover this</th></tr>
+    <tr><td>0:00–0:45</td><td><strong>Issue</strong> — What's the problem? Why does it matter?</td></tr>
+    <tr><td>0:45–1:30</td><td><strong>Audience</strong> — Who are you targeting? Be specific.</td></tr>
+    <tr><td>1:30–2:15</td><td><strong>Message</strong> — What's your key message? What frame?</td></tr>
+    <tr><td>2:15–3:00</td><td><strong>Medium</strong> — How will you deliver it? What tools?</td></tr>
+  </table>
+  <div class="highlight">Use the feedback form on the session app to give each group a quick note.</div>
+</div>
+
+<!-- SLIDE 19: WORKSHOP -->
+<div class="slide" data-notes="After all pitches, 10 minutes for groups to workshop. Each group should answer three questions on the app: (1) Who exactly is your target audience? (2) What is your one-sentence key message? (3) What is your primary medium and why? This forces them to apply the Block 1 concepts immediately.">
+  <h2>Workshop: Sharpen Your Strategy (10 min)</h2>
+  <p>In your groups, answer these three questions on the session app:</p>
+  <div class="card-row">
+    <div class="card"><h3>1. Audience</h3><p>Who exactly? Demographics, values, media habits. NOT "everyone."</p></div>
+    <div class="card"><h3>2. Message</h3><p>One sentence. If they remember nothing else, what do they remember?</p></div>
+    <div class="card"><h3>3. Medium</h3><p>Primary delivery method. Why this one? Paid, earned, or owned?</p></div>
+  </div>
+</div>
+
+<!-- SLIDE 20: TRANSITION TO BLOCK 3 -->
+<div class="slide" data-notes="Transition to Block 3 — the midterm review. Students will be anxious. Start by being reassuring: the exam is designed to be fair, it tests understanding not memorisation, and we're going to practise the hardest part right now.">
+  <div class="center">
+    <p class="emoji">📝</p>
+    <h1>Block 3: Midterm Review</h1>
+    <p>Everything you need to know about the exam — and a practice run</p>
+  </div>
+</div>
+
+<!-- SLIDE 21: EXAM FORMAT -->
+<div class="slide" data-notes="Go through this slowly. Closed book. 80 minutes. 20 marks. Three sections. Emphasise: Section C is worth 8 marks and takes the most time — budget 40 minutes for it. Section A is quick — 15 minutes. Section B is 15 minutes. That leaves 10 minutes buffer.">
+  <h2>Midterm Exam Format</h2>
+  <div class="card-row">
+    <div class="card">
+      <h3>Section A</h3>
+      <p class="big-number" style="font-size:2.5rem">8</p>
+      <p>Multiple choice questions × 1 mark each</p>
+      <p class="subtitle">~15 minutes</p>
+    </div>
+    <div class="card">
+      <h3>Section B</h3>
+      <p class="big-number" style="font-size:2.5rem">4</p>
+      <p>Short analysis — read a passage, answer 2 questions × 2 marks each</p>
+      <p class="subtitle">~15 minutes</p>
+    </div>
+    <div class="card" style="border-color:var(--accent2)">
+      <h3>Section C</h3>
+      <p class="big-number" style="font-size:2.5rem">8</p>
+      <p>Applied scenario — write a 300–400 word campaign plan</p>
+      <p class="subtitle">~40 minutes</p>
+    </div>
+  </div>
+  <p style="margin-top:.8em"><strong>Total: 20 marks · 80 minutes · Closed book · No devices</strong></p>
+</div>
+
+<!-- SLIDE 22: SECTION A DETAIL -->
+<div class="slide" data-notes="8 MCQs. Mix of concept-recognition and applied. Cover Weeks 1-7: research questions, literature review, data types, chart types, correlation vs causation, policy brief structure, framing, ethos/pathos/logos, media types. Tips: read all four options before answering. If unsure, eliminate wrong answers first. Don't spend more than 2 minutes per question.">
+  <h2>Section A: Multiple Choice</h2>
+  <ul>
+    <li>8 questions, 4 options each, 1 mark per question</li>
+    <li>Covers Weeks 1–7: research methods, data, policy writing, framing, persuasion, media</li>
+    <li>Mix of definition questions and applied scenarios</li>
+  </ul>
+  <div class="highlight"><strong>Tip:</strong> Read ALL four options before answering. Eliminate obviously wrong answers first. Don't spend more than 2 minutes on any one question.</div>
+</div>
+
+<!-- SLIDE 23: SECTION B DETAIL -->
+<div class="slide" data-notes="A short passage — could be a campaign message, a policy statement, a social media post, etc. Two questions: (1) identify the framing type with evidence from the text, (2) identify persuasion modes with evidence from the text. 2 marks each. Write 3-5 sentences per answer. Key: always quote specific words or phrases from the passage.">
+  <h2>Section B: Short Analysis</h2>
+  <ul>
+    <li>Read a short passage (~100 words)</li>
+    <li><strong>Question 1 (2 marks):</strong> Identify the framing type. Cite specific words.</li>
+    <li><strong>Question 2 (2 marks):</strong> Identify persuasion modes (ethos, pathos, logos). Give examples from the text.</li>
+  </ul>
+  <div class="highlight"><strong>Tip:</strong> Always quote specific words or phrases from the passage. "The passage uses negative framing, as seen in the phrase '...' " gets full marks. Vague answers don't.</div>
+</div>
+
+<!-- SLIDE 24: SECTION C DETAIL -->
+<div class="slide" data-notes="This is the big one — 8 marks, 300-400 words. You get a scenario (e.g., 'An NGO wants to raise awareness about X. Design a campaign.'). Four parts, each worth 2 marks: (a) target audience, (b) framing strategy, (c) key message using 2+ persuasion modes, (d) ethical awareness. The marking scheme rewards specificity. 'Young people' = weak. 'University students aged 18-25 in Northern Cyprus who use Instagram' = strong. We're going to practise this right now.">
+  <h2>Section C: Applied Scenario</h2>
+  <p>You receive a scenario. Write a campaign communication plan (300–400 words).</p>
+  <table>
+    <tr><th>Part</th><th>What to write</th><th>Marks</th></tr>
+    <tr><td>(a) Target Audience</td><td>Specific group, demographics, why them</td><td>2</td></tr>
+    <tr><td>(b) Framing Strategy</td><td>Positive, negative, or both — explain + example message</td><td>2</td></tr>
+    <tr><td>(c) Key Message</td><td>3–4 sentences using ≥2 persuasion modes</td><td>2</td></tr>
+    <tr><td>(d) Ethical Awareness</td><td>One risk + how to avoid it</td><td>2</td></tr>
+  </table>
+  <div class="warn"><strong>Common mistake:</strong> vague audience. "Young people" = weak. "University students aged 18–25 in Northern Cyprus who use Instagram daily" = strong.</div>
+</div>
+
+<!-- SLIDE 25: PRACTICE EXERCISE -->
+<div class="slide" data-notes="Give them 15 minutes to write this on paper or in the app. Walk around the room. After 15 minutes, we'll go through the model answer together. This is the most important activity of the day — it directly prepares them for the exam.">
+  <h2>Practice: Section C (15 min)</h2>
+  <div class="warn">
+    <strong>Scenario:</strong> A local animal shelter is struggling. Fewer people are adopting pets, and the shelter is running out of space and funding. The shelter director has asked you to design a short communication campaign to encourage more adoptions.
+  </div>
+  <p style="margin-top:1em">Write your answer now — parts (a), (b), (c), and (d). You have <strong>15 minutes</strong>.</p>
+  <p class="subtitle">Use the session app or write on paper. This is practice — not graded.</p>
+</div>
+
+<!-- SLIDE 26: MODEL ANSWER -->
+<div class="slide" data-notes="Go through each part. (a) Young adults 20-30 near the shelter, especially students — flexible schedules, social media users, easy to reach. (b) Both: negative to open (urgency — shelter is full, animals face being put down), positive to close (one visit could change two lives). (c) Use logos (47 animals, vaccinated), ethos (Dr. Polat, head vet), pathos (so much love to give, your new best friend). (d) Risk: guilt-tripping with distressing images. Avoid by focusing on hopeful images and factual urgency. Read the model slowly and explain the scoring logic.">
+  <h2>Model Answer: Key Points</h2>
+  <table>
+    <tr><th>Part</th><th>Strong Answer Includes</th></tr>
+    <tr><td>(a) Audience</td><td>Specific: "Young adults 20–30, students, near the shelter, active on social media." Explains <em>why</em> this group.</td></tr>
+    <tr><td>(b) Framing</td><td>Both: negative opening (urgency, shelter capacity), positive close (rewarding action). Gives example phrases.</td></tr>
+    <tr><td>(c) Message</td><td>Uses logos (47 animals, vaccinated), ethos (vet's quote), pathos (emotional language). Labels each mode.</td></tr>
+    <tr><td>(d) Ethics</td><td>Names a specific risk (guilt-tripping, distressing images). Says how to avoid it (hopeful imagery, factual urgency).</td></tr>
+  </table>
+  <div class="highlight"><strong>Scoring logic:</strong> Each part is 0–2 marks. 0 = missing or irrelevant. 1 = partially correct or vague. 2 = specific, accurate, and well-explained.</div>
+</div>
+
+<!-- SLIDE 27: CONCEPT MAP — WHAT TO STUDY -->
+<div class="slide" data-notes="Quick review of all testable concepts. Don't read the whole list — highlight the ones students tend to forget: correlation vs causation, policy brief vs essay, owned media, boomerang effect. Tell them the midterm review app has flashcards and practice questions for all of these.">
+  <h2>What to Study: Key Concepts</h2>
+  <div class="card-row">
+    <div class="card">
+      <h3>Weeks 1–3</h3>
+      <p>Research question · Literature review · Primary vs secondary sources · Citation · Thesis statement · Essay structure</p>
+    </div>
+    <div class="card">
+      <h3>Week 4</h3>
+      <p>Quantitative vs qualitative · Bar / line / pie / scatter · Correlation vs causation · Misleading visualisations</p>
+    </div>
+  </div>
+  <div class="card-row">
+    <div class="card">
+      <h3>Week 5</h3>
+      <p>Policy brief structure · Brief vs essay · Evidence-based argument · Executive summary</p>
+    </div>
+    <div class="card">
+      <h3>Weeks 6–7</h3>
+      <p>Target audience · Positive/negative framing · Ethos/pathos/logos · Paid/earned/owned media · Message discipline · Negative campaigning · Boomerang effect · Ethics of persuasion</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 28: STUDY TIPS + REVIEW APP -->
+<div class="slide" data-notes="Share the midterm review app link. Emphasise: the app has flashcards, practice MCQs, a practice Section B with model answers, and a practice Section C with a model answer. All auto-saving. Tell them to go through EVERY concept in the Checklist tab — if they can explain it without looking, they're ready.">
+  <h2>Study Resources</h2>
+  <ul>
+    <li><strong>Midterm Review App</strong> — flashcards, practice MCQs, practice scenarios with model answers</li>
+    <li><strong>Policy Brief Writer</strong> — revisit your brief structure</li>
+    <li><strong>Week 6 App</strong> — framing experiment and concept notes</li>
+    <li><strong>This week's App</strong> — Ad Autopsy notes and group workshop</li>
+  </ul>
+  <div class="highlight"><strong>Self-test method:</strong> Go through every concept in the Checklist tab. If you can explain it in your own words without looking — you know it. Whatever is left unchecked — that's what you need to study.</div>
+  <p style="margin-top:1em;font-size:clamp(1rem,2vw,1.3rem)"><strong>Links are on Teams and in the session app.</strong></p>
+</div>
+
+<!-- SLIDE 29: Q&A -->
+<div class="slide" data-notes="Open the floor. Answer questions honestly. If they ask 'will X be on the exam?' you can say: anything from Weeks 1-7 is fair game, but the exam tests understanding, not memorisation. If they ask about Section C: practise writing one more scenario at home. Time yourself. 40 minutes, 300-400 words.">
+  <div class="center">
+    <p class="emoji">❓</p>
+    <h1>Questions?</h1>
+    <p>About the exam, the policy brief, your group project — anything.</p>
+  </div>
+</div>
+
+<!-- SLIDE 30: CLOSING -->
+<div class="slide" data-notes="Final reminders. Policy brief: tonight 23:59. Midterm: next week, date TBD — check Teams. Midterm review app: study with it. After the midterm: we move into MUN preparation. Thank them, wish them luck with the brief tonight.">
+  <div class="center">
+    <h1>See You at the Midterm</h1>
+    <div style="margin-top:1.5em">
+      <p><strong>Tonight 23:59</strong> — Policy Brief deadline</p>
+      <p><strong>Week 8</strong> — Midterm exam (date TBD, check Teams)</p>
+      <p><strong>Week 9</strong> — MUN Preparation begins</p>
+    </div>
+    <p style="margin-top:1.5em;color:var(--muted)">Good luck with the brief. Start early on midterm revision.</p>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<div class="notes" id="notes"></div>
+<div class="nav-bar">
+  <button onclick="go(-1)">◀ Prev</button>
+  <span class="counter" id="counter"></span>
+  <span style="color:var(--muted);font-size:.75rem">N = notes · F = fullscreen · arrows/space = navigate</span>
+  <button onclick="go(1)">Next ▶</button>
+</div>
+
+<script>
+const slides=document.querySelectorAll('.slide');
+let cur=0;
+const total=slides.length;
+
+function show(n){
+  if(n<0||n>=total)return;
+  slides[cur].classList.remove('active');
+  cur=n;
+  slides[cur].classList.add('active');
+  document.getElementById('counter').textContent=`${cur+1} / ${total}`;
+  document.getElementById('progress').style.width=((cur+1)/total*100)+'%';
+  const note=slides[cur].getAttribute('data-notes');
+  document.getElementById('notes').innerHTML=note?`<strong>Speaker Notes:</strong> ${note}`:'';
+  sessionStorage.setItem('w7slide',cur);
+}
+
+function go(d){show(cur+d)}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(1)}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(-1)}
+  else if(e.key==='Home'){e.preventDefault();show(0)}
+  else if(e.key==='End'){e.preventDefault();show(total-1)}
+  else if(e.key.toLowerCase()==='n'){document.getElementById('notes').classList.toggle('show')}
+  else if(e.key.toLowerCase()==='f'){
+    if(!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{});
+    else document.exitFullscreen();
+  }
+});
+
+let tx=0;
+document.addEventListener('touchstart',e=>{tx=e.changedTouches[0].screenX},{passive:true});
+document.addEventListener('touchend',e=>{
+  const diff=e.changedTouches[0].screenX-tx;
+  if(Math.abs(diff)>50){diff<0?go(1):go(-1)}
+},{passive:true});
+
+document.querySelector('.deck').addEventListener('click',e=>{
+  if(e.target.tagName==='A'||e.target.tagName==='BUTTON'||e.target.closest('button'))return;
+  const x=e.clientX/window.innerWidth;
+  x>.5?go(1):go(-1);
+});
+
+const saved=sessionStorage.getItem('w7slide');
+show(saved?parseInt(saved):0);
+</script>
+</body>
+</html>
