@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PSIR 172 – MUN Learning Companion</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --panel:#121a31;
+      --panel-2:#182243;
+      --card:#1d2a52;
+      --text:#edf2ff;
+      --muted:#b9c5ea;
+      --accent:#7cc4ff;
+      --accent-2:#8ef0c3;
+      --warn:#ffd27a;
+      --danger:#ff9b9b;
+      --line:rgba(255,255,255,.12);
+      --shadow:0 12px 28px rgba(0,0,0,.24);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:linear-gradient(180deg,#0b1020 0%,#0e1530 100%);color:var(--text);font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;line-height:1.5}
+    a{color:var(--accent)}
+    .wrap{max-width:1200px;margin:0 auto;padding:24px}
+    .hero{
+      background:linear-gradient(135deg,rgba(124,196,255,.16),rgba(142,240,195,.12));
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:28px;
+      box-shadow:var(--shadow);
+      margin-bottom:20px;
+    }
+    .hero h1{margin:0 0 8px;font-size:clamp(1.7rem,3.2vw,2.8rem)}
+    .hero p{margin:8px 0;color:var(--muted);max-width:900px}
+    .hero-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:12px;
+      margin-top:18px;
+    }
+    .kpi{
+      background:rgba(255,255,255,.05);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+    }
+    .kpi .label{font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+    .kpi .value{font-size:1.2rem;font-weight:700;margin-top:4px}
+    .topbar{
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;
+      margin:14px 0 18px;
+    }
+    .controls{
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+    }
+    .btn{
+      border:none;
+      border-radius:12px;
+      padding:10px 14px;
+      font-weight:700;
+      cursor:pointer;
+      background:var(--accent);
+      color:#06101e;
+      transition:.2s ease;
+    }
+    .btn:hover{transform:translateY(-1px);filter:brightness(1.03)}
+    .btn.secondary{background:#22315f;color:var(--text);border:1px solid var(--line)}
+    .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+    .btn.warn{background:var(--warn);color:#352300}
+    .btn.small{padding:7px 10px;font-size:.9rem}
+    .tabs{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+      gap:10px;
+      margin-bottom:18px;
+    }
+    .tab{
+      background:var(--panel);
+      border:1px solid var(--line);
+      color:var(--text);
+      border-radius:14px;
+      padding:12px 14px;
+      cursor:pointer;
+      text-align:left;
+      font-weight:700;
+    }
+    .tab.active{
+      background:linear-gradient(135deg,rgba(124,196,255,.2),rgba(142,240,195,.14));
+      outline:2px solid rgba(124,196,255,.3);
+    }
+    .panel{
+      display:none;
+      background:rgba(255,255,255,.03);
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:22px;
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+    }
+    .panel.active{display:block}
+    .panel h2{margin-top:0;font-size:1.55rem}
+    .panel h3{margin-top:22px}
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(12,1fr);
+      gap:16px;
+    }
+    .col-12{grid-column:span 12}
+    .col-8{grid-column:span 8}
+    .col-6{grid-column:span 6}
+    .col-4{grid-column:span 4}
+    .card{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px;
+    }
+    .callout{
+      border-left:4px solid var(--accent-2);
+      background:rgba(142,240,195,.08);
+      padding:14px 16px;
+      border-radius:12px;
+      margin:14px 0;
+    }
+    .warnbox{
+      border-left:4px solid var(--warn);
+      background:rgba(255,210,122,.08);
+      padding:14px 16px;
+      border-radius:12px;
+      margin:14px 0;
+    }
+    .dangerbox{
+      border-left:4px solid var(--danger);
+      background:rgba(255,155,155,.08);
+      padding:14px 16px;
+      border-radius:12px;
+      margin:14px 0;
+    }
+    ul,ol{padding-left:20px}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .chip{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      background:#243562;
+      border:1px solid var(--line);
+      color:var(--text);
+      font-size:.9rem;
+    }
+    .mini{
+      color:var(--muted);
+      font-size:.94rem;
+    }
+    details{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px 14px;
+      background:var(--panel);
+      margin:10px 0;
+    }
+    summary{
+      cursor:pointer;
+      font-weight:700;
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:10px;
+      overflow:hidden;
+      border-radius:12px;
+    }
+    th,td{
+      border:1px solid var(--line);
+      padding:10px 12px;
+      vertical-align:top;
+      text-align:left;
+    }
+    th{background:#1b2750}
+    textarea{
+      width:100%;
+      min-height:110px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#0f1732;
+      color:var(--text);
+      padding:12px;
+      resize:vertical;
+      font:inherit;
+    }
+    .quiz-option{
+      display:block;
+      margin:8px 0;
+      padding:10px 12px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:#111938;
+      cursor:pointer;
+    }
+    .quiz-option input{margin-right:8px}
+    .score{
+      font-weight:800;
+      color:var(--accent-2);
+      margin-top:10px;
+    }
+    .footer{
+      color:var(--muted);
+      font-size:.92rem;
+      padding:16px 0 26px;
+    }
+    .resource-list li{margin:8px 0}
+    .two-col{
+      columns:2;
+      column-gap:20px;
+    }
+    @media (max-width:900px){
+      .col-8,.col-6,.col-4{grid-column:span 12}
+      .two-col{columns:1}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>PSIR 172 – MUN Learning Companion</h1>
+      <p>
+        This app is your <strong>learning guide</strong> for our Model United Nations simulation.
+        It explains the United Nations, common MUN formats, how our class simulation works,
+        how to write a position paper, how to give an opening speech, and how to draft resolutions.
+      </p>
+      <p>
+        Use this app to <strong>learn the process</strong>. Use the separate
+        <strong>Student Toolkit</strong> to actually build your briefing, speech, position paper, and draft text.
+      </p>
+
+      <div class="hero-grid">
+        <div class="kpi">
+          <div class="label">Course</div>
+          <div class="value">PSIR 172</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Simulation Style</div>
+          <div class="value">GA-style Humanitarian Committee</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Agenda</div>
+          <div class="value">Refugees & Displacement</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Class Format</div>
+          <div class="value">18 Delegations × 2 Students</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="topbar">
+      <div class="controls">
+        <button class="btn secondary" onclick="openTab('overview')">Start Here</button>
+        <button class="btn secondary" onclick="openTab('process')">How MUN Works</button>
+        <button class="btn secondary" onclick="openTab('writing')">Writing Help</button>
+        <button class="btn secondary" onclick="openTab('faq')">FAQ</button>
+      </div>
+      <div class="controls">
+        <a class="btn" href="psir172-mun-student-toolkit.html">Open Student Toolkit</a>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="overview" onclick="openTab('overview')">1. UN & MUN Basics</button>
+      <button class="tab" data-tab="committee" onclick="openTab('committee')">2. Our Class Committee</button>
+      <button class="tab" data-tab="process" onclick="openTab('process')">3. MUN Process</button>
+      <button class="tab" data-tab="writing" onclick="openTab('writing')">4. Writing Support</button>
+      <button class="tab" data-tab="protocol" onclick="openTab('protocol')">5. Protocol & Survival Guide</button>
+      <button class="tab" data-tab="interactive" onclick="openTab('interactive')">6. Videos, Quiz & Practice</button>
+      <button class="tab" data-tab="faq" onclick="openTab('faq')">7. FAQ</button>
+      <button class="tab" data-tab="resources" onclick="openTab('resources')">8. Resources</button>
+    </div>
+
+    <section class="panel active" id="overview">
+      <h2>UN & MUN Basics</h2>
+
+      <div class="callout">
+        <strong>Big idea:</strong> In Model United Nations, you do <em>not</em> speak as yourself.
+        You represent a country, defend that country’s interests, and try to negotiate realistic outcomes.
+      </div>
+
+      <div class="grid">
+        <div class="col-6">
+          <div class="card">
+            <h3>What is the United Nations?</h3>
+            <p>
+              The United Nations (UN) is an international organization founded in 1945.
+              It brings states together to address international peace and security,
+              development, human rights, humanitarian crises, and international cooperation.
+            </p>
+            <p class="mini">
+              In simple terms: it is one of the main global forums where states debate problems,
+              negotiate responses, and coordinate action.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="card">
+            <h3>What is Model UN?</h3>
+            <p>
+              Model UN (MUN) is a classroom or conference simulation of UN-style diplomacy.
+              Students represent states, research positions, deliver speeches, negotiate with other delegates,
+              and draft documents such as resolutions.
+            </p>
+            <p class="mini">
+              The point is not just public speaking. It is also about research, strategic thinking,
+              negotiation, and understanding how international politics works in practice.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card">
+            <h3>The UN’s six principal organs</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Body</th>
+                  <th>What it does</th>
+                  <th>Why it matters for MUN</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>General Assembly (GA)</td>
+                  <td>All member states participate; discusses a wide range of international issues.</td>
+                  <td>Most classroom MUNs use GA-style bodies because they allow broad participation.</td>
+                </tr>
+                <tr>
+                  <td>Security Council (UNSC)</td>
+                  <td>Focuses on international peace and security; smaller membership; can act more directly.</td>
+                  <td>Popular in MUN, but often too small and restrictive for large classes.</td>
+                </tr>
+                <tr>
+                  <td>ECOSOC</td>
+                  <td>Coordinates work on economic, social, and development issues.</td>
+                  <td>Good for issue-based and development-oriented simulations.</td>
+                </tr>
+                <tr>
+                  <td>International Court of Justice (ICJ)</td>
+                  <td>Settles legal disputes between states and issues advisory opinions.</td>
+                  <td>Some MUNs simulate legal argument rather than committee debate.</td>
+                </tr>
+                <tr>
+                  <td>Secretariat</td>
+                  <td>Administrative arm of the UN, led by the Secretary-General.</td>
+                  <td>In some simulations, staff or crisis updates imitate secretariat functions.</td>
+                </tr>
+                <tr>
+                  <td>Trusteeship Council</td>
+                  <td>Historically oversaw trust territories; now inactive.</td>
+                  <td>Mostly part of UN background rather than common simulation practice.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="card">
+            <h3>Common MUN formats worldwide</h3>
+            <div class="chips">
+              <span class="chip">General Assembly</span>
+              <span class="chip">Security Council</span>
+              <span class="chip">ECOSOC</span>
+              <span class="chip">Regional Bodies</span>
+              <span class="chip">Specialized Agencies</span>
+              <span class="chip">Crisis Committees</span>
+            </div>
+            <p style="margin-top:12px">
+              Different formats produce different classroom dynamics.
+              Large bodies encourage broad participation; smaller bodies may be more intense and competitive;
+              crisis bodies move faster and often require improvisation.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="card">
+            <h3>Why we are not doing UNSC</h3>
+            <ul>
+              <li>The real Security Council has only 15 members.</li>
+              <li>Our class is much larger, so UNSC would exclude too many students.</li>
+              <li>A General Assembly-style format is easier for first-year students.</li>
+              <li>GA-style debate suits a humanitarian topic like refugees and displacement.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="committee">
+      <h2>Our Class Committee</h2>
+
+      <div class="callout">
+        <strong>Our design:</strong> one full-class, single-room, General Assembly-style humanitarian committee
+        on <strong>International Responsibility-Sharing for Refugees and Displaced Persons</strong>.
+      </div>
+
+      <div class="grid">
+        <div class="col-6">
+          <div class="card">
+            <h3>Why this format fits our class</h3>
+            <ul>
+              <li>Everyone participates in the same room.</li>
+              <li>Each delegation has two students, so responsibilities can be shared.</li>
+              <li>The topic is broad enough to generate different national positions.</li>
+              <li>Students can research the issue with accessible sources.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="card">
+            <h3>What each delegation does</h3>
+            <ul>
+              <li>Research the assigned country</li>
+              <li>Identify national interests and likely policy positions</li>
+              <li>Write a position paper</li>
+              <li>Prepare an opening speech</li>
+              <li>Negotiate with other delegations</li>
+              <li>Help draft or amend a resolution</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card">
+            <h3>How this simulation differs from a real UN committee</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Real UN</th>
+                  <th>Our classroom MUN</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Long negotiations across many meetings</td>
+                  <td>Compressed into a few class sessions</td>
+                </tr>
+                <tr>
+                  <td>Formal institutional procedures and long document chains</td>
+                  <td>Simplified rules for clarity and time management</td>
+                </tr>
+                <tr>
+                  <td>Professional diplomats and state officials</td>
+                  <td>Students learning diplomatic role-play</td>
+                </tr>
+                <tr>
+                  <td>Large staffs and extensive resources</td>
+                  <td>Research using class tools and public sources</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="warnbox">
+            <strong>Important:</strong> this is not a test of whether you personally agree with your country.
+            It is a test of whether you can understand and represent a state position in a diplomatic setting.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="process">
+      <h2>How MUN Works: Step by Step</h2>
+
+      <div class="grid">
+        <div class="col-12">
+          <div class="card">
+            <h3>The basic flow</h3>
+            <ol>
+              <li><strong>Get assigned a country</strong> and learn its role in the issue.</li>
+              <li><strong>Research</strong> its interests, concerns, and likely policy positions.</li>
+              <li><strong>Write a position paper</strong> summarizing what your country wants.</li>
+              <li><strong>Prepare an opening speech</strong> that states your position clearly.</li>
+              <li><strong>Participate in formal debate</strong> when recognized by the chair.</li>
+              <li><strong>Caucus informally</strong> with other delegates to form alliances or blocs.</li>
+              <li><strong>Draft clauses</strong> and negotiate wording for a resolution.</li>
+              <li><strong>Debate and revise</strong> draft language.</li>
+              <li><strong>Vote or seek consensus</strong> on final text.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="col-4">
+          <div class="card">
+            <h3>Before committee</h3>
+            <ul>
+              <li>Learn the issue</li>
+              <li>Learn the country</li>
+              <li>Map allies and tensions</li>
+              <li>Prepare your speech</li>
+              <li>Know your red lines</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-4">
+          <div class="card">
+            <h3>During formal session</h3>
+            <ul>
+              <li>Speak when recognized</li>
+              <li>Be concise</li>
+              <li>Stay in character</li>
+              <li>Ask what action is realistic</li>
+              <li>Listen for possible allies</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-4">
+          <div class="card">
+            <h3>During caucusing</h3>
+            <ul>
+              <li>Find common ground</li>
+              <li>Compare priorities</li>
+              <li>Trade wording</li>
+              <li>Build coalitions</li>
+              <li>Draft usable clauses</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card">
+            <h3>What is caucusing?</h3>
+            <p>
+              Caucusing is the less formal phase of committee when delegates move around, talk directly,
+              compare ideas, and try to build support. This is often where the real political work happens.
+            </p>
+            <p class="mini">
+              In other words: formal speeches show positions, but caucusing often produces deals.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="card">
+            <h3>What does “bloc formation” mean?</h3>
+            <p>
+              A bloc is a loose grouping of countries with similar concerns or overlapping goals.
+              For example, host states may want more burden-sharing, donor states may push funding mechanisms,
+              and sovereignty-focused states may resist overly intrusive language.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="card">
+            <h3>What makes a strong delegate?</h3>
+            <ul>
+              <li>Knows the country’s position</li>
+              <li>Speaks clearly and briefly</li>
+              <li>Offers realistic proposals</li>
+              <li>Negotiates rather than just repeats moral claims</li>
+              <li>Can compromise on wording without losing core interests</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="writing">
+      <h2>Writing Support: Position Papers, Speeches, and Resolutions</h2>
+
+      <div class="grid">
+        <div class="col-6">
+          <div class="card">
+            <h3>Position paper: what it should do</h3>
+            <ul>
+              <li>Explain the issue briefly</li>
+              <li>State your country’s position</li>
+              <li>Identify interests and concerns</li>
+              <li>Show what your delegation supports</li>
+              <li>Indicate what your delegation rejects</li>
+              <li>End with realistic proposals</li>
+            </ul>
+            <div class="callout">
+              <strong>Think of it like this:</strong> your position paper is your delegation’s roadmap for committee.
+            </div>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="card">
+            <h3>Opening speech: what it should do</h3>
+            <ul>
+              <li>Name the problem</li>
+              <li>Show why it matters to your country</li>
+              <li>State your country’s principle or concern</li>
+              <li>Call for one or two realistic actions</li>
+            </ul>
+            <p class="mini">Aim for about 45–75 seconds.</p>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card">
+            <h3>How resolutions work</h3>
+            <p>
+              A resolution usually has two major parts:
+            </p>
+            <ul>
+              <li><strong>Preambulatory clauses</strong> – background, principles, concerns, context</li>
+              <li><strong>Operative clauses</strong> – actions the committee recommends, requests, encourages, or supports</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="card">
+            <h3>Preambulatory clause starters</h3>
+            <div class="chips">
+              <span class="chip">Recognizing</span>
+              <span class="chip">Acknowledging</span>
+              <span class="chip">Deeply concerned</span>
+              <span class="chip">Noting with concern</span>
+              <span class="chip">Recalling</span>
+              <span class="chip">Affirming</span>
+              <span class="chip">Emphasizing</span>
+              <span class="chip">Guided by</span>
+            </div>
+            <p style="margin-top:12px">
+              These set the context. They do not tell states what to do. They explain why the issue matters.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="card">
+            <h3>Operative clause starters</h3>
+            <div class="chips">
+              <span class="chip">Calls upon</span>
+              <span class="chip">Encourages</span>
+              <span class="chip">Recommends</span>
+              <span class="chip">Requests</span>
+              <span class="chip">Supports</span>
+              <span class="chip">Urges</span>
+              <span class="chip">Invites</span>
+              <span class="chip">Further requests</span>
+            </div>
+            <p style="margin-top:12px">
+              These are the action clauses. They say what the committee wants to happen.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card">
+            <h3>Mini example</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Example</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Preambulatory</td>
+                  <td><em>Recognizing</em> the disproportionate pressure placed on major refugee-hosting states,</td>
+                </tr>
+                <tr>
+                  <td>Operative</td>
+                  <td><em>Encourages</em> member states to increase financial and technical support for countries hosting large refugee populations,</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="card">
+            <h3>Strong diplomatic phrasing</h3>
+            <ul class="two-col">
+              <li>The delegation of ___ emphasizes…</li>
+              <li>Our delegation recognizes…</li>
+              <li>We stress the importance of…</li>
+              <li>We encourage member states to…</li>
+              <li>We remain concerned about…</li>
+              <li>We support practical cooperation on…</li>
+              <li>We call for balanced responsibility-sharing…</li>
+              <li>We welcome constructive dialogue…</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="card">
+            <h3>Weak habits to avoid</h3>
+            <ul>
+              <li>Speaking only from personal opinion</li>
+              <li>Using very emotional but vague language</li>
+              <li>Saying “we should just solve it” without a mechanism</li>
+              <li>Ignoring sovereignty and political constraints</li>
+              <li>Proposing unrealistic or impossible solutions</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="warnbox">
+            <strong>Rule of thumb:</strong> good MUN writing is not just morally expressive.
+            It is politically realistic, specific, and state-centered.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="protocol">
+      <h2>Protocol & Survival Guide</h2>
+
+      <div class="grid">
+        <div class="col-6">
+          <div class="card">
+            <h3>Basic rules for students</h3>
+            <ol>
+              <li>Speak as your assigned country, not as yourself.</li>
+              <li>Wait to be recognized before speaking in formal session.</li>
+              <li>Be brief and clear.</li>
+              <li>Use diplomatic language even when disagreeing.</li>
+              <li>Negotiate actively during caucusing.</li>
+              <li>Try to improve wording, not just repeat positions.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="card">
+            <h3>What common phrases mean</h3>
+            <ul>
+              <li><strong>“The Chair recognizes…”</strong> = you may speak now.</li>
+              <li><strong>“Motion”</strong> = a formal proposal for how committee should proceed.</li>
+              <li><strong>“Caucus”</strong> = a structured or informal discussion phase.</li>
+              <li><strong>“Amendment”</strong> = a proposed change to draft text.</li>
+              <li><strong>“Yield”</strong> = giving up or transferring remaining speaking time, where allowed.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card">
+            <h3>How to disagree diplomatically</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Less effective</th>
+                  <th>Better diplomatic version</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>That idea is wrong.</td>
+                  <td>Our delegation has reservations about that proposal.</td>
+                </tr>
+                <tr>
+                  <td>We reject that completely.</td>
+                  <td>Our delegation would have difficulty supporting that language in its current form.</td>
+                </tr>
+                <tr>
+                  <td>You are being unrealistic.</td>
+                  <td>Our delegation believes a more practical approach would be…</td>
+                </tr>
+                <tr>
+                  <td>That violates our interests.</td>
+                  <td>Our delegation is concerned that such a measure may conflict with national capacity or sovereignty considerations.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="card">
+            <h3>If you feel nervous</h3>
+            <ul>
+              <li>Use your position paper as your anchor.</li>
+              <li>Keep your opening speech short and prepared.</li>
+              <li>During caucus, ask questions before making big statements.</li>
+              <li>You do not need to sound like a professional diplomat.</li>
+              <li>You do need to sound prepared, respectful, and clear.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="card">
+            <h3>If you get stuck</h3>
+            <ul>
+              <li>Return to your country’s interests.</li>
+              <li>Ask: what would our delegation realistically support?</li>
+              <li>Ask another delegation: what language could we both accept?</li>
+              <li>Propose a narrower, more practical clause.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="dangerbox">
+            <strong>Do not panic if you do not know everything.</strong>
+            No delegation knows every detail. The goal is not perfection.
+            The goal is informed, diplomatic participation.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="interactive">
+      <h2>Videos, Quiz & Practice</h2>
+
+      <div class="grid">
+        <div class="col-6">
+          <div class="card">
+            <h3>Suggested video section</h3>
+            <p>
+              You can replace the links below with your preferred videos later.
+              For now, this section acts as a placeholder for short explainers on MUN procedure,
+              speeches, and resolution writing.
+            </p>
+            <ul class="resource-list">
+              <li><a href="https://www.un.org/en/mun/page/getting-started-model-united-nations" target="_blank">UN: Getting Started with Model UN</a></li>
+              <li><a href="https://www.harvardmun.org/committee-list" target="_blank">Harvard MUN: Committee Types</a></li>
+              <li><a href="https://www.amun.org/simulation-guide/" target="_blank">AMUN: Model UN in a Box</a></li>
+            </ul>
+            <p class="mini">
+              If you want, later we can embed YouTube videos directly into this page.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="card">
+            <h3>Practice prompt</h3>
+            <p><strong>Scenario:</strong> Your country thinks refugee-hosting states need more help, but does not want mandatory quotas.</p>
+            <p><strong>Try saying:</strong></p>
+            <textarea id="practiceBox" placeholder="Write 2–4 diplomatic sentences here..."></textarea>
+            <button class="btn small" onclick="copyPractice()">Copy Practice Response</button>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card">
+            <h3>Quick self-check quiz</h3>
+
+            <div class="quiz-item">
+              <p><strong>1. In MUN, what is your main task?</strong></p>
+              <label class="quiz-option"><input type="radio" name="q1" value="0"> Express your personal opinion as strongly as possible</label>
+              <label class="quiz-option"><input type="radio" name="q1" value="1"> Represent your assigned country’s position and negotiate realistic outcomes</label>
+              <label class="quiz-option"><input type="radio" name="q1" value="0"> Try to win every argument regardless of realism</label>
+            </div>
+
+            <div class="quiz-item">
+              <p><strong>2. What do operative clauses do?</strong></p>
+              <label class="quiz-option"><input type="radio" name="q2" value="0"> They give historical background only</label>
+              <label class="quiz-option"><input type="radio" name="q2" value="1"> They state the actions the committee recommends or supports</label>
+              <label class="quiz-option"><input type="radio" name="q2" value="0"> They list delegate attendance</label>
+            </div>
+
+            <div class="quiz-item">
+              <p><strong>3. Why are we using a GA-style committee instead of the UNSC?</strong></p>
+              <label class="quiz-option"><input type="radio" name="q3" value="1"> Because GA-style format fits a larger class and broader participation</label>
+              <label class="quiz-option"><input type="radio" name="q3" value="0"> Because the Security Council does not discuss refugee issues</label>
+              <label class="quiz-option"><input type="radio" name="q3" value="0"> Because the General Assembly is more legally powerful than the UNSC in every respect</label>
+            </div>
+
+            <div class="quiz-item">
+              <p><strong>4. What is caucusing mainly for?</strong></p>
+              <label class="quiz-option"><input type="radio" name="q4" value="0"> Avoiding negotiation</label>
+              <label class="quiz-option"><input type="radio" name="q4" value="1"> Informal discussion, alliance building, and drafting</label>
+              <label class="quiz-option"><input type="radio" name="q4" value="0"> Replacing all speeches permanently</label>
+            </div>
+
+            <button class="btn" onclick="gradeQuiz()">Check Quiz</button>
+            <div class="score" id="quizScore"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="faq">
+      <h2>FAQ</h2>
+
+      <details open>
+        <summary>What if I personally disagree with my country?</summary>
+        <p>
+          That is normal. In MUN you are not defending your own beliefs. You are practicing political representation,
+          role-play, and diplomatic analysis.
+        </p>
+      </details>
+
+      <details>
+        <summary>What if I am shy or uncomfortable speaking?</summary>
+        <p>
+          Prepare a short opening speech in advance, speak clearly, and keep it simple.
+          Also remember that MUN is not only about speeches; research, drafting, and negotiation matter too.
+        </p>
+      </details>
+
+      <details>
+        <summary>What if I do not know my country perfectly?</summary>
+        <p>
+          No one knows everything. Focus on the agenda, your country’s basic interests,
+          and a few realistic positions it would likely support or oppose.
+        </p>
+      </details>
+
+      <details>
+        <summary>Do I need to sound extremely formal?</summary>
+        <p>
+          No. You should be respectful and diplomatic, but you do not need to sound artificial.
+          Clear and professional is better than exaggerated imitation.
+        </p>
+      </details>
+
+      <details>
+        <summary>What if our delegation is unsure about a clause?</summary>
+        <p>
+          Ask whether the wording is realistic, whether it fits your country’s interests,
+          and whether it could gain support from others. Good MUN often depends on wording changes.
+        </p>
+      </details>
+
+      <details>
+        <summary>What if I say something incorrect?</summary>
+        <p>
+          Correct yourself, refine your point, or shift to a more general position.
+          Committee is about problem-solving and adaptation, not perfection.
+        </p>
+      </details>
+    </section>
+
+    <section class="panel" id="resources">
+      <h2>Resources</h2>
+
+      <div class="card">
+        <h3>Useful links</h3>
+        <ul class="resource-list">
+          <li><a target="_blank" href="https://www.un.org/en/about-us/main-bodies">United Nations – Main Bodies</a></li>
+          <li><a target="_blank" href="https://www.un.org/en/mun/page/getting-started-model-united-nations">United Nations – Getting Started with Model UN</a></li>
+          <li><a target="_blank" href="https://www.harvardmun.org/committee-list">Harvard Model UN – Committee List / Types</a></li>
+          <li><a target="_blank" href="https://www.amun.org/simulation-guide/">AMUN – Model UN in a Box</a></li>
+          <li><a target="_blank" href="https://www.amun.org/handbooks/2025/2025-handbook/simulations-roles-and-roleplaying-2025/">AMUN Handbook – Simulations, Roles, and Roleplaying</a></li>
+        </ul>
+      </div>
+
+      <div class="callout">
+        <strong>Use this app to learn.</strong> Then open the <strong>Student Toolkit</strong> to draft your actual MUN materials.
+      </div>
+
+      <p>
+        <a class="btn" href="psir172-mun-student-toolkit.html">Go to Student Toolkit</a>
+      </p>
+    </section>
+
+    <div class="footer">
+      PSIR 172 – MUN Learning Companion. Single-file HTML classroom resource.
+    </div>
+  </div>
+
+  <script>
+    function openTab(id){
+      document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      const activeTab=document.querySelector(`.tab[data-tab="${id}"]`);
+      if(activeTab) activeTab.classList.add('active');
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    function gradeQuiz(){
+      let score = 0;
+      ['q1','q2','q3','q4'].forEach(name=>{
+        const checked = document.querySelector(`input[name="${name}"]:checked`);
+        if(checked) score += Number(checked.value);
+      });
+      const out = document.getElementById('quizScore');
+      const total = 4;
+      let message = `Score: ${score}/${total}. `;
+      if(score === 4){
+        message += 'Excellent — you understand the core logic of the simulation.';
+      } else if(score >= 3){
+        message += 'Good — you are on track.';
+      } else if(score >= 2){
+        message += 'Decent start — review the basics and try again.';
+      } else {
+        message += 'Go back through the guide once more before committee.';
+      }
+      out.textContent = message;
+    }
+
+    function copyPractice(){
+      const box = document.getElementById('practiceBox');
+      box.select();
+      box.setSelectionRange(0,99999);
+      document.execCommand('copy');
+      alert('Practice response copied.');
+    }
+  </script>
+</body>
+</html>
