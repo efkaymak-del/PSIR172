@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PSIR 172 – MUN Simulation Practice App</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --panel:#121a31;
+      --panel2:#182243;
+      --card:#1c2850;
+      --text:#eef3ff;
+      --muted:#b7c4e8;
+      --line:rgba(255,255,255,.12);
+      --accent:#7cc4ff;
+      --accent2:#8ef0c3;
+      --warn:#ffd27a;
+      --danger:#ff9b9b;
+      --good:#8ef0c3;
+      --mid:#ffd27a;
+      --bad:#ff9b9b;
+      --shadow:0 14px 32px rgba(0,0,0,.24);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      padding:0;
+      background:linear-gradient(180deg,#0b1020 0%, #0f1735 100%);
+      color:var(--text);
+      font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;
+      line-height:1.5;
+    }
+    a{color:var(--accent)}
+    .wrap{max-width:1320px;margin:0 auto;padding:24px}
+    .hero{
+      background:linear-gradient(135deg,rgba(124,196,255,.16),rgba(142,240,195,.11));
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:28px;
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+    }
+    .hero h1{margin:0 0 8px;font-size:clamp(1.8rem,3vw,2.8rem)}
+    .hero p{margin:8px 0;color:var(--muted);max-width:980px}
+    .hero-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:12px;
+      margin-top:18px;
+    }
+    .kpi{
+      background:rgba(255,255,255,.05);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+    }
+    .kpi .label{
+      font-size:.8rem;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.04em;
+    }
+    .kpi .value{
+      margin-top:4px;
+      font-size:1.08rem;
+      font-weight:800;
+    }
+    .toolbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin:18px 0;
+    }
+    .btns{display:flex;flex-wrap:wrap;gap:10px}
+    .btn{
+      display:inline-block;
+      border:none;
+      border-radius:12px;
+      padding:10px 14px;
+      font-weight:700;
+      cursor:pointer;
+      text-decoration:none;
+      background:var(--accent);
+      color:#06101e;
+      transition:.2s ease;
+    }
+    .btn:hover{transform:translateY(-1px);filter:brightness(1.03)}
+    .btn.secondary{
+      background:#22315f;
+      color:var(--text);
+      border:1px solid var(--line);
+    }
+    .btn.ghost{
+      background:transparent;
+      color:var(--text);
+      border:1px solid var(--line);
+    }
+    .btn.warn{
+      background:var(--warn);
+      color:#332300;
+    }
+    .layout{
+      display:grid;
+      grid-template-columns:360px 1fr;
+      gap:18px;
+    }
+    .panel,.main{
+      background:rgba(255,255,255,.03);
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:20px;
+      box-shadow:var(--shadow);
+    }
+    .side-card,.card{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px;
+      margin-bottom:16px;
+    }
+    .side-card h3,.card h3{margin-top:0}
+    label{
+      display:block;
+      margin:10px 0 6px;
+      font-weight:700;
+      font-size:.95rem;
+    }
+    input,select,textarea{
+      width:100%;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#0f1732;
+      color:var(--text);
+      padding:12px;
+      font:inherit;
+    }
+    textarea{min-height:100px;resize:vertical}
+    .mini{color:var(--muted);font-size:.92rem}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+    .chip{
+      display:inline-block;
+      background:#24345f;
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:.88rem;
+    }
+    .mode-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:12px;
+      margin:12px 0 6px;
+    }
+    .mode{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      background:#111938;
+      cursor:pointer;
+    }
+    .mode.active{
+      outline:2px solid rgba(124,196,255,.26);
+      background:linear-gradient(135deg,rgba(124,196,255,.18),rgba(142,240,195,.10));
+    }
+    .callout{
+      border-left:4px solid var(--accent2);
+      background:rgba(142,240,195,.08);
+      padding:14px 16px;
+      border-radius:12px;
+      margin:14px 0;
+    }
+    .warnbox{
+      border-left:4px solid var(--warn);
+      background:rgba(255,210,122,.08);
+      padding:14px 16px;
+      border-radius:12px;
+      margin:14px 0;
+    }
+    .dangerbox{
+      border-left:4px solid var(--danger);
+      background:rgba(255,155,155,.08);
+      padding:14px 16px;
+      border-radius:12px;
+      margin:14px 0;
+    }
+    .sim-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .progress{
+      width:100%;
+      height:12px;
+      border-radius:999px;
+      background:#121c3b;
+      overflow:hidden;
+      border:1px solid var(--line);
+      margin-top:10px;
+    }
+    .progress-bar{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,var(--accent),var(--accent2));
+      transition:width .25s ease;
+    }
+    .scenario{
+      background:#0f1732;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:16px;
+      margin:14px 0;
+    }
+    .feedback{
+      border-radius:16px;
+      padding:16px;
+      margin-top:14px;
+      border:1px solid var(--line);
+      background:#101938;
+    }
+    .scores{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+      gap:10px;
+      margin:12px 0;
+    }
+    .score-card{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      background:#121c3b;
+    }
+    .score-label{font-size:.82rem;color:var(--muted);text-transform:uppercase}
+    .score-value{font-size:1.2rem;font-weight:800;margin-top:3px}
+    .traffic{
+      display:inline-block;
+      padding:4px 8px;
+      border-radius:999px;
+      font-size:.82rem;
+      font-weight:800;
+    }
+    .green{background:rgba(142,240,195,.15);color:var(--good)}
+    .yellow{background:rgba(255,210,122,.15);color:var(--mid)}
+    .red{background:rgba(255,155,155,.15);color:var(--bad)}
+    .log{
+      max-height:360px;
+      overflow:auto;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:#0f1732;
+      padding:10px;
+    }
+    .log-entry{
+      border-bottom:1px solid rgba(255,255,255,.08);
+      padding:10px 4px;
+    }
+    .log-entry:last-child{border-bottom:none}
+    .tag{
+      display:inline-block;
+      font-size:.75rem;
+      padding:4px 8px;
+      border-radius:999px;
+      background:#253866;
+      border:1px solid var(--line);
+      margin-bottom:6px;
+    }
+    .footer{color:var(--muted);font-size:.92rem;padding:16px 0 28px}
+    @media (max-width:980px){
+      .layout{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>PSIR 172 – MUN Simulation Practice App</h1>
+      <p>
+        This app lets you rehearse the Model UN experience before the live class simulation.
+        It is a <strong>practice committee</strong>: you choose your delegation, select a mode,
+        respond to prompts, and receive coaching-style feedback.
+      </p>
+      <p>
+        Use it individually or with your delegation partner to practice
+        <strong>opening speeches</strong>, <strong>moderated debate</strong>,
+        <strong>caucusing</strong>, and <strong>resolution drafting</strong>.
+      </p>
+      <div class="hero-grid">
+        <div class="kpi">
+          <div class="label">Practice Modes</div>
+          <div class="value">Speech, Debate, Caucus, Clauses, Full Mini-Sim</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Feedback</div>
+          <div class="value">Tone, Realism, Specificity, Alignment</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Use</div>
+          <div class="value">Solo or Pair Practice</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Course</div>
+          <div class="value">PSIR 172 MUN</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="toolbar">
+      <div class="btns">
+        <button class="btn secondary" onclick="startSimulation()">Start / Restart</button>
+        <button class="btn secondary" onclick="nextRound()">Next Prompt</button>
+        <button class="btn ghost" onclick="saveSetup()">Save Setup</button>
+        <button class="btn ghost" onclick="loadSetup()">Load Saved</button>
+        <button class="btn warn" onclick="resetAll()">Reset All</button>
+      </div>
+      <div class="btns">
+        <a class="btn" href="psir172-mun-student-toolkit.html">Open Student Toolkit</a>
+        <a class="btn secondary" href="psir172-mun-resources.html">Open Resources App</a>
+      </div>
+    </div>
+
+    <div class="layout">
+      <aside class="panel">
+        <div class="side-card">
+          <h3>1. Delegation Setup</h3>
+          <label for="country">Country / Delegation</label>
+          <select id="country">
+            <option value="">Select country</option>
+            <option>Türkiye</option>
+            <option>Germany</option>
+            <option>Greece</option>
+            <option>Italy</option>
+            <option>Jordan</option>
+            <option>Lebanon</option>
+            <option>Pakistan</option>
+            <option>Uganda</option>
+            <option>Kenya</option>
+            <option>Bangladesh</option>
+            <option>United States</option>
+            <option>China</option>
+            <option>France</option>
+            <option>United Kingdom</option>
+            <option>Sweden</option>
+            <option>Brazil</option>
+            <option>South Africa</option>
+            <option>Mexico</option>
+          </select>
+
+          <label for="partner">Partner / Delegation teammate</label>
+          <input id="partner" type="text" placeholder="Optional name(s)" />
+
+          <label for="roleType">Role type</label>
+          <select id="roleType">
+            <option value="">Select role type</option>
+            <option>Host state</option>
+            <option>Donor state</option>
+            <option>Transit state</option>
+            <option>Destination state</option>
+            <option>Major power</option>
+            <option>Mixed / complex role</option>
+          </select>
+
+          <label for="interests">Top interests</label>
+          <textarea id="interests" placeholder="E.g. reduce burden on host states, preserve sovereignty, secure more funding, avoid mandatory quotas"></textarea>
+
+          <label for="allies">Likely allies</label>
+          <textarea id="allies" placeholder="Which countries may support your position?"></textarea>
+
+          <label for="redlines">Red lines / limits</label>
+          <textarea id="redlines" placeholder="Which proposals would your delegation likely reject?"></textarea>
+
+          <div class="callout">
+            <strong>Tip:</strong> the better your setup, the better the practice feedback.
+          </div>
+        </div>
+
+        <div class="side-card">
+          <h3>2. Practice Mode</h3>
+          <div class="mode-grid">
+            <div class="mode active" data-mode="speech" onclick="setMode('speech', this)">
+              <strong>Opening Speech</strong>
+              <div class="mini">Practice your first formal intervention</div>
+            </div>
+            <div class="mode" data-mode="debate" onclick="setMode('debate', this)">
+              <strong>Moderated Debate</strong>
+              <div class="mini">Respond to chair prompts and challenges</div>
+            </div>
+            <div class="mode" data-mode="caucus" onclick="setMode('caucus', this)">
+              <strong>Caucus Practice</strong>
+              <div class="mini">Test alliances and negotiation choices</div>
+            </div>
+            <div class="mode" data-mode="clause" onclick="setMode('clause', this)">
+              <strong>Clause Drafting</strong>
+              <div class="mini">Draft and revise resolution language</div>
+            </div>
+            <div class="mode" data-mode="full" onclick="setMode('full', this)">
+              <strong>Full Mini-Sim</strong>
+              <div class="mini">Short guided sequence across stages</div>
+            </div>
+          </div>
+
+          <label for="responseBox" style="margin-top:14px;">Your response</label>
+          <textarea id="responseBox" placeholder="Type your speech, negotiation line, or clause here..."></textarea>
+
+          <div class="btns" style="margin-top:10px;">
+            <button class="btn" onclick="submitResponse()">Submit Response</button>
+            <button class="btn secondary" onclick="autofillExample()">Generate Example Starter</button>
+            <button class="btn ghost" onclick="copyResponse()">Copy</button>
+          </div>
+        </div>
+
+        <div class="side-card">
+          <h3>3. Session Log</h3>
+          <div class="log" id="logBox">
+            <div class="mini">Your simulation turns and feedback will appear here.</div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <div class="sim-header">
+          <div>
+            <h2 style="margin:0 0 6px;">Live Practice Committee</h2>
+            <div class="mini" id="statusText">Mode: Opening Speech | Round 1 of 1</div>
+          </div>
+          <div style="min-width:260px;">
+            <div class="mini">Progress</div>
+            <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+          </div>
+        </div>
+
+        <div class="scenario" id="scenarioBox">
+          Click <strong>Start / Restart</strong> to begin the simulation.
+        </div>
+
+        <div class="card">
+          <h3>Coach Guidance</h3>
+          <div id="coachBox" class="mini">
+            The simulator will act as chair, other delegations, and coach.
+            It will give you feedback on clarity, diplomatic tone, realism, and alignment with your delegation.
+          </div>
+        </div>
+
+        <div class="feedback" id="feedbackBox">
+          <h3 style="margin-top:0;">Feedback</h3>
+          <div class="mini">Submit a response to receive feedback.</div>
+
+          <div class="scores" id="scoreGrid" style="display:none;">
+            <div class="score-card">
+              <div class="score-label">Country Alignment</div>
+              <div class="score-value" id="scoreAlignment">–</div>
+            </div>
+            <div class="score-card">
+              <div class="score-label">Diplomatic Tone</div>
+              <div class="score-value" id="scoreTone">–</div>
+            </div>
+            <div class="score-card">
+              <div class="score-label">Specificity</div>
+              <div class="score-value" id="scoreSpecificity">–</div>
+            </div>
+            <div class="score-card">
+              <div class="score-label">Realism</div>
+              <div class="score-value" id="scoreRealism">–</div>
+            </div>
+          </div>
+
+          <div id="feedbackText" style="margin-top:10px;"></div>
+        </div>
+
+        <div class="card">
+          <h3>How this practice app works</h3>
+          <ul>
+            <li><strong>Opening Speech mode</strong> helps you practice your first formal intervention.</li>
+            <li><strong>Moderated Debate mode</strong> gives you chair prompts and simulated challenges.</li>
+            <li><strong>Caucus mode</strong> helps you test negotiation and alliance language.</li>
+            <li><strong>Clause Drafting mode</strong> helps you practice preambulatory and operative language.</li>
+            <li><strong>Full Mini-Sim mode</strong> walks you through several stages in sequence.</li>
+          </ul>
+        </div>
+      </main>
+    </div>
+
+    <div class="footer">
+      PSIR 172 – MUN Simulation Practice App. Standalone guided rehearsal tool for the class simulation.
+    </div>
+  </div>
+
+  <script>
+    const modePrompts = {
+      speech: [
+        {
+          title: "Opening Speech Prompt",
+          scenario: "The Chair recognizes the delegation. Deliver a 45–75 second opening speech on international responsibility-sharing for refugees and displaced persons. State the problem, your country’s concern, and one realistic action your delegation supports.",
+          coach: "Keep it brief, state your country’s position clearly, and avoid speaking in personal terms."
+        }
+      ],
+      debate: [
+        {
+          title: "Moderated Debate – Burden-Sharing",
+          scenario: "The Chair asks: 'How should international responsibility-sharing be organized so that host states are not left carrying disproportionate burdens?' Respond as your delegation.",
+          coach: "Try to give a position, a reason, and a realistic action."
+        },
+        {
+          title: "Challenge from Another Delegation",
+          scenario: "Another delegation responds: 'Your proposal sounds expensive and politically unrealistic. Why should other states support it?' Reply diplomatically.",
+          coach: "Defend your position without sounding personal or aggressive."
+        }
+      ],
+      caucus: [
+        {
+          title: "Caucus Scenario – Finding Allies",
+          scenario: "You enter caucus. Several delegations are discussing funding, sovereignty, and voluntary resettlement. What kind of delegations do you approach first, and what do you say to them?",
+          coach: "Show strategic thinking: who is likely to support you, and why?"
+        },
+        {
+          title: "Negotiation Adjustment",
+          scenario: "A potential ally says they like your general idea but dislike the phrase 'mandatory relocation'. Revise your language to keep support while protecting your delegation’s interests.",
+          coach: "This is about compromise wording."
+        }
+      ],
+      clause: [
+        {
+          title: "Clause Drafting – Operative Clause",
+          scenario: "Write one operative clause proposing a realistic measure related to refugee responsibility-sharing.",
+          coach: "Begin with language like 'Encourages', 'Calls upon', 'Requests', or 'Urges'."
+        },
+        {
+          title: "Clause Revision",
+          scenario: "A delegation objects that your clause is too vague. Rewrite it so that it is more specific and implementable.",
+          coach: "Add who should do what, and how."
+        }
+      ],
+      full: [
+        {
+          title: "Round 1 – Opening Speech",
+          scenario: "The Chair recognizes your delegation for an opening speech. State your country’s position and one practical priority.",
+          coach: "Clear opening, country perspective, one concrete point."
+        },
+        {
+          title: "Round 2 – Moderated Debate",
+          scenario: "The Chair asks whether responsibility-sharing should rely mainly on funding, resettlement, regional coordination, or another mechanism. Respond.",
+          coach: "Choose a direction and justify it."
+        },
+        {
+          title: "Round 3 – Caucus",
+          scenario: "In caucus, another delegation says they might support your approach if you soften one part of it. What compromise language do you offer?",
+          coach: "Negotiate wording without abandoning your core interests."
+        },
+        {
+          title: "Round 4 – Clause Drafting",
+          scenario: "Draft one short operative clause your delegation would be comfortable defending in committee.",
+          coach: "Use formal resolution language."
+        }
+      ]
+    };
+
+    let currentMode = "speech";
+    let roundIndex = 0;
+    let totalRounds = 1;
+
+    function setMode(mode, el){
+      currentMode = mode;
+      roundIndex = 0;
+      document.querySelectorAll('.mode').forEach(m => m.classList.remove('active'));
+      if(el) el.classList.add('active');
+      updateScenario();
+      updateProgress();
+    }
+
+    function getPrompts(){
+      return modePrompts[currentMode] || modePrompts.speech;
+    }
+
+    function updateScenario(){
+      const prompts = getPrompts();
+      totalRounds = prompts.length;
+      const item = prompts[roundIndex] || prompts[0];
+      document.getElementById('scenarioBox').innerHTML = `
+        <div class="tag">${item.title}</div>
+        <div>${item.scenario}</div>
+      `;
+      document.getElementById('coachBox').textContent = item.coach;
+      document.getElementById('statusText').textContent = `Mode: ${prettyMode(currentMode)} | Round ${roundIndex + 1} of ${totalRounds}`;
+    }
+
+    function prettyMode(mode){
+      if(mode === "speech") return "Opening Speech";
+      if(mode === "debate") return "Moderated Debate";
+      if(mode === "caucus") return "Caucus Practice";
+      if(mode === "clause") return "Clause Drafting";
+      if(mode === "full") return "Full Mini-Simulation";
+      return mode;
+    }
+
+    function startSimulation(){
+      roundIndex = 0;
+      updateScenario();
+      updateProgress();
+      addLog("system", `Simulation started in ${prettyMode(currentMode)} mode.`);
+      document.getElementById('feedbackText').innerHTML = '<div class="mini">Submit a response to receive feedback.</div>';
+      document.getElementById('scoreGrid').style.display = 'none';
+    }
+
+    function nextRound(){
+      const prompts = getPrompts();
+      if(roundIndex < prompts.length - 1){
+        roundIndex++;
+        updateScenario();
+        updateProgress();
+        addLog("system", `Moved to round ${roundIndex + 1} in ${prettyMode(currentMode)} mode.`);
+      } else {
+        updateDebrief();
+      }
+    }
+
+    function updateProgress(){
+      const prompts = getPrompts();
+      const percent = ((roundIndex) / prompts.length) * 100;
+      document.getElementById('progressBar').style.width = percent + '%';
+    }
+
+    function submitResponse(){
+      const response = document.getElementById('responseBox').value.trim();
+      if(!response){
+        alert("Please enter a response first.");
+        return;
+      }
+
+      const profile = getProfile();
+      const result = evaluateResponse(response, profile, currentMode);
+
+      document.getElementById('scoreGrid').style.display = 'grid';
+      document.getElementById('scoreAlignment').innerHTML = renderTraffic(result.alignment);
+      document.getElementById('scoreTone').innerHTML = renderTraffic(result.tone);
+      document.getElementById('scoreSpecificity').innerHTML = renderTraffic(result.specificity);
+      document.getElementById('scoreRealism').innerHTML = renderTraffic(result.realism);
+
+      document.getElementById('feedbackText').innerHTML = `
+        <div class="callout"><strong>Coach summary:</strong> ${result.summary}</div>
+        <p><strong>Strengths:</strong> ${result.strengths}</p>
+        <p><strong>Needs work:</strong> ${result.improvements}</p>
+        <p><strong>Suggested revision:</strong> ${result.revision}</p>
+      `;
+
+      addLog("delegate", response);
+      addLog("coach", result.summary + " | Suggested revision: " + result.revision);
+
+      if(currentMode !== "full" || roundIndex < getPrompts().length - 1){
+        document.getElementById('progressBar').style.width = (((roundIndex + 1) / getPrompts().length) * 100) + '%';
+      }
+    }
+
+    function evaluateResponse(text, profile, mode){
+      const lower = text.toLowerCase();
+      const wordCount = text.split(/\s+/).filter(Boolean).length;
+
+      let alignment = 2;
+      let tone = 2;
+      let specificity = 2;
+      let realism = 2;
+
+      const dipPhrases = ["delegation", "encourages", "supports", "calls for", "urges", "recognizes", "emphasizes", "requests"];
+      const personalPhrases = ["i think", "i believe", "my opinion", "we all know"];
+      const specificWords = ["funding", "coordination", "resettlement", "technical support", "capacity", "host states", "regional", "voluntary", "unhcr", "member states"];
+      const unrealisticWords = ["everyone must", "completely solve", "immediately end", "all countries must", "force every country"];
+      const operativeStarters = ["encourages", "calls upon", "requests", "urges", "invites", "recommends", "supports", "further requests"];
+
+      if(profile.interests && containsAny(lower, profile.interests.toLowerCase().split(/[,\n]/).map(s => s.trim()).filter(Boolean))) alignment++;
+      if(profile.redlines && containsAny(lower, profile.redlines.toLowerCase().split(/[,\n]/).map(s => s.trim()).filter(Boolean))) alignment--;
+      if(profile.country && lower.includes(profile.country.toLowerCase())) alignment++;
+      if(personalPhrases.some(p => lower.includes(p))) tone--;
+      if(dipPhrases.some(p => lower.includes(p))) tone++;
+      if(specificWords.some(w => lower.includes(w))) specificity++;
+      if(wordCount < 18) specificity--;
+      if(unrealisticWords.some(w => lower.includes(w))) realism--;
+      if(lower.includes("voluntary") || lower.includes("support") || lower.includes("coordination") || lower.includes("capacity")) realism++;
+      if(mode === "clause" && operativeStarters.some(s => lower.startsWith(s))) specificity++;
+      if(mode === "speech" && wordCount > 170) specificity--;
+      if(mode === "speech" && wordCount > 170) tone--;
+
+      alignment = clamp(alignment,1,3);
+      tone = clamp(tone,1,3);
+      specificity = clamp(specificity,1,3);
+      realism = clamp(realism,1,3);
+
+      const strengths = buildStrengths(alignment, tone, specificity, realism);
+      const improvements = buildImprovements(alignment, tone, specificity, realism, mode);
+      const summary = buildSummary(alignment, tone, specificity, realism);
+      const revision = buildRevisionSuggestion(profile, mode, text);
+
+      return { alignment, tone, specificity, realism, strengths, improvements, summary, revision };
+    }
+
+    function buildStrengths(a,t,s,r){
+      const out = [];
+      if(a >= 2) out.push("your response broadly fits a delegation perspective");
+      if(t >= 2) out.push("the tone is reasonably diplomatic");
+      if(s >= 2) out.push("you include some concrete policy language");
+      if(r >= 2) out.push("your proposal sounds at least moderately realistic");
+      if(out.length === 0) out.push("you have started to frame a response and can build from here");
+      return out.join("; ") + ".";
+    }
+
+    function buildImprovements(a,t,s,r,mode){
+      const out = [];
+      if(a === 1) out.push("tie your answer more clearly to your assigned country’s interests and limits");
+      if(t === 1) out.push("avoid personal or overly emotional language and sound more diplomatic");
+      if(s === 1) out.push("be more specific about who should do what");
+      if(r === 1) out.push("make the proposal more politically realistic and less absolute");
+      if(mode === "speech") out.push("keep the speech short, structured, and easy to deliver aloud");
+      if(mode === "clause") out.push("use formal clause language with a clear action verb");
+      return out.join("; ") + ".";
+    }
+
+    function buildSummary(a,t,s,r){
+      const avg = (a+t+s+r)/4;
+      if(avg >= 2.75) return "Strong practice response. This sounds usable in committee with minor refinement.";
+      if(avg >= 2.1) return "Solid start. Your response is workable, but it would benefit from sharper wording and clearer diplomatic framing.";
+      if(avg >= 1.5) return "Partial success. The core idea is visible, but the response needs more precision and stronger committee language.";
+      return "Weak draft. Reframe this response from the perspective of a state delegation using more diplomatic and realistic wording.";
+    }
+
+    function buildRevisionSuggestion(profile, mode, text){
+      const c = profile.country || "the delegation";
+      if(mode === "speech"){
+        return `Honourable Chair, the delegation of ${c} recognizes that refugee-hosting states face significant pressure and emphasizes the need for balanced international responsibility-sharing. Our delegation supports practical cooperation through increased funding, technical support, and voluntary coordination mechanisms that respect national capacity and sovereignty.`;
+      }
+      if(mode === "debate"){
+        return `The delegation of ${c} supports a responsibility-sharing framework that combines financial assistance, regional coordination, and capacity-building for host states. Such an approach is more practical and politically sustainable than overly rigid one-size-fits-all commitments.`;
+      }
+      if(mode === "caucus"){
+        return `Our delegation would be open to compromise language emphasizing voluntary cooperation, additional support for host states, and improved coordination with relevant international agencies.`;
+      }
+      if(mode === "clause"){
+        return `Encourages member states, in cooperation with relevant international organizations, to expand financial and technical support for countries hosting large refugee populations, on a voluntary and capacity-sensitive basis;`;
+      }
+      return `The delegation of ${c} supports realistic, cooperative measures that balance humanitarian responsibility with national capacity and sovereignty concerns.`;
+    }
+
+    function renderTraffic(score){
+      if(score === 3) return `<span class="traffic green">Strong</span>`;
+      if(score === 2) return `<span class="traffic yellow">Moderate</span>`;
+      return `<span class="traffic red">Weak</span>`;
+    }
+
+    function containsAny(text, arr){
+      return arr.some(item => item && text.includes(item));
+    }
+
+    function clamp(n,min,max){
+      return Math.max(min, Math.min(max, n));
+    }
+
+    function getProfile(){
+      return {
+        country: document.getElementById('country').value.trim(),
+        partner: document.getElementById('partner').value.trim(),
+        roleType: document.getElementById('roleType').value.trim(),
+        interests: document.getElementById('interests').value.trim(),
+        allies: document.getElementById('allies').value.trim(),
+        redlines: document.getElementById('redlines').value.trim()
+      };
+    }
+
+    function saveSetup(){
+      const data = {
+        profile: getProfile(),
+        currentMode,
+        roundIndex
+      };
+      localStorage.setItem('psir172MUNSimApp', JSON.stringify(data));
+      alert('Setup saved.');
+    }
+
+    function loadSetup(){
+      const raw = localStorage.getItem('psir172MUNSimApp');
+      if(!raw){
+        alert('No saved setup found.');
+        return;
+      }
+      const data = JSON.parse(raw);
+      if(data.profile){
+        document.getElementById('country').value = data.profile.country || '';
+        document.getElementById('partner').value = data.profile.partner || '';
+        document.getElementById('roleType').value = data.profile.roleType || '';
+        document.getElementById('interests').value = data.profile.interests || '';
+        document.getElementById('allies').value = data.profile.allies || '';
+        document.getElementById('redlines').value = data.profile.redlines || '';
+      }
+      currentMode = data.currentMode || 'speech';
+      roundIndex = data.roundIndex || 0;
+      document.querySelectorAll('.mode').forEach(m=>{
+        m.classList.toggle('active', m.dataset.mode === currentMode);
+      });
+      updateScenario();
+      updateProgress();
+      addLog("system", "Saved setup loaded.");
+    }
+
+    function resetAll(){
+      if(!confirm('Reset all fields, log, and simulation state?')) return;
+      ['country','partner','roleType','interests','allies','redlines','responseBox'].forEach(id=>{
+        document.getElementById(id).value = '';
+      });
+      document.getElementById('logBox').innerHTML = '<div class="mini">Your simulation turns and feedback will appear here.</div>';
+      document.getElementById('feedbackText').innerHTML = '<div class="mini">Submit a response to receive feedback.</div>';
+      document.getElementById('scoreGrid').style.display = 'none';
+      document.getElementById('scenarioBox').innerHTML = 'Click <strong>Start / Restart</strong> to begin the simulation.';
+      document.getElementById('coachBox').textContent = 'The simulator will act as chair, other delegations, and coach. It will give you feedback on clarity, diplomatic tone, realism, and alignment with your delegation.';
+      currentMode = 'speech';
+      roundIndex = 0;
+      document.querySelectorAll('.mode').forEach(m=>{
+        m.classList.toggle('active', m.dataset.mode === 'speech');
+      });
+      document.getElementById('statusText').textContent = 'Mode: Opening Speech | Round 1 of 1';
+      document.getElementById('progressBar').style.width = '0%';
+      localStorage.removeItem('psir172MUNSimApp');
+    }
+
+    function addLog(type, text){
+      const box = document.getElementById('logBox');
+      const div = document.createElement('div');
+      div.className = 'log-entry';
+      const tag = type === 'delegate' ? 'Delegate Response' : (type === 'coach' ? 'Coach Feedback' : 'System');
+      div.innerHTML = `<div class="tag">${tag}</div><div>${escapeHtml(text)}</div>`;
+      box.prepend(div);
+    }
+
+    function escapeHtml(str){
+      return str
+        .replaceAll('&','&amp;')
+        .replaceAll('<','&lt;')
+        .replaceAll('>','&gt;')
+        .replaceAll('"','&quot;')
+        .replaceAll("'","&#039;");
+    }
+
+    function autofillExample(){
+      const profile = getProfile();
+      const c = profile.country || 'our delegation';
+      let text = '';
+      if(currentMode === 'speech'){
+        text = `Honourable Chair, the delegation of ${c} recognizes that refugee-hosting states face significant social, economic, and political pressures. Our delegation supports balanced international responsibility-sharing through practical cooperation, increased support for host states, and realistic coordination mechanisms that respect national capacity.`;
+      } else if(currentMode === 'debate'){
+        text = `The delegation of ${c} believes that responsibility-sharing should combine financial support, regional coordination, and targeted assistance for states carrying the heaviest burdens.`;
+      } else if(currentMode === 'caucus'){
+        text = `Our delegation would be willing to support compromise language emphasizing voluntary cooperation, support for host states, and capacity-sensitive burden-sharing.`;
+      } else if(currentMode === 'clause'){
+        text = `Encourages member states, in cooperation with relevant international organizations, to increase financial and technical assistance to countries hosting large refugee populations;`;
+      } else {
+        text = `The delegation of ${c} supports practical and cooperative measures that balance humanitarian obligations with national capacity and sovereignty concerns.`;
+      }
+      document.getElementById('responseBox').value = text;
+    }
+
+    function copyResponse(){
+      const box = document.getElementById('responseBox');
+      box.select();
+      box.setSelectionRange(0,99999);
+      document.execCommand('copy');
+      alert('Response copied.');
+    }
+
+    function updateDebrief(){
+      document.getElementById('scenarioBox').innerHTML = `
+        <div class="tag">Debrief</div>
+        <div>You have reached the end of this practice sequence. Review your log and feedback, then revise your materials in the Student Toolkit.</div>
+      `;
+      document.getElementById('coachBox').textContent = 'Ask yourself: Was my language diplomatic? Was it realistic? Did it fit my country?';
+      document.getElementById('statusText').textContent = `Mode: ${prettyMode(currentMode)} | Completed`;
+      document.getElementById('progressBar').style.width = '100%';
+      addLog("system", `Completed ${prettyMode(currentMode)} practice mode.`);
+    }
+
+    updateScenario();
+  </script>
+</body>
+</html>
