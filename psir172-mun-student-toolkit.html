@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PSIR 172 – MUN Student Toolkit</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --panel:#121a31;
+      --panel2:#18233f;
+      --text:#eef2ff;
+      --muted:#b8c2e0;
+      --accent:#60a5fa;
+      --accent2:#34d399;
+      --warn:#f59e0b;
+      --danger:#f87171;
+      --border:#2b3a63;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#0b1020,#101933);color:var(--text)}
+    body.light{
+      --bg:#f6f8ff;
+      --panel:#ffffff;
+      --panel2:#eef3ff;
+      --text:#15213b;
+      --muted:#5d6b8a;
+      --accent:#2563eb;
+      --accent2:#059669;
+      --warn:#d97706;
+      --danger:#dc2626;
+      --border:#d3def3;
+      background:linear-gradient(180deg,#f6f8ff,#eaf0fb);
+    }
+    .app{max-width:1380px;margin:0 auto;padding:20px}
+    .topbar,.hero,.card,.output-card{
+      background:rgba(18,26,49,.96);
+      border:1px solid var(--border);
+      border-radius:18px;
+    }
+    body.light .topbar, body.light .hero, body.light .card, body.light .output-card{
+      background:rgba(255,255,255,.96);
+    }
+    .topbar{
+      display:flex;justify-content:space-between;align-items:center;gap:12px;
+      padding:14px 16px;margin-bottom:18px;flex-wrap:wrap;
+    }
+    .brand{font-weight:900;font-size:1.12rem}
+    .tagline{color:var(--muted);font-size:.94rem;margin-top:4px}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    button{
+      border:1px solid var(--border);
+      background:var(--panel2);
+      color:var(--text);
+      padding:10px 14px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:800;
+    }
+    button:hover{border-color:var(--accent)}
+    .primary{background:linear-gradient(90deg,var(--accent),#3b82f6);color:#fff;border-color:transparent}
+    .success{background:linear-gradient(90deg,var(--accent2),#10b981);color:#fff;border-color:transparent}
+    .warn{background:linear-gradient(90deg,var(--warn),#f59e0b);color:#fff;border-color:transparent}
+    .danger{background:linear-gradient(90deg,var(--danger),#ef4444);color:#fff;border-color:transparent}
+    .hero{padding:24px;margin-bottom:18px}
+    .hero h1{margin:0 0 8px;font-size:2rem}
+    .hero p{margin:0;color:var(--muted);line-height:1.6}
+    .pill{
+      display:inline-block;padding:6px 10px;border:1px solid var(--border);border-radius:999px;
+      color:var(--muted);margin:10px 8px 0 0;font-size:.92rem
+    }
+    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+    .kpi{background:var(--panel2);border:1px solid var(--border);border-radius:16px;padding:16px}
+    .kpi .l{color:var(--muted);font-size:.9rem}
+    .kpi .v{font-size:1.5rem;font-weight:900;margin-top:6px}
+    .progress-wrap{
+      height:14px;background:#0f1730;border:1px solid var(--border);
+      border-radius:999px;overflow:hidden
+    }
+    body.light .progress-wrap{background:#e7eefc}
+    .progress-bar{
+      height:100%;width:0%;
+      background:linear-gradient(90deg,var(--accent),var(--accent2));
+      transition:width .25s ease
+    }
+    .tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+    .tab-btn.active{background:linear-gradient(90deg,var(--accent),#3b82f6);color:#fff;border-color:transparent}
+    .tab{display:none}
+    .tab.active{display:block}
+    .layout{display:grid;grid-template-columns:2fr 1fr;gap:18px}
+    @media (max-width:1100px){.layout,.kpis{grid-template-columns:1fr}}
+    .card,.output-card{padding:18px}
+    .card{margin-bottom:16px}
+    h2{margin:0 0 6px;font-size:1.3rem}
+    h3{margin:0 0 10px;font-size:1.03rem}
+    .muted{color:var(--muted)}
+    .small{font-size:.92rem;color:var(--muted)}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .three{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    @media (max-width:850px){.two,.three{grid-template-columns:1fr}}
+    label{display:block;margin:12px 0 6px;font-weight:800}
+    input,textarea,select{
+      width:100%;background:rgba(11,18,32,.72);color:var(--text);
+      border:1px solid var(--border);border-radius:12px;padding:11px 12px;font:inherit
+    }
+    body.light input, body.light textarea, body.light select{background:#f8fbff}
+    textarea{min-height:96px;resize:vertical}
+    .count{font-size:.88rem;color:var(--muted);margin-top:6px}
+    .hint{
+      margin-top:12px;padding:12px 14px;border-left:4px solid var(--accent);
+      background:rgba(96,165,250,.08);border-radius:10px
+    }
+    body.light .hint{background:#edf5ff}
+    .output{
+      white-space:pre-wrap;background:rgba(11,18,32,.72);border:1px solid var(--border);
+      border-radius:12px;padding:14px;min-height:280px;line-height:1.55
+    }
+    body.light .output{background:#f8fbff}
+    .sticky{position:sticky;top:18px}
+    .checklist label{
+      display:flex;gap:10px;align-items:flex-start;font-weight:600;margin:8px 0
+    }
+    .checklist input{width:auto;margin-top:3px}
+    .section-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div>
+        <div class="brand">PSIR 172 · MUN Student Toolkit</div>
+        <div class="tagline">Delegation briefing · speech prep · position paper · resolution drafting · reflection</div>
+      </div>
+      <div class="row">
+        <button onclick="toggleTheme()">Toggle Theme</button>
+        <button onclick="exportData()">Export JSON</button>
+        <button onclick="downloadCurrentOutput()" class="success">Download Current Output</button>
+        <button onclick="resetAll()" class="danger">Reset All</button>
+      </div>
+    </div>
+
+    <div class="hero">
+      <h1>Model United Nations Student Toolkit</h1>
+      <p>
+        This toolkit helps you prepare for the PSIR 172 classroom MUN simulation. You are representing
+        an assigned country in a General Assembly–style humanitarian committee on the agenda
+        <strong>International Responsibility-Sharing for Refugees and Displaced Persons</strong>.
+      </p>
+      <div>
+        <span class="pill">18 delegations × 2 students</span>
+        <span class="pill">Write as your country, not yourself</span>
+        <span class="pill">Use this for preparation, not final submission formatting</span>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi"><div class="l">Overall progress</div><div class="v" id="kpiProgress">0%</div></div>
+        <div class="kpi"><div class="l">Total words</div><div class="v" id="kpiWords">0</div></div>
+        <div class="kpi"><div class="l">Speech words</div><div class="v" id="kpiSpeech">0</div></div>
+        <div class="kpi"><div class="l">Status</div><div class="v" id="kpiStatus">Starting</div></div>
+      </div>
+      <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="openTab('briefing', this)">Delegation Briefing</button>
+      <button class="tab-btn" onclick="openTab('speech', this)">Opening Speech</button>
+      <button class="tab-btn" onclick="openTab('paper', this)">Position Paper</button>
+      <button class="tab-btn" onclick="openTab('resolution', this)">Resolution Drafting</button>
+      <button class="tab-btn" onclick="openTab('reflection', this)">Reflection</button>
+    </div>
+
+    <!-- Briefing -->
+    <div class="tab active" id="briefing">
+      <div class="layout">
+        <div>
+          <div class="card">
+            <h2>Delegation Information</h2>
+            <div class="two">
+              <div>
+                <label>Country</label>
+                <select id="country">
+                  <option value="">Select country...</option>
+                  <option>Bangladesh</option><option>Brazil</option><option>China</option><option>France</option>
+                  <option>Germany</option><option>Greece</option><option>Italy</option><option>Jordan</option>
+                  <option>Kenya</option><option>Lebanon</option><option>Mexico</option><option>Pakistan</option>
+                  <option>South Africa</option><option>Sweden</option><option>Türkiye</option><option>Uganda</option>
+                  <option>United Kingdom</option><option>United States</option>
+                </select>
+              </div>
+              <div>
+                <label>Partner</label>
+                <input id="partner" placeholder="Delegation partner name">
+              </div>
+            </div>
+            <div class="three">
+              <div>
+                <label>Role type</label>
+                <select id="roleType">
+                  <option value="">Select...</option>
+                  <option>Host state</option>
+                  <option>Donor state</option>
+                  <option>Transit state</option>
+                  <option>Destination state</option>
+                  <option>Regional / major power</option>
+                  <option>Mixed / multiple roles</option>
+                </select>
+              </div>
+              <div>
+                <label>Strategy style</label>
+                <select id="strategy">
+                  <option value="">Select...</option>
+                  <option>Consensus-building</option>
+                  <option>Firm but cooperative</option>
+                  <option>Leadership-oriented</option>
+                  <option>Cautious / defensive</option>
+                  <option>Pragmatic compromise</option>
+                </select>
+              </div>
+              <div>
+                <label>Main focus</label>
+                <input id="mainFocus" placeholder="Funding, sovereignty, host-state support, etc.">
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Issue and Country Position</h2>
+            <label>What is the issue?</label>
+            <textarea id="issueSummary" placeholder="Explain the issue briefly in your own words."></textarea>
+            <div class="count" id="countIssueSummary">0 words</div>
+
+            <label>Why is this issue important internationally?</label>
+            <textarea id="issueImportance" placeholder="Why does it matter globally?"></textarea>
+            <div class="count" id="countIssueImportance">0 words</div>
+
+            <label>Your country’s general position</label>
+            <textarea id="countryPosition" placeholder="How does your country view the issue?"></textarea>
+            <div class="count" id="countCountryPosition">0 words</div>
+
+            <label>National interests and concerns</label>
+            <textarea id="interests" placeholder="Security, humanitarian obligations, state capacity, sovereignty, regional stability, etc."></textarea>
+            <div class="count" id="countInterests">0 words</div>
+          </div>
+
+          <div class="card">
+            <h2>Allies, Tensions, Policies</h2>
+            <div class="two">
+              <div>
+                <label>Likely allies / partners</label>
+                <textarea id="allies" placeholder="Which countries may support similar approaches?"></textarea>
+                <div class="count" id="countAllies">0 words</div>
+              </div>
+              <div>
+                <label>Likely tensions / disagreements</label>
+                <textarea id="opponents" placeholder="Which countries or approaches may conflict with your position?"></textarea>
+                <div class="count" id="countOpponents">0 words</div>
+              </div>
+            </div>
+
+            <label>Policies your country supports</label>
+            <textarea id="supports" placeholder="What proposals, principles, or actions would your country support?"></textarea>
+            <div class="count" id="countSupports">0 words</div>
+
+            <label>Red lines / proposals your country would reject</label>
+            <textarea id="redlines" placeholder="What would your country likely reject or resist?"></textarea>
+            <div class="count" id="countRedlines">0 words</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="output-card sticky">
+            <h2>Briefing Summary</h2>
+            <div class="section-actions">
+              <button onclick="generateBriefing()" class="primary">Generate</button>
+              <button onclick="copyText('briefingOutput')">Copy</button>
+            </div>
+            <div id="briefingOutput" class="output">Your delegation briefing summary will appear here.</div>
+            <div class="hint">
+              <strong>Reminder:</strong> Ask whether your country would actually support the wording you use.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Speech -->
+    <div class="tab" id="speech">
+      <div class="layout">
+        <div>
+          <div class="card">
+            <h2>Opening Speech Builder</h2>
+            <label>Issue sentence</label>
+            <textarea id="speechIssue" placeholder="Write one sentence identifying the issue."></textarea>
+            <div class="count" id="countSpeechIssue">0 words</div>
+
+            <label>Country concern</label>
+            <textarea id="speechConcern" placeholder="What is your country most concerned about?"></textarea>
+            <div class="count" id="countSpeechConcern">0 words</div>
+
+            <label>Country supports</label>
+            <textarea id="speechSupport" placeholder="What does your country support?"></textarea>
+            <div class="count" id="countSpeechSupport">0 words</div>
+
+            <label>Main proposal</label>
+            <textarea id="speechProposal" placeholder="What action does your delegation want the committee to consider?"></textarea>
+            <div class="count" id="countSpeechProposal">0 words</div>
+
+            <label>Full opening speech draft</label>
+            <textarea id="speech" placeholder="Write or refine your full 45–75 second opening speech here."></textarea>
+            <div class="count" id="countSpeech">0 words</div>
+
+            <div class="section-actions">
+              <button onclick="autofillSpeech()" class="primary">Auto-Build Starter Speech</button>
+              <button onclick="generateSpeechOutput()">Generate Speech Output</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="output-card sticky">
+            <h2>Speech Output</h2>
+            <div class="section-actions">
+              <button onclick="generateSpeechOutput()" class="primary">Generate</button>
+              <button onclick="copyText('speechOutput')">Copy</button>
+            </div>
+            <div id="speechOutput" class="output">Your opening speech output will appear here.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Paper -->
+    <div class="tab" id="paper">
+      <div class="layout">
+        <div>
+          <div class="card">
+            <h2>Position Paper Builder</h2>
+            <label>Solutions your country could support</label>
+            <textarea id="solutions" placeholder="List practical actions or policy directions."></textarea>
+            <div class="count" id="countSolutions">0 words</div>
+
+            <label>Source / note 1</label>
+            <textarea id="source1" placeholder="UNHCR, government statement, report, etc."></textarea>
+            <div class="count" id="countSource1">0 words</div>
+
+            <label>Source / note 2</label>
+            <textarea id="source2" placeholder="Another useful source or note."></textarea>
+            <div class="count" id="countSource2">0 words</div>
+
+            <label>Additional research notes</label>
+            <textarea id="researchNotes" placeholder="Anything else your delegation should remember?"></textarea>
+            <div class="count" id="countResearchNotes">0 words</div>
+
+            <div class="section-actions">
+              <button onclick="generatePaper()" class="primary">Generate Position Paper</button>
+              <button onclick="copyText('paperOutput')">Copy</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="output-card sticky">
+            <h2>Position Paper Draft</h2>
+            <div class="section-actions">
+              <button onclick="generatePaper()" class="primary">Generate</button>
+              <button onclick="copyText('paperOutput')">Copy</button>
+            </div>
+            <div id="paperOutput" class="output">Your position paper draft will appear here.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resolution -->
+    <div class="tab" id="resolution">
+      <div class="layout">
+        <div>
+          <div class="card">
+            <h2>Resolution Drafting</h2>
+            <label>Main problem the committee should address</label>
+            <textarea id="resolutionProblem" placeholder="What problem should the resolution focus on?"></textarea>
+            <div class="count" id="countResolutionProblem">0 words</div>
+
+            <label>Main proposal your delegation wants included</label>
+            <textarea id="resolutionMainProposal" placeholder="What action or wording do you want in the resolution?"></textarea>
+            <div class="count" id="countResolutionMainProposal">0 words</div>
+
+            <div class="two">
+              <div>
+                <label>Preambulatory clauses</label>
+                <textarea id="preamb" placeholder="Recognizing..., Noting with concern..., Emphasizing..."></textarea>
+                <div class="count" id="countPreamb">0 words</div>
+              </div>
+              <div>
+                <label>Operative clauses</label>
+                <textarea id="operative" placeholder="Calls for..., Encourages..., Recommends..., Urges..."></textarea>
+                <div class="count" id="countOperative">0 words</div>
+              </div>
+            </div>
+
+            <label>Bloc / coalition notes</label>
+            <textarea id="blocNotes" placeholder="Which countries might support this language? What wording may need revision?"></textarea>
+            <div class="count" id="countBlocNotes">0 words</div>
+
+            <div class="section-actions">
+              <button onclick="generateResolution()" class="primary">Generate Draft Resolution Notes</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="output-card sticky">
+            <h2>Resolution Output</h2>
+            <div class="section-actions">
+              <button onclick="generateResolution()" class="primary">Generate</button>
+              <button onclick="copyText('resolutionOutput')">Copy</button>
+            </div>
+            <div id="resolutionOutput" class="output">Your resolution drafting output will appear here.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reflection -->
+    <div class="tab" id="reflection">
+      <div class="layout">
+        <div>
+          <div class="card">
+            <h2>Post-Simulation Reflection</h2>
+            <label>What was difficult or interesting about representing a country rather than yourself?</label>
+            <textarea id="reflectRepresentation" placeholder="Reflect on representing the assigned country."></textarea>
+            <div class="count" id="countReflectRepresentation">0 words</div>
+
+            <label>What compromise was necessary during negotiation?</label>
+            <textarea id="reflectCompromise" placeholder="What did your delegation have to adjust, soften, or accept?"></textarea>
+            <div class="count" id="countReflectCompromise">0 words</div>
+
+            <label>Did the final outcome reflect your country’s interests? Why or why not?</label>
+            <textarea id="reflectOutcome" placeholder="Reflect on the resolution or negotiated result."></textarea>
+            <div class="count" id="countReflectOutcome">0 words</div>
+
+            <label>What did you learn about diplomacy, state interests, or international cooperation?</label>
+            <textarea id="reflectLearning" placeholder="What is the main thing you learned?"></textarea>
+            <div class="count" id="countReflectLearning">0 words</div>
+
+            <div class="section-actions">
+              <button onclick="generateReflection()" class="primary">Generate Reflection Draft</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="output-card sticky">
+            <h2>Reflection Output</h2>
+            <div class="section-actions">
+              <button onclick="generateReflection()" class="primary">Generate</button>
+              <button onclick="copyText('reflectionOutput')">Copy</button>
+            </div>
+            <div id="reflectionOutput" class="output">Your reflection draft will appear here.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'psir172MUNStudentToolkitData';
+
+    const ids = [
+      'country','partner','roleType','strategy','mainFocus',
+      'issueSummary','issueImportance','countryPosition','interests',
+      'allies','opponents','supports','redlines',
+      'speechIssue','speechConcern','speechSupport','speechProposal','speech',
+      'solutions','source1','source2','researchNotes',
+      'resolutionProblem','resolutionMainProposal','preamb','operative','blocNotes',
+      'reflectRepresentation','reflectCompromise','reflectOutcome','reflectLearning'
+    ];
+
+    const countIds = [
+      'issueSummary','issueImportance','countryPosition','interests','allies','opponents',
+      'supports','redlines','speechIssue','speechConcern','speechSupport','speechProposal',
+      'speech','solutions','source1','source2','researchNotes','resolutionProblem',
+      'resolutionMainProposal','preamb','operative','blocNotes','reflectRepresentation',
+      'reflectCompromise','reflectOutcome','reflectLearning'
+    ];
+
+    let currentTab = 'briefing';
+
+    function wc(t){ return (t||'').trim().split(/\s+/).filter(Boolean).length; }
+
+    function saveData(){
+      const data = {};
+      ids.forEach(id=>{
+        const el = document.getElementById(id);
+        if(el) data[id] = el.value;
+      });
+      data.theme = document.body.classList.contains('light') ? 'light' : 'dark';
+      data.currentTab = currentTab;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      updateCounts();
+      updateKPIs();
+    }
+
+    function loadData(){
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return;
+      try{
+        const data = JSON.parse(raw);
+        ids.forEach(id=>{
+          if(data[id] !== undefined){
+            const el = document.getElementById(id);
+            if(el) el.value = data[id];
+          }
+        });
+        if(data.theme === 'light') document.body.classList.add('light');
+        if(data.currentTab) {
+          const btns = document.querySelectorAll('.tab-btn');
+          const targetBtn = Array.from(btns).find(b => b.getAttribute('onclick').includes(`'${data.currentTab}'`));
+          if(targetBtn) openTab(data.currentTab, targetBtn, true);
+        }
+      }catch(e){}
+    }
+
+    function bind(){
+      ids.forEach(id=>{
+        const el = document.getElementById(id);
+        if(el) el.addEventListener('input', saveData);
+      });
+    }
+
+    function updateCounts(){
+      let total = 0;
+      countIds.forEach(id=>{
+        const el = document.getElementById(id);
+        if(!el) return;
+        const n = wc(el.value);
+        total += n;
+        const outId = 'count' + id.charAt(0).toUpperCase() + id.slice(1);
+        const out = document.getElementById(outId);
+        if(out) out.textContent = `${n} words`;
+      });
+      document.getElementById('kpiWords').textContent = total;
+      document.getElementById('kpiSpeech').textContent = wc(document.getElementById('speech').value || '');
+    }
+
+    function updateKPIs(){
+      const required = [
+        'country','issueSummary','countryPosition','interests','supports',
+        'speech','solutions','resolutionMainProposal','reflectLearning'
+      ];
+      let filled = 0;
+      required.forEach(id=>{
+        const el = document.getElementById(id);
+        if(el && el.value.trim()) filled++;
+      });
+      const pct = Math.round((filled / required.length) * 100);
+      document.getElementById('kpiProgress').textContent = pct + '%';
+      document.getElementById('progressBar').style.width = pct + '%';
+
+      let status = 'Starting';
+      if(pct >= 25) status = 'Developing';
+      if(pct >= 50) status = 'Prepared';
+      if(pct >= 75) status = 'Nearly ready';
+      if(pct >= 100) status = 'Toolkit complete';
+      document.getElementById('kpiStatus').textContent = status;
+    }
+
+    function toggleTheme(){
+      document.body.classList.toggle('light');
+      saveData();
+    }
+
+    function openTab(id, btn, skipSave=false){
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      if(btn) btn.classList.add('active');
+      currentTab = id;
+      if(!skipSave) saveData();
+    }
+
+    function copyText(id){
+      const text = document.getElementById(id).textContent;
+      navigator.clipboard.writeText(text).then(()=>alert('Copied to clipboard.')).catch(()=>alert('Copy failed.'));
+    }
+
+    function generateBriefing(){
+      const country = val('country','[Country]');
+      const partner = val('partner','[Partner]');
+      const roleType = val('roleType','[Role Type]');
+      const strategy = val('strategy','[Strategy]');
+      const mainFocus = val('mainFocus','[Main Focus]');
+      const out = `PSIR 172 – Delegation Briefing
+
+Country: ${country}
+Partner: ${partner}
+Role type: ${roleType}
+Delegation strategy: ${strategy}
+Main focus: ${mainFocus}
+
+Issue summary:
+${val('issueSummary','[Add issue summary.]')}
+
+Why the issue matters:
+${val('issueImportance','[Add why this matters internationally.]')}
+
+Country position:
+${val('countryPosition','[Add country position.]')}
+
+National interests:
+${val('interests','[Add interests and concerns.]')}
+
+Likely allies:
+${val('allies','[Add likely allies.]')}
+
+Likely tensions:
+${val('opponents','[Add tensions or opposing positions.]')}
+
+Policies supported:
+${val('supports','[Add policies supported.]')}
+
+Red lines:
+${val('redlines','[Add red lines.]')}
+`;
+      document.getElementById('briefingOutput').textContent = out;
+      saveData();
+    }
+
+    function autofillSpeech(){
+      const country = val('country','[Country]');
+      const issue = val('speechIssue', 'the issue of refugees and displaced persons remains one of the most urgent humanitarian challenges facing the international community');
+      const concern = val('speechConcern', `${country} is concerned about balancing humanitarian obligations with realistic state capacity and long-term stability`);
+      const support = val('speechSupport', `${country} supports cooperative and practical international burden-sharing measures`);
+      const proposal = val('speechProposal', `greater support for host states, stronger coordination with international institutions, and realistic multilateral cooperation`);
+
+      document.getElementById('speech').value =
+`Honourable Chair, distinguished delegates, the delegation of ${country} recognizes that ${issue}. ${concern}. Our delegation believes that ${support}. To address this issue, ${country} calls for ${proposal}. The delegation of ${country} looks forward to working constructively with fellow member states.`;
+      saveData();
+      generateSpeechOutput();
+    }
+
+    function generateSpeechOutput(){
+      const out = `MUN Opening Speech – ${val('country','[Country]')}
+
+${val('speech','[Add opening speech draft here.]')}`;
+      document.getElementById('speechOutput').textContent = out;
+      saveData();
+    }
+
+    function generatePaper(){
+      const country = val('country','[Country]');
+      const out = `PSIR 172 – MUN Position Paper Draft
+
+Committee:
+General Assembly–style Humanitarian Committee
+
+Agenda:
+International Responsibility-Sharing for Refugees and Displaced Persons
+
+Country:
+${country}
+
+Issue overview:
+${val('issueSummary','[Add issue overview.]')}
+
+Why the issue matters:
+${val('issueImportance','[Add why the issue matters.]')}
+
+Country position:
+${val('countryPosition','[Add country position.]')}
+
+National interests:
+${val('interests','[Add interests.]')}
+
+Likely allies and tensions:
+Allies:
+${val('allies','[Add allies.]')}
+
+Tensions:
+${val('opponents','[Add tensions.]')}
+
+Policies supported:
+${val('supports','[Add policies supported.]')}
+
+Red lines:
+${val('redlines','[Add red lines.]')}
+
+Proposed solutions:
+${val('solutions','[Add solutions.]')}
+
+Research notes / sources:
+1. ${val('source1','[Add source 1]')}
+2. ${val('source2','[Add source 2]')}
+
+Additional notes:
+${val('researchNotes','[Add notes.]')}
+
+Conclusion:
+The delegation of ${country} supports realistic, cooperative, and internationally coordinated measures that address displacement while respecting national interests, state capacity, and effective burden-sharing.
+`;
+      document.getElementById('paperOutput').textContent = out;
+      saveData();
+    }
+
+    function generateResolution(){
+      const out = `Resolution Drafting Notes – ${val('country','[Country]')}
+
+Main problem:
+${val('resolutionProblem','[Add main problem.]')}
+
+Main proposal:
+${val('resolutionMainProposal','[Add main proposal.]')}
+
+Possible preambulatory clauses:
+${val('preamb','[Add preambulatory clauses.]')}
+
+Possible operative clauses:
+${val('operative','[Add operative clauses.]')}
+
+Bloc / coalition notes:
+${val('blocNotes','[Add bloc notes.]')}
+`;
+      document.getElementById('resolutionOutput').textContent = out;
+      saveData();
+    }
+
+    function generateReflection(){
+      const out = `Post-MUN Reflection – ${val('country','[Country]')}
+
+Representing the country:
+${val('reflectRepresentation','[Add reflection.]')}
+
+Compromise and negotiation:
+${val('reflectCompromise','[Add compromise reflection.]')}
+
+Outcome and country interests:
+${val('reflectOutcome','[Add outcome reflection.]')}
+
+Main learning:
+${val('reflectLearning','[Add learning reflection.]')}
+`;
+      document.getElementById('reflectionOutput').textContent = out;
+      saveData();
+    }
+
+    function val(id, fallback=''){
+      const el = document.getElementById(id);
+      return el && el.value.trim() ? el.value.trim() : fallback;
+    }
+
+    function exportData(){
+      const raw = localStorage.getItem(STORAGE_KEY) || '{}';
+      const blob = new Blob([raw], {type:'application/json'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'psir172-mun-student-toolkit-data.json';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    function downloadCurrentOutput(){
+      const map = {
+        briefing:'briefingOutput',
+        speech:'speechOutput',
+        paper:'paperOutput',
+        resolution:'resolutionOutput',
+        reflection:'reflectionOutput'
+      };
+      const id = map[currentTab];
+      const text = document.getElementById(id).textContent;
+      const blob = new Blob([text], {type:'text/plain'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `psir172-${currentTab}-output.txt`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    function resetAll(){
+      if(!confirm('Reset all saved toolkit data?')) return;
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    }
+
+    loadData();
+    bind();
+    updateCounts();
+    updateKPIs();
+    generateBriefing();
+    generateSpeechOutput();
+    generatePaper();
+    generateResolution();
+    generateReflection();
+  </script>
+</body>
+</html>
