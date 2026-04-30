@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PSIR 172 - MUN Introduction Deck</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --panel:#121a31;
+      --panel2:#18233f;
+      --text:#eef2ff;
+      --muted:#b8c2e0;
+      --accent:#60a5fa;
+      --accent2:#34d399;
+      --warn:#f59e0b;
+      --danger:#f87171;
+      --border:#2b3a63;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;height:100%;font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
+    body{overflow:hidden}
+    .deck{
+      height:100vh;
+      width:100vw;
+      display:flex;
+      flex-direction:column;
+    }
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding:12px 18px;
+      background:rgba(10,14,28,.95);
+      border-bottom:1px solid var(--border);
+      flex-wrap:wrap;
+    }
+    .brand{
+      font-weight:800;
+      letter-spacing:.3px;
+    }
+    .controls{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    button{
+      background:var(--panel2);
+      color:var(--text);
+      border:1px solid var(--border);
+      border-radius:10px;
+      padding:9px 12px;
+      cursor:pointer;
+      font-weight:700;
+    }
+    button:hover{border-color:var(--accent)}
+    .slide-wrap{
+      flex:1;
+      position:relative;
+      overflow:hidden;
+    }
+    .slide{
+      position:absolute;
+      inset:0;
+      display:none;
+      padding:44px 56px 78px;
+      overflow:auto;
+      background:
+        radial-gradient(circle at top right, rgba(96,165,250,.12), transparent 28%),
+        linear-gradient(180deg, #0b1020 0%, #101933 100%);
+    }
+    .slide.active{display:block}
+    .eyebrow{
+      display:inline-block;
+      padding:6px 10px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      color:var(--muted);
+      font-size:.9rem;
+      margin-bottom:18px;
+      background:rgba(255,255,255,.03);
+    }
+    h1{
+      font-size:2.35rem;
+      margin:0 0 16px;
+      line-height:1.08;
+    }
+    h2{
+      font-size:1.8rem;
+      margin:0 0 14px;
+      line-height:1.15;
+    }
+    h3{
+      font-size:1.12rem;
+      margin:0 0 10px;
+      color:#d8e4ff;
+    }
+    p, li{
+      font-size:1.08rem;
+      line-height:1.55;
+      color:var(--text);
+    }
+    ul{
+      margin:14px 0 0 18px;
+      padding:0;
+    }
+    li{margin:8px 0}
+    .muted{color:var(--muted)}
+    .accent{color:var(--accent)}
+    .accent2{color:var(--accent2)}
+    .warn{color:var(--warn)}
+    .danger{color:var(--danger)}
+    .grid{
+      display:grid;
+      gap:18px;
+    }
+    .grid-2{grid-template-columns:1fr 1fr}
+    .grid-3{grid-template-columns:repeat(3,1fr)}
+    .grid-4{grid-template-columns:repeat(4,1fr)}
+    @media (max-width:1000px){
+      .slide{padding:28px 22px 90px}
+      .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+      h1{font-size:1.85rem}
+      h2{font-size:1.4rem}
+      p,li{font-size:1rem}
+    }
+    .card{
+      background:rgba(18,26,49,.92);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:18px 18px 16px;
+      box-shadow:0 10px 30px rgba(0,0,0,.18);
+    }
+    .big-card{
+      padding:24px;
+      border-radius:20px;
+    }
+    .kpi{
+      background:linear-gradient(180deg, rgba(24,35,63,.95), rgba(17,25,48,.95));
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:18px;
+    }
+    .kpi .label{
+      color:var(--muted);
+      font-size:.92rem;
+      margin-bottom:8px;
+    }
+    .kpi .value{
+      font-size:1.7rem;
+      font-weight:900;
+    }
+    .table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:10px;
+      overflow:hidden;
+      border-radius:14px;
+    }
+    .table th,.table td{
+      border:1px solid var(--border);
+      padding:12px 14px;
+      text-align:left;
+      vertical-align:top;
+      font-size:1rem;
+    }
+    .table th{
+      background:#162141;
+      color:#dce7ff;
+    }
+    .table td{
+      background:rgba(255,255,255,.02);
+    }
+    .note{
+      margin-top:16px;
+      padding:14px 16px;
+      border-left:4px solid var(--accent);
+      background:rgba(96,165,250,.08);
+      border-radius:12px;
+      color:#dfe9ff;
+    }
+    .danger-note{
+      border-left-color:var(--danger);
+      background:rgba(248,113,113,.08);
+    }
+    .success-note{
+      border-left-color:var(--accent2);
+      background:rgba(52,211,153,.09);
+    }
+    .footer{
+      position:absolute;
+      left:0;right:0;bottom:0;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding:12px 18px;
+      background:rgba(10,14,28,.92);
+      border-top:1px solid var(--border);
+      color:var(--muted);
+      font-size:.95rem;
+    }
+    .progress{
+      flex:1;
+      max-width:360px;
+      height:10px;
+      background:#0f1730;
+      border-radius:999px;
+      overflow:hidden;
+      border:1px solid var(--border);
+    }
+    .progress > div{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg, var(--accent), var(--accent2));
+      transition:width .25s ease;
+    }
+    .pill{
+      display:inline-block;
+      padding:7px 10px;
+      margin:6px 8px 0 0;
+      border-radius:999px;
+      border:1px solid var(--border);
+      color:var(--muted);
+      font-size:.95rem;
+      background:rgba(255,255,255,.03);
+    }
+    .center{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .hero-title{
+      font-size:2.8rem;
+      margin-bottom:14px;
+    }
+    .hero-sub{
+      max-width:920px;
+      font-size:1.15rem;
+      color:var(--muted);
+    }
+    @media (max-width:1000px){
+      .hero-title{font-size:2rem}
+    }
+    .source-list a{
+      color:#93c5fd;
+      text-decoration:none;
+    }
+    .source-list a:hover{text-decoration:underline}
+    .small{font-size:.95rem;color:var(--muted)}
+    .quote{
+      font-size:1.16rem;
+      line-height:1.5;
+      padding:18px;
+      border-left:4px solid var(--accent2);
+      background:rgba(52,211,153,.08);
+      border-radius:12px;
+    }
+    .slide-num{
+      min-width:70px;
+      text-align:right;
+    }
+  </style>
+</head>
+<body>
+  <div class="deck">
+    <div class="topbar">
+      <div class="brand">PSIR 172 · MUN Introduction Deck</div>
+      <div class="controls">
+        <button onclick="prevSlide()">◀ Prev</button>
+        <button onclick="nextSlide()">Next ▶</button>
+        <button onclick="toggleFullscreen()">⛶ Fullscreen</button>
+        <button onclick="window.print()">🖨 Print</button>
+      </div>
+    </div>
+
+    <div class="slide-wrap">
+
+      <section class="slide active">
+        <div class="eyebrow">Week 9 · MUN Introduction</div>
+        <h1 class="hero-title">Model United Nations:<br>Understanding the UN, MUN Formats, and Our Class Simulation</h1>
+        <p class="hero-sub">
+          PSIR 172 – Applied Skills in Political Science & International Relations<br>
+          Agenda:
+          <span class="accent2"><strong>International Responsibility-Sharing for Refugees and Displaced Persons</strong></span>
+        </p>
+        <div class="grid grid-3" style="margin-top:28px">
+          <div class="kpi">
+            <div class="label">Class format</div>
+            <div class="value">1 full-class MUN</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Delegations</div>
+            <div class="value">18 × 2 students</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Goal</div>
+            <div class="value">Position paper → simulation</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="eyebrow">Roadmap</div>
+        <h1>Today’s Roadmap</h1>
+        <div class="grid grid-2">
+          <div class="card big-card">
+            <h3>Part 1</h3>
+            <ul>
+              <li>Housekeeping</li>
+              <li>Midterm and course observations</li>
+              <li>Where we are in the semester</li>
+            </ul>
+          </div>
+          <div class="card big-card">
+            <h3>Part 2</h3>
+            <ul>
+              <li>What the United Nations is</li>
+              <li>Main UN organs</li>
+              <li>What Model UN is</li>
+              <li>Different MUN formats worldwide</li>
+            </ul>
+          </div>
+          <div class="card big-card">
+            <h3>Part 3</h3>
+            <ul>
+              <li>Why we are using a GA-style simulation</li>
+              <li>Why we are not doing UNSC or crisis</li>
+              <li>Our class design and topic</li>
+            </ul>
+          </div>
+          <div class="card big-card">
+            <h3>Part 4</h3>
+            <ul>
+              <li>What a position paper is</li>
+              <li>How to research your country</li>
+              <li>What happens next</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="eyebrow">Housekeeping</div>
+        <h1>Housekeeping</h1>
+        <div class="grid grid-2">
+          <div class="card">
+            <h3>Course Administration</h3>
+            <ul>
+              <li>Campaign/project groups have been registered.</li>
+              <li>Formal instructions and deadlines will be posted in <strong>Teams</strong>.</li>
+              <li>Please check Teams regularly.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Course Transition</h3>
+            <ul>
+              <li>We have completed the midterm period.</li>
+              <li>We now move into the next major applied phase of the course.</li>
+              <li>This phase emphasizes representation, negotiation, diplomacy, and simulation.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="note">
+          <strong>Reminder:</strong> campaign/project work continues in parallel, but this week’s immediate focus is MUN preparation and the position paper.
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="eyebrow">Course Reflection</div>
+        <h1>Midterm and Course Observations</h1>
+        <div class="grid grid-3">
+          <div class="card">
+            <h3 class="accent2">Strengths</h3>
+            <ul>
+              <li>Strong engagement in class activities</li>
+              <li>Good effort in research and writing</li>
+              <li>Willingness to participate and experiment</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3 class="warn">Needs Improvement</h3>
+            <ul>
+              <li>More specificity in argumentation</li>
+              <li>Clearer structure in written work</li>
+              <li>Stronger use of evidence to support claims</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3 class="accent">Why MUN Matters Now</h3>
+            <ul>
+              <li>It pushes you to apply research under pressure.</li>
+              <li>It requires audience awareness and strategy.</li>
+              <li>It connects writing, speaking, teamwork, and negotiation.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="eyebrow">Semester Sequence</div>
+        <h1>Where We Are in the Semester</h1>
+        <table class="table">
+          <tr>
+            <th>Stage</th>
+            <th>What we did</th>
+            <th>Skills emphasized</th>
+          </tr>
+          <tr>
+            <td>Weeks 1–2</td>
+            <td>Research methods, academic writing</td>
+            <td>Question formulation, structure, evidence</td>
+          </tr>
+          <tr>
+            <td>Weeks 3–4</td>
+            <td>Data literacy and visualization</td>
+            <td>Interpreting data, presenting findings visually</td>
+          </tr>
+          <tr>
+            <td>Midterm period</td>
+            <td>Assessment and consolidation</td>
+            <td>Review and synthesis</td>
+          </tr>
+          <tr>
+            <td><strong>Now</strong></td>
+            <td><strong>MUN preparation and simulation</strong></td>
+            <td><strong>Representation, diplomacy, negotiation, speaking</strong></td>
+          </tr>
+          <tr>
+            <td>Later</td>
+            <td>Campaign/project presentations</td>
+            <td>Public communication, design, teamwork</td>
+          </tr>
+        </table>
+      </section>
+
+      <section class="slide">
+        <div class="eyebrow">UN Background</div>
+        <h1>What Is the United Nations?</h1>
+        <div class="grid grid-2">
+          <div class="card big-card">
+            <p>
+              The <strong>United Nations</strong> was founded in <strong>1945</strong> and is an international organization created to support cooperation among states.
+            </p>
+            <p>Its work broadly concerns:</p>
+            <ul>
+              <li>international peace and security</li>
+              <li>economic and social development</li>
+              <li>human rights</li>
+              <li>humanitarian cooperation</li>
+              <li>international law and diplomacy</li>
+            </ul>
+          </div>
+          <div class="card big-card center" style="flex-direction:column;text-align:left">
+            <div class="quote">
+              MUN only makes sense if students first understand that the UN is a system of institutions, procedures, and state representation — not just a generic debate club.
+            </div>
+            <p class="small" style="margin-top:16px">
+              This class simulation is simplified for learning, but it is based on real UN logics and structures.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="eyebrow">UN Structure</div>
+        <h1>The Main Organs of the UN</h1>
+        <div class="grid grid-3">
+          <div class="card"><h3>General Assembly</h3><p class="muted">Main deliberative and representative body. All 193 member states are represented.</p></div>
+          <div class="card"><h3>Security Council</h3><p class="muted">Responsible for international peace and security. 15 members.</p></div>
+          <div class="card"><h3>ECOSOC</h3><p class="muted">Coordinates economic, social, and environmental policy dialogue.</p></div>
+          <div class="card"><h3>International Court of Justice</h3><p class="muted">Principal judicial organ of the UN, based in The Hague.</p></div>
+          <div class="card"><h3>Secretariat</h3><p class="muted">Carries out the day-to-day work of the organization.</p></div>
+          <div class="card"><h3>Trusteeship Council</h3><p class="muted">Historically supervised trust territories; operations suspended in 1994.</p></div>
+        </div>
+        <div class="note">
+          <strong>Key institutional difference:</strong> the <strong>General Assembly</strong> is universal and representative; the <strong>Security Council</strong> is smaller and focused on peace and security.
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="eyebrow">GA vs UNSC</div>
+        <h1>General Assembly vs Security Council</h1>
+        <table class="table">
+          <tr>
+            <th>Feature</th>
+            <th>General Assembly</th>
+            <th>Security Council</th>
+          </tr>
+          <tr>
+            <td>Membership</td>
+            <td>All 193 UN member states</td>
+            <td>15 members total</td>
+          </tr>
+          <tr>
+            <td>Main function</td>
+            <td>Deliberation, representation, recommendations, broad global issues</td>
+            <td>Primary responsibility for international peace and security</td>
+          </tr>
+          <tr>
+            <td>Typical classroom feel</td>
+            <td>Large, multilateral, broad participation</td>
+            <td>Smaller, higher-stakes, concentrated membership</td>
+          </tr>
+          <tr>
+            <td>Why it matters for us</td>
+            <td>Fits a full class and broad humanitarian topic</td>
+            <td>Too small to naturally accommodate 36 students equally</td>
+          </tr>
+        </table>
+        <div class="danger-note note">
+          <strong>Important:</strong> We are <strong>not</strong> doing a UNSC simulation because the real Security Council has only 15 members and does not fit our class size or teaching goals well.
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="eyebrow">What Is MUN?</div>
+        <h1>What Is Model United Nations?</h1>
+        <div class="grid grid-2">
+          <div class="card big-card">
+            <ul>
+              <li>MUN is an <strong>academic simulation</strong> of UN processes.</li>
+              <li>Students represent <strong>countries</strong>, not themselves.</li>
+              <li>Delegates research state positions and interests.</li>
+              <li>Delegates debate, negotiate, and draft documents.</li>
+              <li>The goal is not only debate — it is also <strong>cooperation and problem-solving</strong>.</li>
+            </ul>
+          </div>
+          <div class="card big-card">
+            <h3>Core principle</h3>
+            <p class="quote">Represent the state, not yourself.</p>
+            <p class="muted">
+              You may be assigned a country whose policies differ from your own views. That is part of the educational value of MUN.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="eyebrow">MUN Diversity</div>
+        <h1>MUN Is Not One Single Format</h1>
+        <div class="card big-card">
+          <p>
+            Around the world, MUN conferences use different committee types, sizes, rules, and written outputs.
+            Some simulate broad UN bodies. Others simulate smaller councils, specialized agencies, regional bodies, or crisis scenarios.
+          </p>
+          <p>
+            So when we say <strong>“we are doing MUN”</strong>, that does <strong>not</strong> mean there is only one correct format.
+            The format must be chosen according to:
+          </p>
+          <div>
+            <span class="pill">class size</span>
+            <span class="pill">student experience level</span>
+            <span class="pill">room constraints</span>
+            <span class="pill">topic complexity</span>
+            <span class="pill">learning objectives</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="eyebrow">Committee Types</div>
+        <h1>Common MUN Formats Worldwide</h1>
+        <table class="table">
+          <tr>
+            <th>Format</th>
+            <th>Typical style</th>
+            <th>General characteristics</th>
+          </tr>
+          <tr>
+            <td>General Assembly</td>
+            <td>Large, resolution-based</td>
+            <td>Broad representation, major global issues, formal debate and resolutions</td>
+          </tr>
+          <tr>
+            <td>ECOSOC / Social-Economic Bodies</td>
+            <td>Mid-sized, resolution-based</td>
+            <td>Development, social policy, economic and environmental issues</td>
+          </tr>
+          <tr>
+            <td>Regional Bodies</td>
+            <td>Mid-sized</td>
+            <td>Focused on a specific geographic region or organization</td>
+          </tr>
+          <tr>
+            <td>Specialized Bodies</td>
+            <td>Smaller, often directive-based</td>
+            <td>Narrower institutional focus, more role-specific negotiation</td>
+          </tr>
+          <tr>
+            <td>Crisis Committees</td>
+            <td>Small, fast-paced, directive-based</td>
+            <td>Reactive, dynamic, often more advanced and less beginner-friendly</td>
+          </tr>
+        </table>
+      </section>
+
+      <section class="slide">
+        <div class="eyebrow">Alternatives</div>
+        <h1>Why Some Conferences Use UNSC, Specialized, or Crisis Committees</h1>
+        <div class="grid grid-3">
+          <div class="card">
+            <h3>UNSC</h3>
+            <ul>
+              <li>good for peace and security topics</li>
+              <li>small membership</li>
+              <li>works best with smaller groups</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Specialized Bodies</h3>
+            <ul>
+              <li>good for narrow policy or institutional themes</li>
+              <li>often smaller and more technical</li>
+              <li>can be strong for advanced students</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Crisis</h3>
+            <ul>
+              <li>fast-moving and often unpredictable</li>
+              <li>requires improvisation</li>
+              <li>usually better for experienced delegates</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="eyebrow">Why Not UNSC?</div>
+        <h1>Why We Are Not Doing a Security Council MUN</h1>
+        <div class="grid grid-2">
+          <div class="card big-card">
+            <ul>
+              <li>The real Security Council has <strong>15 members</strong>.</li>
+              <li>Our class has about <strong>36 students</strong>.</li>
+              <li>We want all students engaged at the same time in the same room.</li>
+              <li>A full UNSC format would leave too many students in artificial or secondary roles.</li>
+            </ul>
+          </div>
+          <div class="card big-card">
+            <ul>
+              <li>UNSC simulations can be excellent, but they are not automatically the best choice for every class.</li>
+              <li>For our course, a larger representative committee is more inclusive, more practical, and more teachable.</li>
+              <li>This is a deliberate design choice, not an accidental compromise.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="eyebrow">Why GA-Style?</div>
+        <h1>Why We Are Using a GA-Style Humanitarian Committee</h1>
+        <div class="grid grid-2">
+          <div class="card">
+            <h3>Practical reasons</h3>
+            <ul>
+              <li>everyone can participate</li>
+              <li>works in one room</li>
+              <li>fits 18 delegations</li>
+              <li>supports broad international representation</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Educational reasons</h3>
+            <ul>
+              <li>better for first-year students</li>
+              <li>good for learning negotiation and coalition-building</li>
+              <li>suited to consensus-building and drafting</li>
+              <li>appropriate for a broad humanitarian agenda</li>
+            </ul>
+          </div>
+        </div>
+        <div class="success-note note">
+          <strong>Our approach:</strong> we are simulating a <strong>General Assembly–style humanitarian committee</strong>, adapted for classroom learning.
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="eyebrow">Our Design</div>
+        <h1>Our Class Simulation Design</h1>
+        <div class="grid grid-4">
+          <div class="kpi">
+            <div class="label">Committee model</div>
+            <div class="value">GA-style humanitarian body</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Classroom structure</div>
+            <div class="value">1 full committee</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Delegations</div>
+            <div class="value">18 countries</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Pairing</div>
+            <div class="value">2 students each</div>
+          </div>
+        </div>
+        <div class="note">
+          Everyone participates in the same committee, on the same agenda, through the same negotiation process.
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="eyebrow">Agenda</div>
+        <h1>Our Agenda</h1>
+        <div class="card big-card">
+          <h2 class="accent2">International Responsibility-Sharing for Refugees and Displaced Persons</h2>
+          <p>
+            This topic asks how states and the international community should share responsibility for protecting and supporting refugees and displaced persons.
+          </p>
+          <div class="grid grid-2" style="margin-top:10px">
+            <div>
+              <h3>Key dimensions</h3>
+              <ul>
+                <li>hosting refugees</li>
+                <li>international funding</li>
+                <li>resettlement and burden-sharing</li>
+                <li>border pressures and transit issues</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Also relevant</h3>
+              <ul>
+                <li>humanitarian obligations</li>
+                <li>state capacity</li>
+                <li>regional instability</li>
+                <li>sovereignty and domestic politics</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="eyebrow">Why This Topic?</div>
+        <h1>Why This Topic Works for Our MUN</h1>
+        <div class="grid grid-3">
+          <div class="card"><h3>Accessible</h3><p class="muted">Students can understand the issue relatively quickly and begin research without highly technical background.</p></div>
+          <div class="card"><h3>Diverse Positions</h3><p class="muted">Host states, donor states, transit states, destination states, and major powers all face the issue differently.</p></div>
+          <div class="card"><h3>Strong Diplomacy</h3><p class="muted">The topic creates room for disagreement, bargaining, coalition-building, and resolution drafting.</p></div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="eyebrow">What Delegates Do</div>
+        <h1>What Delegates Actually Do</h1>
+        <div class="grid grid-2">
+          <div class="card">
+            <h3>Before the simulation</h3>
+            <ul>
+              <li>research the assigned country</li>
+              <li>identify interests and concerns</li>
+              <li>write a position paper</li>
+              <li>prepare an opening speech</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>During the simulation</h3>
+            <ul>
+              <li>speak formally</li>
+              <li>negotiate informally</li>
+              <li>build alliances / blocs</li>
+              <li>draft and revise resolutions</li>
+            </ul>
+          </div>
+        </div>
+        <div class="note">
+          A delegate’s goal is not simply to “win the debate” but to represent the country effectively and work toward an outcome that the country could support.
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="eyebrow">Position Papers</div>
+        <h1>What Is a Position Paper?</h1>
+        <div class="grid grid-2">
+          <div class="card big-card">
+            <p>
+              A <strong>position paper</strong> is a short written statement from the perspective of your assigned country.
+            </p>
+            <ul>
+              <li>explains the issue briefly</li>
+              <li>states the country’s position</li>
+              <li>identifies key interests and concerns</li>
+              <li>proposes solutions the country would support</li>
+            </ul>
+          </div>
+          <div class="card big-card">
+            <h3>Main point</h3>
+            <p class="quote">
+              This is not a personal essay. It is a delegation brief that prepares you for the simulation.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="eyebrow">Position Paper Structure</div>
+        <h1>Core Elements of a Good Position Paper</h1>
+        <div class="grid grid-3">
+          <div class="card"><h3>1. The issue</h3><p class="muted">What is the problem under discussion?</p></div>
+          <div class="card"><h3>2. Country position</h3><p class="muted">How does your country understand the issue?</p></div>
+          <div class="card"><h3>3. National interests</h3><p class="muted">What concerns shape your state’s view?</p></div>
+          <div class="card"><h3>4. Policies supported</h3><p class="muted">What principles or actions would your country back?</p></div>
+          <div class="card"><h3>5. Proposed solutions</h3><p class="muted">What measures would your delegation advocate?</p></div>
+          <div class="card"><h3>6. Conclusion</h3><p class="muted">What overall message should the committee hear from your delegation?</p></div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="eyebrow">Research</div>
+        <h1>How to Research Your Country</h1>
+        <div class="grid grid-2">
+          <div class="card">
+            <h3>Ask questions like:</h3>
+            <ul>
+              <li>Is this country mainly a host, donor, transit, or destination state?</li>
+              <li>What has this government said publicly?</li>
+              <li>What kinds of burden-sharing would it support?</li>
+              <li>What would it probably reject?</li>
+              <li>Which countries might it align with?</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Use sources like:</h3>
+            <ul>
+              <li>UNHCR</li>
+              <li>UN documents and reports</li>
+              <li>government / foreign ministry websites</li>
+              <li>reputable news and policy analysis</li>
+              <li>country voting records or public statements where relevant</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="eyebrow">Sequence</div>
+        <h1>What Happens Next</h1>
+        <table class="table">
+          <tr>
+            <th>Step</th>
+            <th>What happens</th>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>Students complete the Google Form for delegation preferences</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Instructor assigns countries and pairs</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Delegations research country positions</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Delegations prepare position papers and opening speeches</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>MUN simulation begins</td>
+          </tr>
+        </table>
+      </section>
+
+      <section class="slide">
+        <div class="eyebrow">Key Takeaway</div>
+        <h1>Final Takeaway</h1>
+        <div class="card big-card">
+          <p class="quote">
+            The simulation must be designed first.<br>
+            Your role is assigned next.<br>
+            Your position paper prepares you to perform that role.
+          </p>
+          <p style="margin-top:18px">In other words:</p>
+          <ul>
+            <li>we are not writing position papers in the abstract</li>
+            <li>we are preparing to represent specific countries</li>
+            <li>the paper is the bridge between research and simulation</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="eyebrow">Sources</div>
+        <h1>Reference Basis for This Introduction</h1>
+        <div class="card big-card source-list">
+          <ul>
+            <li><a href="https://www.un.org/en/about-us/main-bodies" target="_blank">United Nations – Main Bodies</a></li>
+            <li><a href="https://www.un.org/en/mun/page/getting-started-model-united-nations" target="_blank">United Nations – Getting Started with Model United Nations</a></li>
+            <li><a href="https://www.harvardmun.org/committee-list" target="_blank">Harvard Model UN – Committee Types</a></li>
+            <li><a href="https://www.amun.org/handbooks/2025/2025-handbook/simulations-roles-and-roleplaying-2025/" target="_blank">AMUN – Simulations, Roles, and Roleplaying</a></li>
+          </ul>
+          <p class="small">
+            This classroom deck adapts official UN and established MUN guidance for a first-year undergraduate course simulation.
+          </p>
+        </div>
+      </section>
+
+    </div>
+
+    <div class="footer">
+      <div>Use ← / → arrow keys, space, or buttons to navigate</div>
+      <div class="progress"><div id="progressBar"></div></div>
+      <div class="slide-num" id="slideNum">1 / 20</div>
+    </div>
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    let current = 0;
+
+    function showSlide(index){
+      if(index < 0) index = 0;
+      if(index >= slides.length) index = slides.length - 1;
+      slides[current].classList.remove('active');
+      current = index;
+      slides[current].classList.add('active');
+      updateUI();
+    }
+
+    function nextSlide(){ showSlide(current + 1); }
+    function prevSlide(){ showSlide(current - 1); }
+
+    function updateUI(){
+      document.getElementById('slideNum').textContent = `${current + 1} / ${slides.length}`;
+      document.getElementById('progressBar').style.width = `${((current + 1) / slides.length) * 100}%`;
+      document.title = `PSIR 172 - MUN Deck (${current + 1}/${slides.length})`;
+    }
+
+    function toggleFullscreen(){
+      if(!document.fullscreenElement){
+        document.documentElement.requestFullscreen?.();
+      }else{
+        document.exitFullscreen?.();
+      }
+    }
+
+    document.addEventListener('keydown', (e)=>{
+      if(['ArrowRight','PageDown',' '].includes(e.key)){
+        e.preventDefault();
+        nextSlide();
+      }
+      if(['ArrowLeft','PageUp'].includes(e.key)){
+        e.preventDefault();
+        prevSlide();
+      }
+      if(e.key.toLowerCase() === 'f'){
+        toggleFullscreen();
+      }
+      if(e.key === 'Home') showSlide(0);
+      if(e.key === 'End') showSlide(slides.length - 1);
+    });
+
+    updateUI();
+  </script>
+</body>
+</html>
