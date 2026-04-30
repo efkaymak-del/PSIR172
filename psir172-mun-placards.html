@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PSIR 172 MUN Placards</title>
+  <style>
+    @page {
+      size: A4 landscape;
+      margin: 10mm;
+    }
+
+    body{
+      margin:0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:#f4f6fb;
+      color:#111827;
+    }
+
+    .toolbar{
+      position:sticky;
+      top:0;
+      z-index:10;
+      background:#111827;
+      color:white;
+      padding:12px 16px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .toolbar h1{
+      font-size:1rem;
+      margin:0;
+    }
+
+    .toolbar button{
+      background:#2563eb;
+      color:white;
+      border:none;
+      padding:10px 14px;
+      border-radius:8px;
+      cursor:pointer;
+      font-weight:700;
+    }
+
+    .sheet{
+      padding:12px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+
+    .placard{
+      background:white;
+      border:2px solid #1f2937;
+      height:170px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+      position:relative;
+      page-break-inside:avoid;
+    }
+
+    .placard::after{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      top:50%;
+      border-top:1.5px dashed #9ca3af;
+    }
+
+    .top, .bottom{
+      width:100%;
+      height:50%;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      padding:8px;
+    }
+
+    .label{
+      font-size:14px;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      color:#4b5563;
+      margin-bottom:8px;
+      font-weight:700;
+    }
+
+    .country{
+      font-size:28px;
+      font-weight:900;
+      letter-spacing:.5px;
+      line-height:1.1;
+    }
+
+    .agenda{
+      font-size:11px;
+      color:#6b7280;
+      margin-top:8px;
+    }
+
+    @media print {
+      body{background:white;}
+      .toolbar{display:none;}
+      .sheet{padding:0;}
+      .placard{break-inside:avoid;}
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <h1>PSIR 172 MUN Placards – Print, cut, and fold on the dashed line</h1>
+    <button onclick="window.print()">Print Placards</button>
+  </div>
+
+  <div class="sheet" id="sheet"></div>
+
+  <script>
+    const countries = [
+      "Türkiye","Germany","Greece","Italy","Jordan","Lebanon",
+      "Pakistan","Uganda","Kenya","Bangladesh","United States","China",
+      "France","United Kingdom","Sweden","Brazil","South Africa","Mexico"
+    ];
+
+    const sheet = document.getElementById('sheet');
+
+    countries.forEach(country => {
+      const card = document.createElement('div');
+      card.className = 'placard';
+      card.innerHTML = `
+        <div class="top">
+          <div class="label">PSIR 172 MUN</div>
+          <div class="country">${country}</div>
+          <div class="agenda">Refugees / Displacement Agenda</div>
+        </div>
+        <div class="bottom">
+          <div class="label">PSIR 172 MUN</div>
+          <div class="country">${country}</div>
+          <div class="agenda">Refugees / Displacement Agenda</div>
+        </div>
+      `;
+      sheet.appendChild(card);
+    });
+  </script>
+</body>
+</html>
