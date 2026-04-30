@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PSIR 172 – MUN Instructor Pack</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --panel:#121a31;
+      --panel2:#18233f;
+      --text:#eef2ff;
+      --muted:#b8c2e0;
+      --accent:#60a5fa;
+      --accent2:#34d399;
+      --warn:#f59e0b;
+      --danger:#f87171;
+      --border:#2b3a63;
+    }
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      padding:0;
+      font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;
+      background:linear-gradient(180deg,#0b1020,#101933);
+      color:var(--text);
+    }
+    body.light{
+      --bg:#f6f8ff;
+      --panel:#ffffff;
+      --panel2:#eef3ff;
+      --text:#15213b;
+      --muted:#5d6b8a;
+      --accent:#2563eb;
+      --accent2:#059669;
+      --warn:#d97706;
+      --danger:#dc2626;
+      --border:#d3def3;
+      background:linear-gradient(180deg,#f6f8ff,#eaf0fb);
+    }
+    .app{max-width:1280px;margin:0 auto;padding:22px}
+    .topbar,.hero,.card,.footer{
+      background:rgba(18,26,49,.96);
+      border:1px solid var(--border);
+      border-radius:18px;
+    }
+    body.light .topbar, body.light .hero, body.light .card, body.light .footer{
+      background:rgba(255,255,255,.96);
+    }
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding:14px 16px;
+      margin-bottom:18px;
+      flex-wrap:wrap;
+    }
+    .brand{
+      font-weight:900;
+      font-size:1.12rem;
+    }
+    .tagline{
+      color:var(--muted);
+      font-size:.95rem;
+      margin-top:4px;
+    }
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    button,.btn{
+      border:1px solid var(--border);
+      background:var(--panel2);
+      color:var(--text);
+      padding:10px 14px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:800;
+      text-decoration:none;
+      display:inline-block;
+    }
+    button:hover,.btn:hover{border-color:var(--accent)}
+    .primary{background:linear-gradient(90deg,var(--accent),#3b82f6);color:white;border-color:transparent}
+    .success{background:linear-gradient(90deg,var(--accent2),#10b981);color:white;border-color:transparent}
+    .warn{background:linear-gradient(90deg,var(--warn),#f59e0b);color:white;border-color:transparent}
+    .hero{
+      padding:24px;
+      margin-bottom:18px;
+    }
+    .hero h1{
+      margin:0 0 10px;
+      font-size:2.1rem;
+    }
+    .hero p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.6;
+      max-width:1000px;
+    }
+    .pills{margin-top:14px}
+    .pill{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      color:var(--muted);
+      margin:8px 8px 0 0;
+      font-size:.92rem;
+    }
+    .kpis{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+      margin:18px 0;
+    }
+    .kpi{
+      background:var(--panel2);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:16px;
+    }
+    .kpi .l{
+      color:var(--muted);
+      font-size:.9rem;
+    }
+    .kpi .v{
+      font-size:1.5rem;
+      font-weight:900;
+      margin-top:6px;
+    }
+    .section-title{
+      margin:26px 0 12px;
+      font-size:1.25rem;
+      font-weight:900;
+    }
+    .grid{
+      display:grid;
+      gap:16px;
+    }
+    .grid-3{grid-template-columns:repeat(3,1fr)}
+    .grid-2{grid-template-columns:repeat(2,1fr)}
+    @media (max-width:1050px){
+      .grid-3,.grid-2,.kpis{grid-template-columns:1fr}
+    }
+    .card{
+      padding:18px;
+      min-height:210px;
+    }
+    .card h3{
+      margin:0 0 8px;
+      font-size:1.08rem;
+    }
+    .meta{
+      color:var(--muted);
+      font-size:.92rem;
+      margin-bottom:10px;
+    }
+    .card p{
+      line-height:1.55;
+      color:var(--text);
+      margin:0 0 14px;
+    }
+    .mini{
+      font-size:.92rem;
+      color:var(--muted);
+      line-height:1.5;
+    }
+    .checklist{
+      margin:0;
+      padding-left:18px;
+      color:var(--text);
+    }
+    .checklist li{
+      margin:6px 0;
+    }
+    .footer{
+      padding:18px;
+      margin-top:22px;
+    }
+    .small{
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.55;
+    }
+    .notice{
+      margin-top:14px;
+      padding:14px 16px;
+      border-left:4px solid var(--accent);
+      background:rgba(96,165,250,.08);
+      border-radius:12px;
+    }
+    body.light .notice{
+      background:#edf5ff;
+    }
+    code{
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--border);
+      border-radius:8px;
+      padding:2px 6px;
+      font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+      font-size:.92em;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div>
+        <div class="brand">PSIR 172 · MUN Instructor Pack</div>
+        <div class="tagline">Central launcher for the full classroom simulation package</div>
+      </div>
+      <div class="row">
+        <button onclick="toggleTheme()">Toggle Theme</button>
+        <button onclick="window.print()">Print Index</button>
+      </div>
+    </div>
+
+    <div class="hero">
+      <h1>Model United Nations Instructor Resource Index</h1>
+      <p>
+        This page organizes the PSIR 172 MUN package into one place so it can actually be used in class.
+        It covers preparation, assignments, live simulation support, and post-simulation reflection for the class MUN on
+        <strong>International Responsibility-Sharing for Refugees and Displaced Persons</strong>.
+      </p>
+
+      <div class="pills">
+        <span class="pill">Format: General Assembly–style humanitarian committee</span>
+        <span class="pill">Class size: 36 students</span>
+        <span class="pill">Delegations: 18 countries × 2 students</span>
+        <span class="pill">Weeks 9–11 focus</span>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi">
+          <div class="l">Simulation format</div>
+          <div class="v">1 full-class MUN</div>
+        </div>
+        <div class="kpi">
+          <div class="l">Main agenda</div>
+          <div class="v">Refugees / displacement</div>
+        </div>
+        <div class="kpi">
+          <div class="l">Core student prep</div>
+          <div class="v">Paper + speech + clauses</div>
+        </div>
+        <div class="kpi">
+          <div class="l">Instructor use</div>
+          <div class="v">Chairing + tracking + debrief</div>
+        </div>
+      </div>
+
+      <div class="notice">
+        <strong>Suggested folder setup:</strong><br>
+        Place this file in the same folder as your other MUN HTML files, especially:
+        <code>psir172-mun-intro-deck.html</code>,
+        <code>psir172-mun-position-paper-builder.html</code>,
+        and <code>psir172-mun-placards.html</code>.
+      </div>
+    </div>
+
+    <div class="section-title">1. Core Presentation and Orientation</div>
+    <div class="grid grid-3">
+      <div class="card">
+        <h3>MUN Introduction Deck</h3>
+        <div class="meta">Week 9 · Background + format explanation</div>
+        <p>
+          HTML slide deck covering the UN, UN organs, MUN formats, why the class is using a GA-style humanitarian simulation,
+          and how the position paper fits into the exercise.
+        </p>
+        <a class="btn primary" href="psir172-mun-intro-deck.html" target="_blank">Open Slide Deck</a>
+      </div>
+
+      <div class="card">
+        <h3>Google Form: Delegation Preferences</h3>
+        <div class="meta">Pre-assignment workflow</div>
+        <p>
+          Use the previously drafted Google Form to collect country preferences, partner requests, and confidence/skill information before assigning delegations.
+        </p>
+        <div class="mini">Use the text draft in your planning documents to build the form in Google Forms.</div>
+      </div>
+
+      <div class="card">
+        <h3>Country Assignment Master Sheet</h3>
+        <div class="meta">Instructor-side allocation tool</div>
+        <p>
+          The master delegation list for the 18 countries, student pairings, country role types, and notes on assignment logic.
+        </p>
+        <div class="mini">Best stored in Excel or Google Sheets for live tracking.</div>
+      </div>
+    </div>
+
+    <div class="section-title">2. Student Preparation Materials</div>
+    <div class="grid grid-3">
+      <div class="card">
+        <h3>Position Paper Assignment Sheet</h3>
+        <div class="meta">Delegation submission guidance</div>
+        <p>
+          Full assignment brief explaining what a position paper is, what it should include, expected length, research expectations, and assessment criteria.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Delegation Briefing Template</h3>
+        <div class="meta">Country research bridge document</div>
+        <p>
+          One-page structured guide helping students identify national interests, allies, tensions, supported policies, red lines, and delegation strategy.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>MUN Position Paper Builder</h3>
+        <div class="meta">Interactive HTML tool</div>
+        <p>
+          Browser-based builder for country position, interests, allies, red lines, supported solutions, opening speech, and generated paper draft.
+        </p>
+        <a class="btn success" href="psir172-mun-position-paper-builder.html" target="_blank">Open Builder App</a>
+      </div>
+
+      <div class="card">
+        <h3>Opening Speech Builder</h3>
+        <div class="meta">Speech preparation worksheet</div>
+        <p>
+          Guides students in converting their country research into a 45–75 second formal opening statement using diplomatic language.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Resolution-Drafting Worksheet</h3>
+        <div class="meta">From ideas to committee text</div>
+        <p>
+          Helps students distinguish preambulatory and operative clauses, identify bloc language, and draft workable committee proposals.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Student Rules Handout</h3>
+        <div class="meta">Simulation quick-reference sheet</div>
+        <p>
+          One-page rules summary for students covering recognition by the Chair, speaking as the state, caucusing, realistic proposals, and diplomatic conduct.
+        </p>
+      </div>
+    </div>
+
+    <div class="section-title">3. Simulation Day Support</div>
+    <div class="grid grid-3">
+      <div class="card">
+        <h3>Week 10 Simulation Plan</h3>
+        <div class="meta">Simulation Part I</div>
+        <p>
+          Covers opening, roll call, opening speeches, moderated discussion, caucusing, and initial draft resolution work.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Week 11 Simulation Plan</h3>
+        <div class="meta">Simulation Part II</div>
+        <p>
+          Covers clause negotiation, draft consolidation, informal amendments, final debate, consensus/voting, and debrief.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Chair Script + Simplified Rules</h3>
+        <div class="meta">Instructor live-use guide</div>
+        <p>
+          Provides ready-made chair language for opening the committee, recognizing speakers, moving to caucus, handling draft clauses, amendments, and decisions.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Printable Placards</h3>
+        <div class="meta">Desk labels for delegations</div>
+        <p>
+          Printable folded country placards for all 18 delegations to improve room structure, visibility, and simulation atmosphere.
+        </p>
+        <a class="btn warn" href="psir172-mun-placards.html" target="_blank">Open Placards</a>
+      </div>
+
+      <div class="card">
+        <h3>Country Release Template</h3>
+        <div class="meta">Student-facing assignment notice</div>
+        <p>
+          Clean announcement template for releasing delegation assignments, reminding students of their role, next tasks, and simulation purpose.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Participation Tracking Tables</h3>
+        <div class="meta">Instructor monitoring</div>
+        <p>
+          Supports informal assessment of speaking, caucusing, drafting, and delegation participation across Weeks 10 and 11.
+        </p>
+      </div>
+    </div>
+
+    <div class="section-title">4. Post-Simulation Reflection and Closure</div>
+    <div class="grid grid-2">
+      <div class="card">
+        <h3>Post-MUN Reflection Sheet</h3>
+        <div class="meta">Individual debrief task</div>
+        <p>
+          Reflection prompts asking students to analyze country representation, negotiation, compromise, outcomes, and lessons about diplomacy and international cooperation.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Reflection Rubric</h3>
+        <div class="meta">Simple 5-point model</div>
+        <p>
+          Light-touch rubric for evaluating reflection quality, insight into representation, negotiation analysis, learning, and clarity.
+        </p>
+      </div>
+    </div>
+
+    <div class="section-title">5. Suggested Teaching Sequence</div>
+    <div class="grid grid-2">
+      <div class="card">
+        <h3>Week 9</h3>
+        <ul class="checklist">
+          <li>Housekeeping and transition from midterm period</li>
+          <li>UN and MUN background</li>
+          <li>Explain alternative MUN formats</li>
+          <li>Explain why the class uses a GA-style humanitarian committee</li>
+          <li>Release or prepare delegation assignments</li>
+          <li>Introduce position paper and country research</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Weeks 10–11</h3>
+        <ul class="checklist">
+          <li>Opening speeches and formal discussion</li>
+          <li>Caucusing and bloc formation</li>
+          <li>Resolution drafting and revisions</li>
+          <li>Amendments, consensus test, or vote</li>
+          <li>Debrief and post-simulation reflection</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-title">6. Recommended File List</div>
+    <div class="card">
+      <h3>Suggested working folder</h3>
+      <p class="small">
+        Keep the MUN materials together in one folder. A practical setup would be:
+      </p>
+      <p class="small">
+        <code>
+          /psir172-mun/<br>
+          ├─ psir172-mun-instructor-pack.html<br>
+          ├─ psir172-mun-intro-deck.html<br>
+          ├─ psir172-mun-position-paper-builder.html<br>
+          ├─ psir172-mun-placards.html<br>
+          ├─ country-assignment-master-sheet.xlsx<br>
+          ├─ delegation-release-template.docx<br>
+          ├─ position-paper-assignment.docx<br>
+          ├─ delegation-briefing-template.docx<br>
+          ├─ opening-speech-builder.docx<br>
+          ├─ resolution-drafting-worksheet.docx<br>
+          ├─ week10-simulation-plan.docx<br>
+          ├─ week11-simulation-plan.docx<br>
+          ├─ chair-script-rules-guide.docx<br>
+          ├─ student-rules-handout.docx<br>
+          └─ post-mun-reflection-sheet.docx
+        </code>
+      </p>
+    </div>
+
+    <div class="footer">
+      <h3 style="margin-top:0">Next Practical Recommendation</h3>
+      <p class="small">
+        At this point, the MUN package is substantial and classroom-ready. The most useful next step is probably not another planning document,
+        but either:
+      </p>
+      <ul class="checklist">
+        <li><strong>Option A:</strong> combine the student-facing tools into one single HTML MUN toolkit page</li>
+        <li><strong>Option B:</strong> turn the Word-style materials into polished printable documents / PDFs</li>
+      </ul>
+      <p class="small">
+        If you want my recommendation: <strong>Option A next</strong>. That would give students one browser-based place for briefing, speech prep, position paper drafting, and resolution work.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    function toggleTheme(){
+      document.body.classList.toggle('light');
+      localStorage.setItem('psir172MUNInstructorPackTheme',
+        document.body.classList.contains('light') ? 'light' : 'dark');
+    }
+
+    (function initTheme(){
+      const saved = localStorage.getItem('psir172MUNInstructorPackTheme');
+      if(saved === 'light') document.body.classList.add('light');
+    })();
+  </script>
+</body>
+</html>
