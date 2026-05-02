@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PSIR 172 – MUN Preparation Workshop (7 May)</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --panel:#121a31;
+      --panel2:#182243;
+      --text:#eef3ff;
+      --muted:#b8c4e9;
+      --line:rgba(255,255,255,.12);
+      --accent:#7cc4ff;
+      --accent2:#8ef0c3;
+      --warn:#ffd27a;
+      --danger:#ff9b9b;
+      --shadow:0 14px 32px rgba(0,0,0,.25);
+    }
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      padding:0;
+      background:linear-gradient(180deg,#0b1020 0%, #0f1735 100%);
+      color:var(--text);
+      font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;
+    }
+    body{overflow:hidden}
+    .deck{
+      width:100vw;
+      height:100vh;
+      position:relative;
+    }
+    .slide{
+      display:none;
+      width:100vw;
+      height:100vh;
+      padding:34px 48px 64px;
+      overflow:auto;
+      background:linear-gradient(180deg,#0b1020 0%, #10183a 100%);
+    }
+    .slide.active{display:block}
+    .inner{
+      max-width:1200px;
+      margin:0 auto;
+    }
+    h1{
+      margin:0 0 12px;
+      font-size:clamp(2rem,4vw,3.3rem);
+      line-height:1.08;
+    }
+    h2{
+      margin:0 0 14px;
+      font-size:clamp(1.5rem,3vw,2.35rem);
+      line-height:1.15;
+    }
+    h3{
+      margin:0 0 10px;
+      font-size:1.15rem;
+    }
+    p,li{
+      font-size:1.02rem;
+      line-height:1.55;
+      color:var(--text);
+    }
+    .muted{color:var(--muted)}
+    .subtitle{
+      font-size:1.15rem;
+      color:var(--muted);
+      margin-bottom:10px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(12,1fr);
+      gap:16px;
+      margin-top:18px;
+    }
+    .col-12{grid-column:span 12}
+    .col-8{grid-column:span 8}
+    .col-6{grid-column:span 6}
+    .col-4{grid-column:span 4}
+    .card{
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px 18px;
+      box-shadow:var(--shadow);
+    }
+    .hero{
+      background:linear-gradient(135deg,rgba(124,196,255,.18),rgba(142,240,195,.10));
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:26px;
+      box-shadow:var(--shadow);
+    }
+    .callout{
+      border-left:4px solid var(--accent2);
+      background:rgba(142,240,195,.08);
+      padding:14px 16px;
+      border-radius:12px;
+      margin:14px 0;
+    }
+    .warn{
+      border-left:4px solid var(--warn);
+      background:rgba(255,210,122,.08);
+      padding:14px 16px;
+      border-radius:12px;
+      margin:14px 0;
+    }
+    .danger{
+      border-left:4px solid var(--danger);
+      background:rgba(255,155,155,.08);
+      padding:14px 16px;
+      border-radius:12px;
+      margin:14px 0;
+    }
+    ul,ol{margin:10px 0 0 0;padding-left:22px}
+    .kpis{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:12px;
+      margin-top:18px;
+    }
+    .kpi{
+      background:rgba(255,255,255,.05);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+    }
+    .kpi .label{
+      font-size:.8rem;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+      color:var(--muted);
+    }
+    .kpi .value{
+      margin-top:4px;
+      font-size:1.1rem;
+      font-weight:800;
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:10px;
+    }
+    th,td{
+      border:1px solid var(--line);
+      padding:10px 12px;
+      text-align:left;
+      vertical-align:top;
+      font-size:.97rem;
+    }
+    th{background:#1b2750}
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:10px;
+    }
+    .chip{
+      display:inline-block;
+      background:#23345f;
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:.9rem;
+    }
+    .footer{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:10px 16px;
+      background:rgba(6,10,24,.88);
+      border-top:1px solid var(--line);
+      backdrop-filter:blur(8px);
+      z-index:20;
+    }
+    .controls{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    button{
+      border:none;
+      border-radius:10px;
+      padding:9px 12px;
+      cursor:pointer;
+      font-weight:700;
+      background:var(--accent);
+      color:#05101e;
+    }
+    button.secondary{
+      background:#21315d;
+      color:var(--text);
+      border:1px solid var(--line);
+    }
+    .slide-counter{
+      color:var(--muted);
+      font-size:.95rem;
+    }
+    .small{font-size:.92rem;color:var(--muted)}
+    @media (max-width:900px){
+      .slide{padding:20px 18px 82px}
+      .col-8,.col-6,.col-4{grid-column:span 12}
+    }
+  </style>
+</head>
+<body>
+  <div class="deck">
+
+    <section class="slide active">
+      <div class="inner">
+        <div class="hero">
+          <h1>PSIR 172 – MUN Preparation Workshop</h1>
+          <div class="subtitle">7 May • Country Research, Delegation Strategy, and Position Building</div>
+          <p>
+            Today’s session is about learning how to move from
+            <strong>country assignment</strong> to
+            <strong>delegation strategy</strong>.
+            By the end of class, you should know how to research your country,
+            identify its likely priorities, and begin preparing your position paper,
+            opening speech, and negotiation approach.
+          </p>
+          <div class="kpis">
+            <div class="kpi">
+              <div class="label">Today</div>
+              <div class="value">Preparation Workshop</div>
+            </div>
+            <div class="kpi">
+              <div class="label">Next Week</div>
+              <div class="value">MUN Simulation I</div>
+            </div>
+            <div class="kpi">
+              <div class="label">Format</div>
+              <div class="value">18 Delegations × 2 Students</div>
+            </div>
+            <div class="kpi">
+              <div class="label">Agenda</div>
+              <div class="value">Refugees & Displacement</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <h2>Today’s goals</h2>
+        <div class="grid">
+          <div class="col-6">
+            <div class="card">
+              <h3>By the end of class, you should be able to:</h3>
+              <ul>
+                <li>understand your country’s role on the agenda;</li>
+                <li>identify key national interests and constraints;</li>
+                <li>distinguish a country position from a personal opinion;</li>
+                <li>know where and how to research effectively;</li>
+                <li>begin a delegation strategy sheet.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="card">
+              <h3>You will leave class with:</h3>
+              <ul>
+                <li>a completed or partially completed printed strategy form;</li>
+                <li>initial country research notes;</li>
+                <li>draft ideas for your opening speech;</li>
+                <li>a clearer sense of allies, tensions, and red lines;</li>
+                <li>a starting point for the position paper.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="callout">
+          <strong>Main principle:</strong> today is not about memorizing every fact about your country.
+          It is about learning how to identify the facts that matter for this specific agenda.
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <h2>Where we are in the semester</h2>
+        <div class="grid">
+          <div class="col-4">
+            <div class="card">
+              <h3>7 May</h3>
+              <p><strong>Preparation workshop</strong></p>
+              <ul>
+                <li>country research</li>
+                <li>delegation strategy</li>
+                <li>position-building</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="card">
+              <h3>14 May</h3>
+              <p><strong>MUN Simulation I</strong></p>
+              <ul>
+                <li>opening speeches</li>
+                <li>moderated discussion</li>
+                <li>caucusing</li>
+                <li>bloc formation</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="card">
+              <h3>21 May</h3>
+              <p><strong>MUN Simulation II</strong></p>
+              <ul>
+                <li>draft resolution work</li>
+                <li>amendments</li>
+                <li>final debate</li>
+                <li>vote / debrief</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="warn">
+          <strong>Implication:</strong> today is the class where you build the foundation for what you will actually say and do in committee.
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <h2>Your task as a delegation</h2>
+        <div class="grid">
+          <div class="col-8">
+            <div class="card">
+              <h3>What your delegation needs to do</h3>
+              <ol>
+                <li>Understand the issue.</li>
+                <li>Understand your country’s relationship to the issue.</li>
+                <li>Identify your country’s interests, concerns, and limits.</li>
+                <li>Prepare a short opening speech.</li>
+                <li>Prepare for negotiation and clause drafting.</li>
+                <li>Write a position paper based on the same research.</li>
+              </ol>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="card">
+              <h3>Important reminder</h3>
+              <p>You are not speaking as yourself.</p>
+              <p>You are speaking as <strong>your assigned country</strong>.</p>
+            </div>
+          </div>
+        </div>
+        <div class="danger">
+          <strong>Common mistake:</strong> students often research a country in general, but not the country’s position on the issue.
+          That is not enough for MUN.
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <h2>What “country research” actually means</h2>
+        <div class="grid">
+          <div class="col-6">
+            <div class="card">
+              <h3>Weak approach</h3>
+              <ul>
+                <li>capital city</li>
+                <li>population</li>
+                <li>flag</li>
+                <li>random history facts</li>
+                <li>generic encyclopedia material</li>
+              </ul>
+              <p class="small">Most of this does not help you speak in committee.</p>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="card">
+              <h3>Strong approach</h3>
+              <ul>
+                <li>What role does this country play on the issue?</li>
+                <li>What pressures does it face?</li>
+                <li>What would it likely support?</li>
+                <li>What would it likely oppose?</li>
+                <li>What kind of wording would it accept?</li>
+              </ul>
+              <p class="small">This is what helps you speak, negotiate, and draft.</p>
+            </div>
+          </div>
+        </div>
+        <div class="callout">
+          <strong>Research goal:</strong> not “know everything about the country,” but
+          “know enough to act like its delegation in this committee.”
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <h2>The core research questions</h2>
+        <div class="card">
+          <ol>
+            <li>Is this country mainly a <strong>host state</strong>, <strong>donor state</strong>, <strong>transit state</strong>, <strong>destination state</strong>, or some combination?</li>
+            <li>What kinds of political, economic, or humanitarian pressures does it face?</li>
+            <li>What has it said or done on refugee or displacement issues?</li>
+            <li>What kinds of international cooperation would it likely support?</li>
+            <li>What proposals would it likely reject or resist?</li>
+            <li>Which other countries are likely to agree or disagree with it?</li>
+          </ol>
+        </div>
+        <div class="warn">
+          <strong>Think like a delegation:</strong>
+          What do we want? What can we accept? What must we resist? Who can we work with?
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <h2>Where to research</h2>
+        <div class="grid">
+          <div class="col-6">
+            <div class="card">
+              <h3>Good source types</h3>
+              <ul>
+                <li>UNHCR and other UN materials</li>
+                <li>IOM and international organization resources</li>
+                <li>foreign ministry / government websites</li>
+                <li>reputable policy analysis</li>
+                <li>reputable news reporting on the issue</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="card">
+              <h3>What to look for in sources</h3>
+              <ul>
+                <li>issue-specific statements</li>
+                <li>recent policy positions</li>
+                <li>language about cooperation, funding, sovereignty, or burden-sharing</li>
+                <li>evidence of pressure, priorities, or limits</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="callout">
+          <strong>Tip:</strong> you do not need ten sources if two or three good sources clearly tell you how your country relates to the issue.
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <h2>How to move from research to delegation strategy</h2>
+        <div class="card">
+          <table>
+            <thead>
+              <tr>
+                <th>Step</th>
+                <th>Question</th>
+                <th>What you produce</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1. Research</td>
+                <td>What facts and policy signals matter?</td>
+                <td>Relevant notes and evidence</td>
+              </tr>
+              <tr>
+                <td>2. Interpretation</td>
+                <td>What do these facts imply about the country’s role?</td>
+                <td>Country role on the issue</td>
+              </tr>
+              <tr>
+                <td>3. Priorities</td>
+                <td>What does this country most want?</td>
+                <td>Interests and policy priorities</td>
+              </tr>
+              <tr>
+                <td>4. Limits</td>
+                <td>What would this country likely resist?</td>
+                <td>Red lines</td>
+              </tr>
+              <tr>
+                <td>5. Diplomacy</td>
+                <td>Who might agree or disagree?</td>
+                <td>Likely allies and tensions</td>
+              </tr>
+              <tr>
+                <td>6. Output</td>
+                <td>How do we present this in MUN?</td>
+                <td>Speech, form, paper, clause ideas</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <h2>Worked example: using a non-assigned country</h2>
+        <div class="hero">
+          <h2 style="margin-bottom:10px;">Sample country: Canada</h2>
+          <p>
+            We are using <strong>Canada</strong> only as a demonstration country because it is
+            <strong>not part of the assigned delegation list</strong>.
+            This example is here to show you the process, not to give one delegation an advantage.
+          </p>
+        </div>
+        <div class="callout">
+          <strong>What we are modelling:</strong>
+          how to go from “assigned country” to “usable delegation strategy.”
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <h2>Step 1: what kind of country-role is Canada on this issue?</h2>
+        <div class="grid">
+          <div class="col-4">
+            <div class="card">
+              <h3>Likely role</h3>
+              <div class="chips">
+                <span class="chip">destination state</span>
+                <span class="chip">donor state</span>
+                <span class="chip">humanitarian actor</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-8">
+            <div class="card">
+              <h3>Interpretation</h3>
+              <ul>
+                <li>Canada is not primarily an immediate front-line host state in the same way as some regional states.</li>
+                <li>It is more likely to be framed as a state that emphasizes resettlement, managed admissions, international cooperation, and humanitarian support.</li>
+                <li>It may support burden-sharing, but likely in a structured and administratively manageable form.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="warn">
+          <strong>Notice:</strong> even this first step already moves beyond generic facts and toward delegation logic.
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <h2>Step 2: what kinds of evidence would we actually look for?</h2>
+        <div class="grid">
+          <div class="col-6">
+            <div class="card">
+              <h3>Useful evidence</h3>
+              <ul>
+                <li>government or ministry language about refugee admissions</li>
+                <li>references to humanitarian support or international cooperation</li>
+                <li>statements about protection, resettlement, or safe pathways</li>
+                <li>evidence of concern about management, capacity, and public policy balance</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="card">
+              <h3>Less useful evidence</h3>
+              <ul>
+                <li>capital city</li>
+                <li>total area</li>
+                <li>random national history facts</li>
+                <li>general trivia unrelated to refugees or displacement</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="callout">
+          <strong>The rule:</strong> if a fact does not help you say what your country would support or oppose in committee, it is probably not central to this exercise.
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <h2>Step 3: what relevant facts might we extract?</h2>
+        <div class="card">
+          <h3>Example analytical notes for Canada</h3>
+          <ul>
+            <li>Canada is often associated with refugee resettlement and humanitarian framing.</li>
+            <li>It can be presented as supportive of international cooperation and structured admissions pathways.</li>
+            <li>It may be comfortable with language about support, protection, and coordinated international responsibility-sharing.</li>
+            <li>At the same time, it would likely still care about manageability, administrative capacity, and policy control.</li>
+          </ul>
+        </div>
+        <div class="warn">
+          <strong>Important:</strong> these are not random facts. They are facts or interpretations that help predict a likely delegation position.
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <h2>Step 4: what interests follow from that?</h2>
+        <div class="grid">
+          <div class="col-6">
+            <div class="card">
+              <h3>Possible interests</h3>
+              <ul>
+                <li>supporting international burden-sharing</li>
+                <li>maintaining humanitarian credibility</li>
+                <li>supporting orderly and manageable refugee policies</li>
+                <li>encouraging cooperation through legal and structured mechanisms</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="card">
+              <h3>How these shape delegation behaviour</h3>
+              <ul>
+                <li>the delegation may support constructive, cooperative language;</li>
+                <li>it may favour policy tools over emotional rhetoric;</li>
+                <li>it may want realistic commitments rather than broad symbolic declarations.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="callout">
+          <strong>Research becomes strategy here:</strong> facts matter because they point toward interests.
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <h2>Step 5: what red lines or limits might follow?</h2>
+        <div class="grid">
+          <div class="col-12">
+            <div class="card">
+              <h3>Possible red lines for the sample country</h3>
+              <ul>
+                <li>language that is too vague to be implemented;</li>
+                <li>commitments that sound unlimited or administratively unrealistic;</li>
+                <li>wording that removes state control over policy choices;</li>
+                <li>measures that sound morally appealing but politically unworkable.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="danger">
+          <strong>Red lines are important:</strong> a delegation is not defined only by what it supports.
+          It is also defined by what it will not accept.
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <h2>Step 6: what policies might the sample country support?</h2>
+        <div class="card">
+          <ul>
+            <li>increased international cooperation on refugee protection;</li>
+            <li>support for host states through funding or technical assistance;</li>
+            <li>structured and voluntary burden-sharing mechanisms;</li>
+            <li>stronger coordination with international organizations;</li>
+            <li>safe, legal, and administratively manageable pathways where appropriate.</li>
+          </ul>
+        </div>
+        <div class="callout">
+          <strong>Notice the pattern:</strong> the policies are not random. They are connected to the role, interests, and limits we identified earlier.
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <h2>Step 7: what might allies and tensions look like?</h2>
+        <div class="grid">
+          <div class="col-6">
+            <div class="card">
+              <h3>Possible allies</h3>
+              <ul>
+                <li>states that emphasize humanitarian cooperation</li>
+                <li>states open to funding and institutional coordination</li>
+                <li>states comfortable with policy-oriented, structured language</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="card">
+              <h3>Possible tensions</h3>
+              <ul>
+                <li>states strongly prioritizing sovereignty against broader commitments</li>
+                <li>states carrying heavier direct burdens and demanding stronger measures</li>
+                <li>states with very different understandings of burden-sharing</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="warn">
+          <strong>This matters for caucusing:</strong> your delegation should not only know what it thinks,
+          but also who it can likely work with.
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <h2>Step 8: how would this become an opening speech idea?</h2>
+        <div class="card">
+          <h3>Sample short opening-speech logic for Canada</h3>
+          <p>
+            “The delegation of Canada recognizes that refugee and displacement crises require practical and cooperative international responses.
+            Canada supports responsibility-sharing measures that strengthen support for host states, improve international coordination, and promote realistic protection pathways that remain sustainable and well-managed.”
+          </p>
+        </div>
+        <div class="callout">
+          <strong>Key point:</strong> this speech idea comes from the research and interpretation process.
+          It is not invented out of nowhere.
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <h2>From worked example to student form</h2>
+        <div class="card">
+          <table>
+            <thead>
+              <tr>
+                <th>Form section</th>
+                <th>What students should write</th>
+                <th>Worked-example logic</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Country role</td>
+                <td>host / donor / transit / destination / mixed</td>
+                <td>What kind of state-role does the country have on this issue?</td>
+              </tr>
+              <tr>
+                <td>Relevant facts</td>
+                <td>2–4 issue-specific findings</td>
+                <td>Only facts that help explain likely positions</td>
+              </tr>
+              <tr>
+                <td>Interests</td>
+                <td>main priorities and concerns</td>
+                <td>What does the country want to protect or achieve?</td>
+              </tr>
+              <tr>
+                <td>Policies supported</td>
+                <td>realistic proposals or directions</td>
+                <td>What would the delegation likely endorse?</td>
+              </tr>
+              <tr>
+                <td>Red lines</td>
+                <td>policies or wording it would reject</td>
+                <td>What would it resist?</td>
+              </tr>
+              <tr>
+                <td>Allies / tensions</td>
+                <td>likely diplomatic alignments</td>
+                <td>Who may support or challenge the delegation?</td>
+              </tr>
+              <tr>
+                <td>Opening line</td>
+                <td>1–3 draft sentences</td>
+                <td>How can this become a speech?</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <h2>How to think like a delegation</h2>
+        <div class="grid">
+          <div class="col-3">
+            <div class="card">
+              <h3>1. What do we want?</h3>
+              <p>Identify core interests and policy goals.</p>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="card">
+              <h3>2. What can we accept?</h3>
+              <p>Think about compromise and acceptable wording.</p>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="card">
+              <h3>3. What must we resist?</h3>
+              <p>Define clear red lines and limits.</p>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="card">
+              <h3>4. Who can we work with?</h3>
+              <p>Anticipate alliances and tensions.</p>
+            </div>
+          </div>
+        </div>
+        <div class="callout">
+          <strong>This is the bridge</strong> between research and diplomacy.
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <h2>Position paper reminder</h2>
+        <div class="grid">
+          <div class="col-6">
+            <div class="card">
+              <h3>Core parts</h3>
+              <ol>
+                <li>issue overview</li>
+                <li>country position</li>
+                <li>interests and concerns</li>
+                <li>supported policies</li>
+                <li>limits / red lines</li>
+                <li>conclusion</li>
+              </ol>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="card">
+              <h3>Important point</h3>
+              <p>
+                The printed form you complete today should help you build the position paper.
+                It is not extra work. It is a preparation tool.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <h2>Opening speech reminder</h2>
+        <div class="card">
+          <ol>
+            <li>State the issue briefly.</li>
+            <li>Explain why it matters to your country.</li>
+            <li>State your country’s general position.</li>
+            <li>Propose one or two realistic actions.</li>
+          </ol>
+        </div>
+        <div class="warn">
+          <strong>Do not try to sound theatrical.</strong>
+          Aim for clear, diplomatic, and manageable.
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <h2>Resolution reminder</h2>
+        <div class="grid">
+          <div class="col-6">
+            <div class="card">
+              <h3>Preambulatory clauses</h3>
+              <p>These provide context and explain why the issue matters.</p>
+              <div class="chips">
+                <span class="chip">Recognizing</span>
+                <span class="chip">Acknowledging</span>
+                <span class="chip">Deeply concerned</span>
+                <span class="chip">Recalling</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="card">
+              <h3>Operative clauses</h3>
+              <p>These propose action and say what should be done.</p>
+              <div class="chips">
+                <span class="chip">Encourages</span>
+                <span class="chip">Calls upon</span>
+                <span class="chip">Requests</span>
+                <span class="chip">Urges</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="callout">
+          <strong>Today’s form helps prepare this too:</strong> if you know your interests, limits, and priorities,
+          you are much more ready to draft clauses later.
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <h2>In-class activity: what you will do now</h2>
+        <div class="card">
+          <ol>
+            <li>Work with your delegation partner.</li>
+            <li>Use your printed strategy sheet.</li>
+            <li>Identify your country’s role on the issue.</li>
+            <li>Write down key relevant facts.</li>
+            <li>List interests, likely allies, and red lines.</li>
+            <li>Draft one or two opening speech lines.</li>
+            <li>Keep note of the sources you use.</li>
+          </ol>
+        </div>
+        <div class="warn">
+          <strong>Important:</strong> fill in the form based on actual reasoning.
+          Do not just copy phrases from websites.
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <h2>What should be completed by the end of class?</h2>
+        <div class="grid">
+          <div class="col-6">
+            <div class="card">
+              <h3>Minimum</h3>
+              <ul>
+                <li>country role identified</li>
+                <li>at least 2–4 relevant notes</li>
+                <li>at least 3 interests or concerns</li>
+                <li>at least 2 likely supported policies</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="card">
+              <h3>Strong outcome</h3>
+              <ul>
+                <li>allies and tensions identified</li>
+                <li>red lines stated clearly</li>
+                <li>opening line drafted</li>
+                <li>position paper direction visible</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="callout">
+          <strong>If you do this well today,</strong> next week’s simulation becomes much easier.
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <h2>How to use the course tools</h2>
+        <div class="grid">
+          <div class="col-4">
+            <div class="card">
+              <h3>Resources App</h3>
+              <p>Use for reference, examples, clauses, protocol, and video support.</p>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="card">
+              <h3>Student Toolkit</h3>
+              <p>Use to draft speeches, notes, position paper ideas, and resolution text.</p>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="card">
+              <h3>Simulation App</h3>
+              <p>Optional practice tool for rehearsing speeches, debate, and clause responses.</p>
+            </div>
+          </div>
+        </div>
+        <div class="warn">
+          <strong>Use them in this order:</strong>
+          first understand your position, then use tools to develop it.
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <h2>Final reminder</h2>
+        <div class="hero">
+          <h2 style="margin-bottom:10px;">You are not preparing as yourself.</h2>
+          <p>
+            You are preparing to speak and negotiate as a state delegation.
+            Good MUN preparation means:
+          </p>
+          <ul>
+            <li>identify relevant facts, not random facts;</li>
+            <li>derive interests and limits from the evidence;</li>
+            <li>turn those into strategy, speech, and negotiation choices;</li>
+            <li>be realistic, diplomatic, and clear.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="footer">
+    <div class="controls">
+      <button onclick="prevSlide()">◀ Prev</button>
+      <button onclick="nextSlide()">Next ▶</button>
+      <button class="secondary" onclick="toggleOverview()">Overview</button>
+    </div>
+    <div class="slide-counter" id="counter">Slide 1 / 18</div>
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    let current = 0;
+
+    function showSlide(index){
+      if(index < 0) index = 0;
+      if(index >= slides.length) index = slides.length - 1;
+      slides.forEach(s => s.classList.remove('active'));
+      slides[index].classList.add('active');
+      current = index;
+      document.getElementById('counter').textContent = `Slide ${current + 1} / ${slides.length}`;
+    }
+
+    function nextSlide(){ showSlide(current + 1); }
+    function prevSlide(){ showSlide(current - 1); }
+
+    function toggleOverview(){
+      alert(
+        "Slide overview:\\n\\n" +
+        "1. Title\\n" +
+        "2. Today's goals\\n" +
+        "3. Semester sequence\\n" +
+        "4. Delegation task\\n" +
+        "5. What country research means\\n" +
+        "6. Core research questions\\n" +
+        "7. Where to research\\n" +
+        "8. Research to strategy\\n" +
+        "9. Worked example intro (Canada)\\n" +
+        "10. Country role\\n" +
+        "11. Evidence to seek\\n" +
+        "12. Relevant facts\\n" +
+        "13. Interests\\n" +
+        "14. Red lines\\n" +
+        "15. Supported policies\\n" +
+        "16. Allies and tensions\\n" +
+        "17. Opening speech idea\\n" +
+        "18. Form completion logic\\n" +
+        "19. Think like a delegation\\n" +
+        "20. Position paper reminder\\n" +
+        "21. Opening speech reminder\\n" +
+        "22. Resolution reminder\\n" +
+        "23. In-class activity\\n" +
+        "24. End-of-class expectations\\n" +
+        "25. Course tools\\n" +
+        "26. Final reminder"
+      );
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') nextSlide();
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+      if (e.key === 'Home') showSlide(0);
+      if (e.key === 'End') showSlide(slides.length - 1);
+    });
+
+    showSlide(0);
+  </script>
+</body>
+</html>
