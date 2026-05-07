@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PSIR 172 – Canada Simulation I Walkthrough</title>
+  <style>
+    :root{
+      --bg:#f6f8fb;
+      --card:#ffffff;
+      --ink:#18324a;
+      --muted:#5e7387;
+      --line:#d9e3ec;
+      --accent:#2f6fed;
+      --accent-soft:#eaf1ff;
+      --good:#137a4b;
+      --good-soft:#e9f8f0;
+      --warn:#9a6700;
+      --warn-soft:#fff7df;
+      --bad:#b42318;
+      --bad-soft:#fff1f0;
+      --shadow:0 8px 24px rgba(24,50,74,0.08);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      background:var(--bg);
+      color:var(--ink);
+      line-height:1.55;
+    }
+    .wrap{
+      max-width:1200px;
+      margin:0 auto;
+      padding:24px;
+    }
+    .hero{
+      background:linear-gradient(135deg,#ffffff 0%,#eef5ff 100%);
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:28px;
+      box-shadow:var(--shadow);
+      margin-bottom:20px;
+    }
+    .hero-top{
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      align-items:flex-start;
+      flex-wrap:wrap;
+    }
+    h1{
+      margin:0 0 10px;
+      font-size:clamp(1.8rem,3vw,2.8rem);
+      line-height:1.15;
+    }
+    .flag{
+      font-size:2.2rem;
+      vertical-align:middle;
+      margin-right:8px;
+    }
+    .sub{
+      color:var(--muted);
+      max-width:850px;
+      margin:0 0 14px;
+    }
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:10px;
+    }
+    .chip{
+      background:#fff;
+      border:1px solid var(--line);
+      color:var(--ink);
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:.92rem;
+    }
+    .layout{
+      display:grid;
+      grid-template-columns:300px 1fr;
+      gap:20px;
+    }
+    .panel, .maincard{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+    .panel{
+      padding:18px;
+      position:sticky;
+      top:16px;
+      align-self:start;
+    }
+    .panel h2{
+      margin:0 0 10px;
+      font-size:1.05rem;
+    }
+    .stage-list{
+      display:grid;
+      gap:10px;
+      margin-top:14px;
+    }
+    .stage-btn{
+      width:100%;
+      text-align:left;
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:14px;
+      padding:12px 13px;
+      color:var(--ink);
+      cursor:pointer;
+      transition:.2s ease;
+      font-size:.95rem;
+    }
+    .stage-btn:hover{border-color:#b9cbe0;background:#f9fbff}
+    .stage-btn.active{
+      background:var(--accent-soft);
+      border-color:#b9cdfc;
+      color:#1747a6;
+      font-weight:700;
+    }
+    .small{
+      color:var(--muted);
+      font-size:.92rem;
+    }
+    .scorebox{
+      margin-top:16px;
+      padding:14px;
+      background:#fbfcfe;
+      border:1px dashed var(--line);
+      border-radius:14px;
+    }
+    .maincard{
+      padding:24px;
+    }
+    .kicker{
+      color:var(--accent);
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-weight:700;
+      font-size:.78rem;
+      margin-bottom:8px;
+    }
+    h3{
+      margin:0 0 8px;
+      font-size:1.6rem;
+    }
+    .twocol{
+      display:grid;
+      grid-template-columns:1.25fr .95fr;
+      gap:18px;
+      margin-top:18px;
+    }
+    .box{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:16px;
+      background:#fff;
+    }
+    .box h4{
+      margin:0 0 8px;
+      font-size:1rem;
+    }
+    .prompt{
+      background:#f9fbff;
+    }
+    .goal{
+      background:#fcfdff;
+    }
+    .options{
+      display:grid;
+      gap:12px;
+      margin-top:12px;
+    }
+    .opt{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+      background:#fff;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+    .opt:hover{border-color:#b8cae0;background:#fbfdff}
+    .opt strong{display:block;margin-bottom:6px}
+    .opt.selected{
+      border-color:#9ab7ff;
+      background:#f5f9ff;
+    }
+    .feedback{
+      margin-top:16px;
+      border-radius:16px;
+      padding:15px;
+      display:none;
+    }
+    .feedback.good{
+      display:block;
+      background:var(--good-soft);
+      border:1px solid #b8e3cb;
+      color:#145f3e;
+    }
+    .feedback.warn{
+      display:block;
+      background:var(--warn-soft);
+      border:1px solid #efd98b;
+      color:#7a5600;
+    }
+    .feedback.bad{
+      display:block;
+      background:var(--bad-soft);
+      border:1px solid #f0b4ae;
+      color:#8a2118;
+    }
+    .sample{
+      background:#f8fafc;
+      border-left:4px solid var(--accent);
+    }
+    .nav{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      margin-top:22px;
+      flex-wrap:wrap;
+    }
+    button.navbtn{
+      border:none;
+      background:var(--accent);
+      color:#fff;
+      padding:12px 16px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:700;
+    }
+    button.navbtn.secondary{
+      background:#e9eef5;
+      color:var(--ink);
+    }
+    .note{
+      margin-top:14px;
+      color:var(--muted);
+      font-size:.95rem;
+    }
+    .footer{
+      margin-top:16px;
+      color:var(--muted);
+      font-size:.9rem;
+    }
+    .checklist{
+      margin:10px 0 0;
+      padding-left:18px;
+    }
+    .callout{
+      margin-top:16px;
+      padding:14px 16px;
+      border-radius:16px;
+      background:#fffdfa;
+      border:1px solid #f0ddac;
+    }
+    @media (max-width: 980px){
+      .layout{grid-template-columns:1fr}
+      .panel{position:relative;top:0}
+      .twocol{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="hero-top">
+        <div>
+          <h1><span class="flag">🇨🇦</span>PSIR 172 – Canada Simulation I Walkthrough</h1>
+          <p class="sub">
+            A guided, step-by-step Model United Nations practice tool showing what
+            <strong>Canada</strong> might do during <strong>Simulation I</strong> on
+            <em>International Responsibility-Sharing for Refugees and Displaced Persons</em>.
+            This is a teaching exemplar, not a strict script to memorize.
+          </p>
+          <div class="chips">
+            <span class="chip">Light Theme</span>
+            <span class="chip">Student-Facing</span>
+            <span class="chip">Recommended Pathway</span>
+            <span class="chip">Sample Dialogue</span>
+            <span class="chip">Clause Drafting</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="panel">
+        <h2>Walkthrough Stages</h2>
+        <p class="small">Click any stage. At each step, choose what Canada should do. The app explains which pathway is strongest and why.</p>
+
+        <div class="stage-list" id="stageList"></div>
+
+        <div class="scorebox">
+          <strong>Recommended Path Choices:</strong>
+          <div class="small" style="margin-top:8px;">
+            <span id="scoreText">0 strong choices made so far.</span>
+          </div>
+        </div>
+
+        <div class="callout">
+          <strong>Reminder:</strong>
+          <div class="small" style="margin-top:6px;">
+            Canada is used here because it is <em>not</em> one of the assigned class delegations.
+            Use the logic of the example, not the exact content, when preparing your own country.
+          </div>
+        </div>
+      </aside>
+
+      <main class="maincard">
+        <div class="kicker" id="stageKicker">Stage 1</div>
+        <h3 id="stageTitle">Opening and Roll Call</h3>
+        <p id="stageIntro">
+          At the start of the session, the chair calls delegations to establish attendance and begin the meeting.
+        </p>
+
+        <div class="twocol">
+          <div class="box prompt">
+            <h4>What is happening?</h4>
+            <div id="stagePrompt"></div>
+          </div>
+          <div class="box goal">
+            <h4>Canada’s goal at this stage</h4>
+            <div id="stageGoal"></div>
+          </div>
+        </div>
+
+        <div class="box" style="margin-top:18px;">
+          <h4>Choose Canada’s best move</h4>
+          <div class="options" id="optionsWrap"></div>
+          <div class="feedback" id="feedbackBox"></div>
+        </div>
+
+        <div class="box sample" style="margin-top:18px;">
+          <h4>Recommended pathway / sample model</h4>
+          <div id="sampleText"></div>
+        </div>
+
+        <div class="box" style="margin-top:18px;">
+          <h4>What students should learn from this step</h4>
+          <div id="learnText"></div>
+        </div>
+
+        <div class="nav">
+          <button class="navbtn secondary" id="prevBtn">← Previous</button>
+          <button class="navbtn secondary" id="resetBtn">Reset choices</button>
+          <button class="navbtn" id="nextBtn">Next Stage →</button>
+        </div>
+
+        <div class="footer">
+          Built as a guided exemplar for PSIR 172 MUN preparation.
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const stages = [
+      {
+        kicker: "Stage 1",
+        title: "Opening and Roll Call",
+        intro: "At the start of the session, the chair calls delegations to establish attendance and begin the meeting.",
+        prompt: `
+          <p><strong>Chair:</strong> “The delegation of Canada?”</p>
+          <p>The committee is just beginning. This is not the moment for a speech or policy argument. The purpose is simply to confirm presence and show readiness.</p>
+        `,
+        goal: `
+          <p>Canada should respond clearly, confidently, and professionally. At this stage, the delegation is trying to signal preparedness without over-speaking.</p>
+        `,
+        options: [
+          {
+            label: "Option A",
+            text: "“Present.”",
+            type: "good",
+            strong: true,
+            feedback: "<strong>Good choice.</strong> This is concise, appropriate, and procedurally correct. It shows Canada is present and ready without turning roll call into debate."
+          },
+          {
+            label: "Option B",
+            text: "“Present. Canada believes global burden-sharing must be strengthened immediately.”",
+            type: "warn",
+            strong: false,
+            feedback: "<strong>Not the best choice.</strong> The policy idea may be reasonable, but roll call is not the moment for substantive intervention. Save that for the opening speech."
+          },
+          {
+            label: "Option C",
+            text: "“Hi, we’re Canada, and we are excited to be here today.”",
+            type: "bad",
+            strong: false,
+            feedback: "<strong>Weak choice.</strong> This is too informal for committee procedure. Delegates should sound professional and diplomatic from the beginning."
+          }
+        ],
+        sample: `
+          <p><strong>Recommended Canada response:</strong> “Present.”</p>
+          <p><strong>What Canada is silently doing next:</strong> getting the opening speech ready, checking notes, and listening carefully to the chair’s instructions.</p>
+        `,
+        learn: `
+          <ul class="checklist">
+            <li>Roll call is procedural, not substantive.</li>
+            <li>Professional tone matters from the first minute.</li>
+            <li>Students should not overtalk when a short answer is enough.</li>
+          </ul>
+        `
+      },
+      {
+        kicker: "Stage 2",
+        title: "Opening Speech",
+        intro: "Now Canada must briefly explain its position on refugees and displaced persons in a diplomatic and realistic way.",
+        prompt: `
+          <p>The chair invites opening speeches. Canada needs to communicate its position clearly: humanitarian, cooperative, but also practical and implementation-focused.</p>
+          <p>This speech should show what Canada cares about without trying to say everything at once.</p>
+        `,
+        goal: `
+          <p>Canada wants to present itself as a constructive, multilateral actor. It should support responsibility-sharing, assistance to host countries, and realistic cooperation.</p>
+        `,
+        options: [
+          {
+            label: "Option A",
+            text: "Give a short, diplomatic speech supporting burden-sharing, support for host countries, and stronger international coordination.",
+            type: "good",
+            strong: true,
+            feedback: "<strong>Strong choice.</strong> This fits Canada’s likely profile: cooperative, humanitarian, and practical. It also leaves room for later negotiation."
+          },
+          {
+            label: "Option B",
+            text: "Give a highly emotional speech blaming states that do not accept enough refugees.",
+            type: "warn",
+            strong: false,
+            feedback: "<strong>Partly understandable but not ideal.</strong> Moral language can be powerful, but direct blame often shuts down negotiation early."
+          },
+          {
+            label: "Option C",
+            text: "Give a very vague speech saying all countries should just do better.",
+            type: "bad",
+            strong: false,
+            feedback: "<strong>Weak choice.</strong> The tone may be polite, but the content is too empty. Delegations need clear priorities and policy direction."
+          }
+        ],
+        sample: `
+          <p><strong>Sample Canada opening speech:</strong></p>
+          <p>“Honourable Chair, distinguished delegates, the delegation of Canada recognises that refugees and displaced persons represent one of the most pressing humanitarian challenges facing the international community today. Canada believes that responsibility-sharing must be cooperative, realistic, and rooted in international partnership. No single host country should bear this burden alone. Our delegation supports stronger assistance for major host states, expanded legal pathways for protection, and improved coordination to ensure humane and effective responses. Canada looks forward to working constructively with fellow delegations toward a practical and balanced resolution.”</p>
+        `,
+        learn: `
+          <ul class="checklist">
+            <li>A good opening speech is brief, clear, and country-specific.</li>
+            <li>It should identify priorities, not just generic concerns.</li>
+            <li>It should leave room for diplomacy rather than attacking others.</li>
+          </ul>
+        `
+      },
+      {
+        kicker: "Stage 3",
+        title: "Listening Strategically to Other Delegations",
+        intro: "During and after speeches, Canada should start identifying likely allies and likely tensions.",
+        prompt: `
+          <p>Canada has spoken. Now it listens.</p>
+          <p>Some delegations may emphasize burden-sharing and international support. Others may stress national sovereignty, capacity limits, or minimal commitments.</p>
+        `,
+        goal: `
+          <p>Canada wants to map the room: who sounds similar, who sounds hesitant, and who might be difficult to work with later.</p>
+        `,
+        options: [
+          {
+            label: "Option A",
+            text: "Take notes on which delegations support cooperation, which stress limits, and which may become useful partners in caucus.",
+            type: "good",
+            strong: true,
+            feedback: "<strong>Excellent choice.</strong> Listening strategically is one of the most important early MUN skills. Canada should use speeches to identify future partners."
+          },
+          {
+            label: "Option B",
+            text: "Ignore other speeches because Canada already knows its own position.",
+            type: "bad",
+            strong: false,
+            feedback: "<strong>Poor choice.</strong> MUN is interactive. If you ignore others, you miss allies, opponents, and possible compromise opportunities."
+          },
+          {
+            label: "Option C",
+            text: "Only listen to the biggest powers and disregard smaller delegations.",
+            type: "warn",
+            strong: false,
+            feedback: "<strong>Not ideal.</strong> Major states matter, but smaller delegations may still become important co-supporters, bridge-builders, or clause partners."
+          }
+        ],
+        sample: `
+          <p><strong>Canada’s likely note-taking:</strong></p>
+          <ul>
+            <li><strong>Likely closer to Canada:</strong> Germany, Sweden, France, United Kingdom</li>
+            <li><strong>Potentially important host-state voices:</strong> Jordan, Lebanon, Uganda, Kenya</li>
+            <li><strong>Possible areas of tension:</strong> delegations resisting broader commitments or insisting on very restrictive wording</li>
+          </ul>
+        `,
+        learn: `
+          <ul class="checklist">
+            <li>MUN is not just about speaking; it is also about listening for alignment.</li>
+            <li>Students should identify allies before caucus begins.</li>
+            <li>Good delegates connect speeches to later negotiation strategy.</li>
+          </ul>
+        `
+      },
+      {
+        kicker: "Stage 4",
+        title: "Moderated Discussion",
+        intro: "The chair now opens a more interactive discussion. Canada may be recognized to expand on its position.",
+        prompt: `
+          <p><strong>Possible chair prompt:</strong> “How should the international community share responsibility more effectively?”</p>
+          <p>Canada needs to answer in a way that sounds realistic and diplomatically useful.</p>
+        `,
+        goal: `
+          <p>Canada wants to restate its priorities in a more concrete way: support for host countries, coordination, and realistic shared commitments.</p>
+        `,
+        options: [
+          {
+            label: "Option A",
+            text: "Emphasize stronger support for major host countries, multilateral coordination, and realistic implementation mechanisms.",
+            type: "good",
+            strong: true,
+            feedback: "<strong>Strong choice.</strong> This is focused, plausible, and aligned with Canada’s likely approach."
+          },
+          {
+            label: "Option B",
+            text: "Demand that every state accept the same number of refugees regardless of capacity.",
+            type: "bad",
+            strong: false,
+            feedback: "<strong>Weak choice.</strong> This sounds morally forceful but diplomatically unrealistic. MUN rewards workable proposals."
+          },
+          {
+            label: "Option C",
+            text: "Speak only in abstract terms about compassion, without naming any policy directions.",
+            type: "warn",
+            strong: false,
+            feedback: "<strong>Too vague.</strong> Diplomatic language should still contain policy substance. Delegations need concrete priorities."
+          }
+        ],
+        sample: `
+          <p><strong>Sample Canada intervention:</strong></p>
+          <p>“The delegation of Canada believes that responsibility-sharing must combine principle with practicality. Frontline host countries should not be left to manage large refugee populations without sustained international support. Canada therefore supports stronger financial and technical assistance, improved multilateral coordination, and language that encourages concrete burden-sharing measures.”</p>
+        `,
+        learn: `
+          <ul class="checklist">
+            <li>In moderated discussion, students should go beyond repeating the opening speech.</li>
+            <li>Good interventions connect values to realistic policies.</li>
+            <li>Concrete but diplomatic answers are stronger than abstract moral statements alone.</li>
+          </ul>
+        `
+      },
+      {
+        kicker: "Stage 5",
+        title: "First Caucus Move",
+        intro: "Caucusing begins. Canada now needs to decide whom to approach first and what to say.",
+        prompt: `
+          <p>Canada cannot talk to everyone at once. It needs an efficient first move.</p>
+          <p>Should Canada start with ideologically similar donor/resettlement states, or directly with frontline host countries?</p>
+        `,
+        goal: `
+          <p>Canada wants to build credibility and identify a workable coalition. The best pathway is to balance states with similar policy orientation and states with direct hosting experience.</p>
+        `,
+        options: [
+          {
+            label: "Option A",
+            text: "Approach Germany or Sweden first to test support for burden-sharing language, then speak to Jordan or Lebanon about host-country priorities.",
+            type: "good",
+            strong: true,
+            feedback: "<strong>Excellent choice.</strong> This is strategic. Canada first secures ideational allies, then grounds the coalition by listening to frontline host states."
+          },
+          {
+            label: "Option B",
+            text: "Only talk to countries that are already very similar to Canada and ignore host states.",
+            type: "warn",
+            strong: false,
+            feedback: "<strong>Too narrow.</strong> Canada would benefit from talking with host states, because their perspectives add legitimacy and practical grounding."
+          },
+          {
+            label: "Option C",
+            text: "Start by confronting likely opponents and telling them they are wrong.",
+            type: "bad",
+            strong: false,
+            feedback: "<strong>Weak diplomacy.</strong> Early caucus is usually better used to build constructive partnerships rather than escalate conflict."
+          }
+        ],
+        sample: `
+          <p><strong>Model caucus opening:</strong></p>
+          <p><strong>Canada to Germany:</strong> “Would your delegation support language on increased technical and financial support for major host countries?”</p>
+          <p><strong>Canada to Jordan:</strong> “We would value your delegation’s perspective on what support host states most need in realistic terms.”</p>
+        `,
+        learn: `
+          <ul class="checklist">
+            <li>Caucusing is not random chatting; it is strategic coalition-building.</li>
+            <li>Good delegations ask questions rather than only pushing their own lines.</li>
+            <li>Speaking with host states can improve the realism of drafting.</li>
+          </ul>
+        `
+      },
+      {
+        kicker: "Stage 6",
+        title: "Negotiating in Caucus",
+        intro: "Canada is now in active conversation with other delegations and needs to test wording and possible compromise.",
+        prompt: `
+          <p>Germany supports strong coordination. Jordan wants more recognition of host-state burdens. Another delegation worries about over-commitment.</p>
+          <p>How should Canada respond?</p>
+        `,
+        goal: `
+          <p>Canada wants language broad enough to attract support but specific enough to matter.</p>
+        `,
+        options: [
+          {
+            label: "Option A",
+            text: "Propose compromise language: support for host countries, stronger coordination, and realistic encouragement rather than inflexible obligations.",
+            type: "good",
+            strong: true,
+            feedback: "<strong>Strong choice.</strong> This is how effective delegates negotiate: maintain substance while adjusting wording to widen support."
+          },
+          {
+            label: "Option B",
+            text: "Refuse any change at all because Canada’s first version is already ideal.",
+            type: "bad",
+            strong: false,
+            feedback: "<strong>Weak negotiation.</strong> MUN requires flexibility. Refusing all compromise makes coalition-building harder."
+          },
+          {
+            label: "Option C",
+            text: "Drop all meaningful content so everyone will agree easily.",
+            type: "warn",
+            strong: false,
+            feedback: "<strong>Also not ideal.</strong> Consensus is useful, but not if the resolution becomes empty and meaningless."
+          }
+        ],
+        sample: `
+          <p><strong>Sample Canada compromise line:</strong></p>
+          <p>“Our delegation would be open to wording that encourages expanded financial and technical support for major host countries, while allowing implementation to reflect national capacity and international cooperation.”</p>
+        `,
+        learn: `
+          <ul class="checklist">
+            <li>The strongest delegates know how to compromise without abandoning substance.</li>
+            <li>Words like “encourages,” “supports,” and “in coordination with” can make clauses more negotiable.</li>
+            <li>Diplomatic flexibility is not weakness; it is strategy.</li>
+          </ul>
+        `
+      },
+      {
+        kicker: "Stage 7",
+        title: "Drafting a Preambulatory Clause",
+        intro: "Canada and potential partners now begin shaping resolution language.",
+        prompt: `
+          <p>Canada wants a preambulatory clause that explains why international burden-sharing matters.</p>
+          <p>The clause should sound formal and realistic.</p>
+        `,
+        goal: `
+          <p>Canada wants to frame the issue in a way that builds support for later action clauses.</p>
+        `,
+        options: [
+          {
+            label: "Option A",
+            text: "“Recognizing that large-scale displacement places disproportionate pressure on frontline host countries and requires sustained international cooperation,”",
+            type: "good",
+            strong: true,
+            feedback: "<strong>Excellent choice.</strong> This is formal, agenda-relevant, and logically sets up the need for responsibility-sharing."
+          },
+          {
+            label: "Option B",
+            text: "“Thinking that the situation is very serious and countries should probably do more,”",
+            type: "bad",
+            strong: false,
+            feedback: "<strong>Weak clause style.</strong> This is informal and not written in MUN resolution language."
+          },
+          {
+            label: "Option C",
+            text: "“Deeply angry that some countries have done almost nothing,”",
+            type: "warn",
+            strong: false,
+            feedback: "<strong>Too accusatory.</strong> Preambulatory clauses should set context, not inflame the room."
+          }
+        ],
+        sample: `
+          <p><strong>Recommended preambulatory clause:</strong></p>
+          <p>“Recognizing that large-scale displacement places disproportionate pressure on frontline host countries and requires sustained international cooperation,”</p>
+        `,
+        learn: `
+          <ul class="checklist">
+            <li>Preambulatory clauses explain context and concern.</li>
+            <li>They should be formal, not conversational.</li>
+            <li>Strong preambular language creates a logical bridge to action.</li>
+          </ul>
+        `
+      },
+      {
+        kicker: "Stage 8",
+        title: "Drafting an Operative Clause",
+        intro: "Canada now needs a realistic action clause that fits its overall strategy.",
+        prompt: `
+          <p>The clause should promote practical responsibility-sharing and support for host countries.</p>
+        `,
+        goal: `
+          <p>Canada wants a clause that is specific enough to matter, but broad enough to gain support.</p>
+        `,
+        options: [
+          {
+            label: "Option A",
+            text: "“Encourages Member States to expand financial, technical, and institutional support for countries hosting large refugee populations, in coordination with relevant international organizations;”",
+            type: "good",
+            strong: true,
+            feedback: "<strong>Strong clause.</strong> It is realistic, formal, and aligned with Canada’s likely diplomatic position."
+          },
+          {
+            label: "Option B",
+            text: "“Forces all states to immediately accept identical refugee quotas;”",
+            type: "bad",
+            strong: false,
+            feedback: "<strong>Unrealistic and too rigid.</strong> This would likely lose broad support in a General Assembly-style classroom simulation."
+          },
+          {
+            label: "Option C",
+            text: "“Suggests that countries think about helping if possible;”",
+            type: "warn",
+            strong: false,
+            feedback: "<strong>Too weak.</strong> The clause is polite but vague and underpowered."
+          }
+        ],
+        sample: `
+          <p><strong>Recommended operative clause:</strong></p>
+          <p>“Encourages Member States to expand financial, technical, and institutional support for countries hosting large refugee populations, in coordination with relevant international organizations;”</p>
+        `,
+        learn: `
+          <ul class="checklist">
+            <li>Operative clauses should identify action, actor, and purpose.</li>
+            <li>Overly coercive wording can be unrealistic in committee.</li>
+            <li>Vague clauses are easy to accept but often too empty to matter.</li>
+          </ul>
+        `
+      },
+      {
+        kicker: "Stage 9",
+        title: "End of Simulation I: What Has Canada Achieved?",
+        intro: "By the end of the first session, Canada should not expect a final victory. The goal is groundwork.",
+        prompt: `
+          <p>Canada has completed opening speeches, discussion, caucusing, and early drafting. What should count as success at this stage?</p>
+        `,
+        goal: `
+          <p>Canada wants to leave Session I with allies identified, draft language started, and a clearer map of the room.</p>
+        `,
+        options: [
+          {
+            label: "Option A",
+            text: "Leave with likely allies identified, host-state concerns better understood, and at least one clause under discussion.",
+            type: "good",
+            strong: true,
+            feedback: "<strong>Exactly right.</strong> Simulation I is about positioning, coalition-building, and early drafting."
+          },
+          {
+            label: "Option B",
+            text: "Assume the work is done after delivering the opening speech.",
+            type: "bad",
+            strong: false,
+            feedback: "<strong>Incorrect.</strong> The opening speech is only the beginning. Most of the real work happens in discussion, caucus, and drafting."
+          },
+          {
+            label: "Option C",
+            text: "Try to dominate the room by talking the most, regardless of coalition support.",
+            type: "warn",
+            strong: false,
+            feedback: "<strong>Not the best measure of success.</strong> Good MUN performance is strategic and cooperative, not just loud."
+          }
+        ],
+        sample: `
+          <p><strong>By the end of Simulation I, Canada should ideally have:</strong></p>
+          <ul>
+            <li>identified likely allies such as Germany, Sweden, France, or the UK,</li>
+            <li>spoken with host-country delegations such as Jordan or Lebanon,</li>
+            <li>tested wording on support for host states and coordination,</li>
+            <li>helped draft or shape at least one preambulatory and one operative clause,</li>
+            <li>prepared to negotiate more concretely in Simulation II.</li>
+          </ul>
+        `,
+        learn: `
+          <ul class="checklist">
+            <li>Simulation I is about preparation, coalition-building, and agenda-shaping.</li>
+            <li>Students should not measure success only by how much they spoke.</li>
+            <li>A good first session creates a foundation for stronger negotiation later.</li>
+          </ul>
+        `
+      }
+    ];
+
+    let current = 0;
+    let chosen = {};
+    let score = 0;
+
+    const stageList = document.getElementById("stageList");
+    const stageKicker = document.getElementById("stageKicker");
+    const stageTitle = document.getElementById("stageTitle");
+    const stageIntro = document.getElementById("stageIntro");
+    const stagePrompt = document.getElementById("stagePrompt");
+    const stageGoal = document.getElementById("stageGoal");
+    const optionsWrap = document.getElementById("optionsWrap");
+    const feedbackBox = document.getElementById("feedbackBox");
+    const sampleText = document.getElementById("sampleText");
+    const learnText = document.getElementById("learnText");
+    const scoreText = document.getElementById("scoreText");
+
+    function renderStageList(){
+      stageList.innerHTML = "";
+      stages.forEach((s, i) => {
+        const btn = document.createElement("button");
+        btn.className = "stage-btn" + (i === current ? " active" : "");
+        btn.innerHTML = `<strong>${s.kicker}</strong><br><span class="small">${s.title}</span>`;
+        btn.onclick = () => {
+          current = i;
+          render();
+        };
+        stageList.appendChild(btn);
+      });
+    }
+
+    function updateScore(){
+      score = Object.values(chosen).filter(v => v === true).length;
+      scoreText.textContent = `${score} strong choice${score===1?"":"s"} made so far.`;
+    }
+
+    function render(){
+      const s = stages[current];
+      stageKicker.textContent = s.kicker;
+      stageTitle.textContent = s.title;
+      stageIntro.textContent = s.intro;
+      stagePrompt.innerHTML = s.prompt;
+      stageGoal.innerHTML = s.goal;
+      sampleText.innerHTML = s.sample;
+      learnText.innerHTML = s.learn;
+      feedbackBox.className = "feedback";
+      feedbackBox.style.display = "none";
+      feedbackBox.innerHTML = "";
+
+      optionsWrap.innerHTML = "";
+      s.options.forEach((opt, idx) => {
+        const div = document.createElement("div");
+        const wasPicked = chosen[`stage-${current}`] === idx;
+        div.className = "opt" + (wasPicked ? " selected" : "");
+        div.innerHTML = `<strong>${opt.label}</strong>${opt.text}`;
+        div.onclick = () => {
+          chosen[`stage-${current}`] = idx;
+          chosen[`strong-${current}`] = opt.strong;
+          render();
+          feedbackBox.className = `feedback ${opt.type}`;
+          feedbackBox.style.display = "block";
+          feedbackBox.innerHTML = opt.feedback;
+          updateScore();
+        };
+        optionsWrap.appendChild(div);
+      });
+
+      if (chosen[`stage-${current}`] !== undefined) {
+        const picked = s.options[chosen[`stage-${current}`]];
+        feedbackBox.className = `feedback ${picked.type}`;
+        feedbackBox.style.display = "block";
+        feedbackBox.innerHTML = picked.feedback;
+      }
+
+      renderStageList();
+      updateScore();
+      document.getElementById("prevBtn").disabled = current === 0;
+      document.getElementById("nextBtn").disabled = current === stages.length - 1;
+    }
+
+    document.getElementById("prevBtn").onclick = () => {
+      if (current > 0) current--;
+      render();
+    };
+
+    document.getElementById("nextBtn").onclick = () => {
+      if (current < stages.length - 1) current++;
+      render();
+    };
+
+    document.getElementById("resetBtn").onclick = () => {
+      chosen = {};
+      score = 0;
+      render();
+    };
+
+    render();
+  </script>
+</body>
+</html>
