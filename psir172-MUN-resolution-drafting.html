@@ -1,1 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PSIR 172 – Resolution Drafting Walkthrough</title>
+  <style>
+    :root{
+      --bg:#f7f9fc;
+      --card:#ffffff;
+      --ink:#18324a;
+      --muted:#5f7387;
+      --line:#dbe4ec;
+      --accent:#2f6fed;
+      --accent-soft:#eaf1ff;
+      --good:#147a4b;
+      --good-soft:#e9f8f0;
+      --warn:#9a6700;
+      --warn-soft:#fff7df;
+      --bad:#b42318;
+      --bad-soft:#fff1f0;
+      --shadow:0 10px 28px rgba(24,50,74,.08);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,"Segoe UI",Arial,sans-serif;
+      background:var(--bg);
+      color:var(--ink);
+      line-height:1.55;
+    }
+    .wrap{
+      max-width:1200px;
+      margin:0 auto;
+      padding:24px;
+    }
+    .hero{
+      background:linear-gradient(135deg,#ffffff 0%,#eef5ff 100%);
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:28px;
+      box-shadow:var(--shadow);
+      margin-bottom:20px;
+    }
+    h1{
+      margin:0 0 10px;
+      font-size:clamp(1.8rem,3vw,2.7rem);
+      line-height:1.15;
+    }
+    .sub{
+      color:var(--muted);
+      max-width:900px;
+      margin:0 0 14px;
+    }
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:10px;
+    }
+    .chip{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:.92rem;
+    }
+    .layout{
+      display:grid;
+      grid-template-columns:300px 1fr;
+      gap:20px;
+    }
+    .panel,.maincard{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+    .panel{
+      padding:18px;
+      position:sticky;
+      top:16px;
+      align-self:start;
+    }
+    .panel h2{
+      margin:0 0 10px;
+      font-size:1.05rem;
+    }
+    .small{
+      color:var(--muted);
+      font-size:.92rem;
+    }
+    .step-list{
+      display:grid;
+      gap:10px;
+      margin-top:14px;
+    }
+    .step-btn{
+      width:100%;
+      text-align:left;
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:14px;
+      padding:12px 13px;
+      color:var(--ink);
+      cursor:pointer;
+      transition:.2s ease;
+      font-size:.95rem;
+    }
+    .step-btn:hover{border-color:#b9cbe0;background:#f9fbff}
+    .step-btn.active{
+      background:var(--accent-soft);
+      border-color:#b9cdfc;
+      color:#1747a6;
+      font-weight:700;
+    }
+    .maincard{
+      padding:24px;
+    }
+    .kicker{
+      color:var(--accent);
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-weight:700;
+      font-size:.78rem;
+      margin-bottom:8px;
+    }
+    h3{
+      margin:0 0 8px;
+      font-size:1.6rem;
+    }
+    .twocol{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+      margin-top:18px;
+    }
+    .box{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:16px;
+      background:#fff;
+    }
+    .box h4{
+      margin:0 0 8px;
+      font-size:1rem;
+    }
+    .prompt{background:#f9fbff}
+    .goal{background:#fcfdff}
+    .options{
+      display:grid;
+      gap:12px;
+      margin-top:12px;
+    }
+    .opt{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+      background:#fff;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+    .opt:hover{border-color:#b8cae0;background:#fbfdff}
+    .opt strong{display:block;margin-bottom:6px}
+    .opt.selected{
+      border-color:#9ab7ff;
+      background:#f5f9ff;
+    }
+    .feedback{
+      margin-top:16px;
+      border-radius:16px;
+      padding:15px;
+      display:none;
+    }
+    .feedback.good{
+      display:block;
+      background:var(--good-soft);
+      border:1px solid #b8e3cb;
+      color:#145f3e;
+    }
+    .feedback.warn{
+      display:block;
+      background:var(--warn-soft);
+      border:1px solid #efd98b;
+      color:#7a5600;
+    }
+    .feedback.bad{
+      display:block;
+      background:var(--bad-soft);
+      border:1px solid #f0b4ae;
+      color:#8a2118;
+    }
+    .sample{
+      background:#f8fafc;
+      border-left:4px solid var(--accent);
+    }
+    .compare{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+      margin-top:10px;
+    }
+    .badbox,.goodbox{
+      border-radius:14px;
+      padding:14px;
+      border:1px solid var(--line);
+    }
+    .badbox{
+      background:var(--bad-soft);
+      border-color:#efb7b1;
+    }
+    .goodbox{
+      background:var(--good-soft);
+      border-color:#bfe2cf;
+    }
+    .mini-res{
+      background:#fbfcfe;
+      border:1px dashed var(--line);
+      border-radius:16px;
+      padding:16px;
+      margin-top:16px;
+    }
+    .nav{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      margin-top:22px;
+      flex-wrap:wrap;
+    }
+    button.navbtn{
+      border:none;
+      background:var(--accent);
+      color:#fff;
+      padding:12px 16px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:700;
+    }
+    button.navbtn.secondary{
+      background:#e9eef5;
+      color:var(--ink);
+    }
+    .footer{
+      margin-top:16px;
+      color:var(--muted);
+      font-size:.9rem;
+    }
+    .checklist{
+      margin:10px 0 0;
+      padding-left:18px;
+    }
+    @media (max-width:980px){
+      .layout{grid-template-columns:1fr}
+      .panel{position:relative;top:0}
+      .twocol,.compare{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>PSIR 172 – Resolution Drafting Walkthrough</h1>
+      <p class="sub">
+        A light-themed student guide to help you understand how Model UN resolutions begin,
+        how weak clauses become stronger ones, how compromise wording works, and how a small
+        draft resolution can emerge from caucusing and negotiation.
+      </p>
+      <div class="chips">
+        <span class="chip">Student-Facing</span>
+        <span class="chip">Clause Builder</span>
+        <span class="chip">Weak vs Strong Examples</span>
+        <span class="chip">Canada-Based Exemplar</span>
+        <span class="chip">Mini-Resolution</span>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="panel">
+        <h2>Walkthrough Steps</h2>
+        <p class="small">Click through the drafting process step by step.</p>
+        <div class="step-list" id="stepList"></div>
+        <div class="box" style="margin-top:16px;">
+          <h4>Quick reminder</h4>
+          <div class="small">
+            A resolution is not just a collection of opinions. It should show:
+            <strong>context</strong>, <strong>action</strong>, and <strong>realistic wording</strong>.
+          </div>
+        </div>
+      </aside>
+
+      <main class="maincard">
+        <div class="kicker" id="stepKicker">Step 1</div>
+        <h3 id="stepTitle">What a Resolution Tries to Do</h3>
+        <p id="stepIntro"></p>
+
+        <div class="twocol">
+          <div class="box prompt">
+            <h4>Core idea</h4>
+            <div id="stepPrompt"></div>
+          </div>
+          <div class="box goal">
+            <h4>What students should focus on</h4>
+            <div id="stepGoal"></div>
+          </div>
+        </div>
+
+        <div class="box" style="margin-top:18px;">
+          <h4>Choose the stronger drafting instinct</h4>
+          <div class="options" id="optionsWrap"></div>
+          <div class="feedback" id="feedbackBox"></div>
+        </div>
+
+        <div class="box sample" style="margin-top:18px;">
+          <h4>Worked example</h4>
+          <div id="sampleText"></div>
+        </div>
+
+        <div class="box" style="margin-top:18px;">
+          <h4>What to learn from this step</h4>
+          <div id="learnText"></div>
+        </div>
+
+        <div class="nav">
+          <button class="navbtn secondary" id="prevBtn">← Previous</button>
+          <button class="navbtn secondary" id="resetBtn">Reset choices</button>
+          <button class="navbtn" id="nextBtn">Next Step →</button>
+        </div>
+
+        <div class="footer">
+          Built as a drafting scaffold for PSIR 172 Model United Nations.
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const steps = [
+      {
+        kicker: "Step 1",
+        title: "What a Resolution Tries to Do",
+        intro: "A Model UN resolution is a structured attempt to describe a problem and propose realistic actions.",
+        prompt: `
+          <p>A good resolution does not just say “this issue is bad.” It should:</p>
+          <ul>
+            <li>identify a problem,</li>
+            <li>show why the issue matters,</li>
+            <li>suggest realistic action,</li>
+            <li>reflect what delegations may actually support.</li>
+          </ul>
+        `,
+        goal: `
+          <p>Students should understand that a resolution is part diplomacy, part writing, and part negotiation. It must be more precise than a speech.</p>
+        `,
+        options: [
+          {
+            label: "Option A",
+            text: "Think of a resolution as a document that combines context, action, and compromise.",
+            type: "good",
+            feedback: "<strong>Correct.</strong> That is the right instinct. A good resolution explains why action is needed and what action is being proposed."
+          },
+          {
+            label: "Option B",
+            text: "Think of a resolution as a place to express your emotions about the issue.",
+            type: "warn",
+            feedback: "<strong>Not the best approach.</strong> Concern matters, but resolutions should be structured, diplomatic, and policy-oriented."
+          },
+          {
+            label: "Option C",
+            text: "Think of a resolution as a place to attack other countries.",
+            type: "bad",
+            feedback: "<strong>Weak approach.</strong> Resolutions are not written as personal attacks. They are formal committee documents."
+          }
+        ],
+        sample: `
+          <p><strong>Simple formula:</strong></p>
+          <p><strong>Context</strong> + <strong>problem framing</strong> + <strong>realistic action</strong></p>
+          <p>Example logic: “Because host countries face disproportionate burdens, member states should strengthen financial and technical support.”</p>
+        `,
+        learn: `
+          <ul class="checklist">
+            <li>Resolutions are more structured than speeches.</li>
+            <li>They must connect ideas to actual policy wording.</li>
+            <li>They should be realistic enough to negotiate.</li>
+          </ul>
+        `
+      },
+      {
+        kicker: "Step 2",
+        title: "Preambulatory vs Operative Clauses",
+        intro: "Most beginner confusion comes from mixing up background clauses and action clauses.",
+        prompt: `
+          <div class="compare">
+            <div class="badbox">
+              <strong>Preambulatory clauses</strong>
+              <p>These explain background, concern, legal context, or committee reasoning.</p>
+              <p>Common starters: <em>Recognizing, Recalling, Noting with concern, Acknowledging, Deeply concerned by</em></p>
+            </div>
+            <div class="goodbox">
+              <strong>Operative clauses</strong>
+              <p>These propose action.</p>
+              <p>Common starters: <em>Encourages, Calls upon, Urges, Requests, Recommends, Supports</em></p>
+            </div>
+          </div>
+        `,
+        goal: `
+          <p>Students should be able to tell the difference between explaining the issue and proposing what should be done about it.</p>
+        `,
+        options: [
+          {
+            label: "Option A",
+            text: "Use preambulatory clauses for background and operative clauses for action.",
+            type: "good",
+            feedback: "<strong>Exactly right.</strong> This is the core distinction students need to master."
+          },
+          {
+            label: "Option B",
+            text: "Use any clause starter anywhere as long as it sounds formal.",
+            type: "bad",
+            feedback: "<strong>No.</strong> Clause type matters. Formal sound alone is not enough."
+          },
+          {
+            label: "Option C",
+            text: "Avoid preambulatory clauses because they are unnecessary.",
+            type: "warn",
+            feedback: "<strong>Too simplistic.</strong> Some committees keep them short, but they still help frame the logic of the resolution."
+          }
+        ],
+        sample: `
+          <p><strong>Preambulatory example:</strong> “Recognizing that large-scale displacement places disproportionate pressure on frontline host countries,”</p>
+          <p><strong>Operative example:</strong> “Encourages Member States to expand financial and technical support for countries hosting large refugee populations;”</p>
+        `,
+        learn: `
+          <ul class="checklist">
+            <li>Preambulatory = why the issue matters.</li>
+            <li>Operative = what the committee wants done.</li>
+            <li>Students should not mix these up in their drafts.</li>
+          </ul>
+        `
+      },
+      {
+        kicker: "Step 3",
+        title: "Weak vs Strong Preambulatory Clauses",
+        intro: "A weak clause is usually vague, informal, or emotionally overloaded. A stronger clause is formal and agenda-relevant.",
+        prompt: `
+          <div class="compare">
+            <div class="badbox">
+              <strong>Weak version</strong>
+              <p>“Thinking that the refugee problem is very serious and countries should do more,”</p>
+            </div>
+            <div class="goodbox">
+              <strong>Stronger version</strong>
+              <p>“Recognizing that large-scale displacement places disproportionate pressure on frontline host countries and requires sustained international cooperation,”</p>
+            </div>
+          </div>
+        `,
+        goal: `
+          <p>Students should notice that the stronger version is more formal, more specific, and more useful for setting up later action clauses.</p>
+        `,
+        options: [
+          {
+            label: "Option A",
+            text: "Prefer the stronger version because it is formal, specific, and logically useful.",
+            type: "good",
+            feedback: "<strong>Correct.</strong> A stronger preambulatory clause gives the resolution direction and seriousness."
+          },
+          {
+            label: "Option B",
+            text: "Prefer the weak version because it sounds simpler.",
+            type: "bad",
+            feedback: "<strong>Not good enough.</strong> Simplicity can help, but here it becomes vagueness and weak drafting."
+          },
+          {
+            label: "Option C",
+            text: "Use very emotional adjectives to make the clause stronger.",
+            type: "warn",
+            feedback: "<strong>Careful.</strong> Formal diplomatic writing usually works better than emotional overstatement."
+          }
+        ],
+        sample: `
+          <p><strong>Why the stronger version works:</strong></p>
+          <ul>
+            <li>It identifies <em>who</em> is under pressure: frontline host countries.</li>
+            <li>It explains <em>why</em> action is needed: large-scale displacement.</li>
+            <li>It sets up later burden-sharing language naturally.</li>
+          </ul>
+        `,
+        learn: `
+          <ul class="checklist">
+            <li>A stronger clause is not just more “fancy.” It is more useful.</li>
+            <li>Specificity helps future negotiation.</li>
+            <li>Formal tone matters in UN-style drafting.</li>
+          </ul>
+        `
+      },
+      {
+        kicker: "Step 4",
+        title: "Weak vs Strong Operative Clauses",
+        intro: "Operative clauses should propose action clearly. They should not be empty, unrealistic, or too vague.",
+        prompt: `
+          <div class="compare">
+            <div class="badbox">
+              <strong>Weak version</strong>
+              <p>“Suggests that countries think about helping if possible;”</p>
+            </div>
+            <div class="goodbox">
+              <strong>Stronger version</strong>
+              <p>“Encourages Member States to expand financial, technical, and institutional support for countries hosting large refugee populations, in coordination with relevant international organizations;”</p>
+            </div>
+          </div>
+        `,
+        goal: `
+          <p>Students should learn that a good operative clause names the actor, action, and purpose more clearly.</p>
+        `,
+        options: [
+          {
+            label: "Option A",
+            text: "Choose the stronger version because it identifies action more clearly and sounds diplomatically realistic.",
+            type: "good",
+            feedback: "<strong>Correct.</strong> This clause gives the committee something tangible to support."
+          },
+          {
+            label: "Option B",
+            text: "Choose the weak version because it is easier for everyone to agree to.",
+            type: "warn",
+            feedback: "<strong>Sometimes tempting, but too weak.</strong> A clause that means almost nothing is not a strong drafting outcome."
+          },
+          {
+            label: "Option C",
+            text: "Replace both with a clause that forces every state to accept identical refugee quotas immediately.",
+            type: "bad",
+            feedback: "<strong>Too rigid and unrealistic.</strong> Strong drafting is not the same as maximalist drafting."
+          }
+        ],
+        sample: `
+          <p><strong>Clause formula:</strong></p>
+          <p><strong>Action verb</strong> + <strong>who</strong> + <strong>what</strong> + <strong>how / in coordination with whom</strong></p>
+          <p>Example: “Encourages Member States to expand financial and technical assistance to major host states through coordinated international partnerships;”</p>
+        `,
+        learn: `
+          <ul class="checklist">
+            <li>Operative clauses should do real work.</li>
+            <li>They should not be so vague that nobody learns anything from them.</li>
+            <li>They also should not be so extreme that no delegation can support them.</li>
+          </ul>
+        `
+      },
+      {
+        kicker: "Step 5",
+        title: "Canada Exemplar: First Drafting Move",
+        intro: "Canada, as a donor/resettlement/multilateral actor, would likely push for support to host states and coordinated burden-sharing.",
+        prompt: `
+          <p>Imagine Canada is drafting after caucusing with Germany and Jordan. Canada wants wording that is constructive, realistic, and widely negotiable.</p>
+        `,
+        goal: `
+          <p>The aim is to connect Canada’s likely identity to actual draft language.</p>
+        `,
+        options: [
+          {
+            label: "Option A",
+            text: "Draft a clause on increased financial and technical support for major host countries through international coordination.",
+            type: "good",
+            feedback: "<strong>Strong Canada-style move.</strong> It reflects burden-sharing, practicality, and multilateral cooperation."
+          },
+          {
+            label: "Option B",
+            text: "Draft a clause blaming other countries for failing morally.",
+            type: "bad",
+            feedback: "<strong>Weak drafting move.</strong> That may sound passionate, but it is not useful resolution language."
+          },
+          {
+            label: "Option C",
+            text: "Draft only a very general statement about compassion.",
+            type: "warn",
+            feedback: "<strong>Too thin.</strong> Humanitarian tone matters, but clauses need policy substance."
+          }
+        ],
+        sample: `
+          <p><strong>Canada-style clause idea:</strong></p>
+          <p>“Encourages Member States to expand financial, technical, and institutional support for countries hosting large refugee populations, in coordination with relevant international organizations;”</p>
+          <p><strong>Why it fits Canada:</strong> It is cooperative, donor-oriented, and realistic without being overly coercive.</p>
+        `,
+        learn: `
+          <ul class="checklist">
+            <li>Country position should shape clause drafting.</li>
+            <li>Canada is a useful model because it shows humanitarian language plus practical implementation logic.</li>
+            <li>Good clauses reflect both values and capacity.</li>
+          </ul>
+        `
+      },
+      {
+        kicker: "Step 6",
+        title: "Host-State Feedback and Amendment",
+        intro: "A clause often improves after another delegation pushes for changes.",
+        prompt: `
+          <p>Suppose Jordan says: “We support this, but host-country burdens should be recognised more explicitly.”</p>
+          <p>Canada now needs to respond constructively.</p>
+        `,
+        goal: `
+          <p>Students should see how caucusing can improve a draft rather than just defend the original text.</p>
+        `,
+        options: [
+          {
+            label: "Option A",
+            text: "Revise the clause to mention sustained support for countries facing disproportionate refugee-hosting pressures.",
+            type: "good",
+            feedback: "<strong>Excellent.</strong> This shows real negotiation: Canada keeps its core goal but incorporates host-state concerns."
+          },
+          {
+            label: "Option B",
+            text: "Refuse all changes because the original clause already sounds formal enough.",
+            type: "bad",
+            feedback: "<strong>Poor negotiation instinct.</strong> Drafting is collaborative. Students need to learn to revise strategically."
+          },
+          {
+            label: "Option C",
+            text: "Delete all substance so everyone can agree quickly.",
+            type: "warn",
+            feedback: "<strong>Not ideal.</strong> Consensus is useful, but not if the final clause says almost nothing."
+          }
+        ],
+        sample: `
+          <p><strong>Revised compromise version:</strong></p>
+          <p>“Encourages Member States to expand sustained financial, technical, and institutional support for countries facing disproportionate refugee-hosting burdens, in coordination with relevant international organizations;”</p>
+          <p><strong>What improved?</strong> The clause now reflects both donor logic and host-state concerns more clearly.</p>
+        `,
+        learn: `
+          <ul class="checklist">
+            <li>Amendments are not automatically bad.</li>
+            <li>Good negotiation often means improving wording through other delegations’ perspectives.</li>
+            <li>Host-state input can make clauses more grounded and credible.</li>
+          </ul>
+        `
+      },
+      {
+        kicker: "Step 7",
+        title: "Compromise Wording",
+        intro: "Students often think compromise means weakness. In fact, diplomatic compromise is often how a workable resolution emerges.",
+        prompt: `
+          <p>Different delegations want different levels of commitment. Canada wants the resolution to remain meaningful but broadly supportable.</p>
+        `,
+        goal: `
+          <p>Students should learn how wording shifts can widen support without destroying substance.</p>
+        `,
+        options: [
+          {
+            label: "Option A",
+            text: "Use language that is still meaningful but more negotiable, such as “encourages,” “supports,” or “in coordination with.”",
+            type: "good",
+            feedback: "<strong>Correct.</strong> This is often how compromise works in MUN drafting."
+          },
+          {
+            label: "Option B",
+            text: "Use only the strongest possible verbs no matter what, because strong drafting means hardline wording.",
+            type: "warn",
+            feedback: "<strong>Not always.</strong> Strong drafting is not just about harsh verbs. It is about realistic, strategic wording."
+          },
+          {
+            label: "Option C",
+            text: "Make every clause so soft that it cannot offend anyone.",
+            type: "bad",
+            feedback: "<strong>Too weak.</strong> If nothing meaningful remains, the resolution loses value."
+          }
+        ],
+        sample: `
+          <p><strong>Examples of more negotiable diplomatic wording:</strong></p>
+          <ul>
+            <li>“Encourages” rather than “orders”</li>
+            <li>“Supports efforts to” rather than “demands”</li>
+            <li>“In coordination with relevant international organizations” to show implementation realism</li>
+            <li>“In accordance with national capacity” when flexibility is needed</li>
+          </ul>
+        `,
+        learn: `
+          <ul class="checklist">
+            <li>Compromise wording is part of diplomacy, not surrender.</li>
+            <li>Students should look for verbs and phrases that widen support.</li>
+            <li>Meaningful but negotiable drafting is often the sweet spot.</li>
+          </ul>
+        `
+      },
+      {
+        kicker: "Step 8",
+        title: "Mini-Resolution Example",
+        intro: "Now bring the pieces together into a very small draft resolution sample.",
+        prompt: `
+          <p>A simple mini-resolution can help students see how individual clauses fit together into a coherent document.</p>
+        `,
+        goal: `
+          <p>Students should understand that even a short resolution should have a logical flow from context to action.</p>
+        `,
+        options: [
+          {
+            label: "Option A",
+            text: "Build a mini-resolution with 1–2 preambulatory clauses and 2–3 operative clauses that reflect a clear strategy.",
+            type: "good",
+            feedback: "<strong>Exactly right.</strong> Beginners benefit from learning to build small, coherent drafts before attempting very long ones."
+          },
+          {
+            label: "Option B",
+            text: "Write as many clauses as possible, even if they do not connect to one another.",
+            type: "bad",
+            feedback: "<strong>Weak drafting logic.</strong> More clauses do not automatically mean a better resolution."
+          },
+          {
+            label: "Option C",
+            text: "Skip all structure and just write a long paragraph instead.",
+            type: "warn",
+            feedback: "<strong>Not suitable for MUN resolution style.</strong> Structure matters."
+          }
+        ],
+        sample: `
+          <div class="mini-res">
+            <strong>Mini-Resolution Example</strong>
+            <p><em>Recognizing</em> that large-scale displacement places disproportionate pressure on frontline host countries,</p>
+            <p><em>Acknowledging</em> the importance of international cooperation in addressing refugee protection and humanitarian support,</p>
+            <p>1. <em>Encourages</em> Member States to expand financial, technical, and institutional support for countries facing large refugee-hosting burdens;</p>
+            <p>2. <em>Supports</em> stronger coordination with relevant international organizations to improve responsibility-sharing mechanisms;</p>
+            <p>3. <em>Recommends</em> that states explore practical measures to improve access to education, health, and protection services for displaced populations.</p>
+          </div>
+        `,
+        learn: `
+          <ul class="checklist">
+            <li>A good mini-resolution is coherent, not bloated.</li>
+            <li>Clauses should fit the same general strategy.</li>
+            <li>Students can begin small and still produce strong work.</li>
+          </ul>
+        `
+      },
+      {
+        kicker: "Step 9",
+        title: "Final Drafting Checklist",
+        intro: "Before students submit or propose draft language, they should check whether it actually works.",
+        prompt: `
+          <p>Ask the following questions of each clause and of the resolution as a whole.</p>
+          <ul>
+            <li>Is it relevant to the agenda?</li>
+            <li>Is it written in diplomatic and formal language?</li>
+            <li>Is it realistic?</li>
+            <li>Would my country plausibly support it?</li>
+            <li>Could at least some other delegations support it?</li>
+          </ul>
+        `,
+        goal: `
+          <p>Students should learn to self-edit instead of assuming their first draft is automatically strong.</p>
+        `,
+        options: [
+          {
+            label: "Option A",
+            text: "Revise a clause if it is vague, unrealistic, or inconsistent with your country’s position.",
+            type: "good",
+            feedback: "<strong>Correct.</strong> Self-editing is part of good MUN drafting."
+          },
+          {
+            label: "Option B",
+            text: "Keep the first version because changing it shows uncertainty.",
+            type: "bad",
+            feedback: "<strong>No.</strong> Revision usually improves drafting."
+          },
+          {
+            label: "Option C",
+            text: "Judge clauses only by whether they sound formal, not whether they make sense.",
+            type: "warn",
+            feedback: "<strong>Not enough.</strong> Formal tone matters, but substance and realism matter too."
+          }
+        ],
+        sample: `
+          <p><strong>Good final reminder:</strong></p>
+          <ul>
+            <li>Does this clause help solve or manage part of the problem?</li>
+            <li>Would my delegation say yes to this in committee?</li>
+            <li>Does the wording leave room for support from others?</li>
+          </ul>
+        `,
+        learn: `
+          <ul class="checklist">
+            <li>Good drafting involves revision.</li>
+            <li>Students should check realism, relevance, and diplomatic fit.</li>
+            <li>The best clause is not always the longest one.</li>
+          </ul>
+        `
+      }
+    ];
+
+    let current = 0;
+    let chosen = {};
+
+    const stepList = document.getElementById("stepList");
+    const stepKicker = document.getElementById("stepKicker");
+    const stepTitle = document.getElementById("stepTitle");
+    const stepIntro = document.getElementById("stepIntro");
+    const stepPrompt = document.getElementById("stepPrompt");
+    const stepGoal = document.getElementById("stepGoal");
+    const optionsWrap = document.getElementById("optionsWrap");
+    const feedbackBox = document.getElementById("feedbackBox");
+    const sampleText = document.getElementById("sampleText");
+    const learnText = document.getElementById("learnText");
+
+    function renderStepList(){
+      stepList.innerHTML = "";
+      steps.forEach((s, i) => {
+        const btn = document.createElement("button");
+        btn.className = "step-btn" + (i === current ? " active" : "");
+        btn.innerHTML = `<strong>${s.kicker}</strong><br><span class="small">${s.title}</span>`;
+        btn.onclick = () => {
+          current = i;
+          render();
+        };
+        stepList.appendChild(btn);
+      });
+    }
+
+    function render(){
+      const s = steps[current];
+      stepKicker.textContent = s.kicker;
+      stepTitle.textContent = s.title;
+      stepIntro.textContent = s.intro;
+      stepPrompt.innerHTML = s.prompt;
+      stepGoal.innerHTML = s.goal;
+      sampleText.innerHTML = s.sample;
+      learnText.innerHTML = s.learn;
+
+      feedbackBox.className = "feedback";
+      feedbackBox.style.display = "none";
+      feedbackBox.innerHTML = "";
+      optionsWrap.innerHTML = "";
+
+      s.options.forEach((opt, idx) => {
+        const div = document.createElement("div");
+        const wasPicked = chosen[`step-${current}`] === idx;
+        div.className = "opt" + (wasPicked ? " selected" : "");
+        div.innerHTML = `<strong>${opt.label}</strong>${opt.text}`;
+        div.onclick = () => {
+          chosen[`step-${current}`] = idx;
+          render();
+          feedbackBox.className = `feedback ${opt.type}`;
+          feedbackBox.style.display = "block";
+          feedbackBox.innerHTML = opt.feedback;
+        };
+        optionsWrap.appendChild(div);
+      });
+
+      if (chosen[`step-${current}`] !== undefined) {
+        const picked = s.options[chosen[`step-${current}`]];
+        feedbackBox.className = `feedback ${picked.type}`;
+        feedbackBox.style.display = "block";
+        feedbackBox.innerHTML = picked.feedback;
+      }
+
+      renderStepList();
+      document.getElementById("prevBtn").disabled = current === 0;
+      document.getElementById("nextBtn").disabled = current === steps.length - 1;
+    }
+
+    document.getElementById("prevBtn").onclick = () => {
+      if (current > 0) current--;
+      render();
+    };
+
+    document.getElementById("nextBtn").onclick = () => {
+      if (current < steps.length - 1) current++;
+      render();
+    };
+
+    document.getElementById("resetBtn").onclick = () => {
+      chosen = {};
+      render();
+    };
+
+    render();
+  </script>
+</body>
+</html>
 
