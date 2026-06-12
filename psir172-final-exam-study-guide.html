@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PSIR 172 – Final Exam Study Guide</title>
+  <style>
+    :root{
+      --bg:#f7f9fc;
+      --card:#ffffff;
+      --ink:#18324a;
+      --muted:#607589;
+      --line:#dbe4ee;
+      --accent:#2f6fed;
+      --accent-soft:#eaf1ff;
+      --good:#178957;
+      --good-soft:#edf9f3;
+      --warn:#b87700;
+      --warn-soft:#fff6e3;
+      --shadow:0 10px 28px rgba(20,40,80,.08);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      background:var(--bg);
+      color:var(--ink);
+      line-height:1.55;
+    }
+    .wrap{max-width:1180px;margin:0 auto;padding:18px}
+    .hero{
+      background:linear-gradient(135deg,#ffffff 0%,#eef4ff 100%);
+      border:1px solid var(--line);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:28px;
+      margin-bottom:18px;
+    }
+    .eyebrow{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:.82rem;
+      font-weight:700;
+      color:var(--accent);
+      background:var(--accent-soft);
+      border:1px solid #d7e4ff;
+      margin-bottom:10px;
+    }
+    h1,h2,h3,h4{margin:0 0 10px}
+    h1{font-size:clamp(1.9rem,3vw,2.7rem);line-height:1.08}
+    h2{font-size:1.35rem}
+    h3{font-size:1.05rem}
+    p{margin:0 0 12px}
+    .sub{color:var(--muted);max-width:880px}
+    .layout{
+      display:grid;
+      grid-template-columns:270px 1fr;
+      gap:18px;
+      align-items:start;
+    }
+    .nav{
+      position:sticky;
+      top:14px;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      padding:14px;
+    }
+    .nav a{
+      display:block;
+      text-decoration:none;
+      color:var(--ink);
+      padding:9px 10px;
+      border-radius:12px;
+      margin:4px 0;
+      font-size:.95rem;
+    }
+    .nav a:hover{background:#f2f6fb}
+    .content{display:grid;gap:18px}
+    .card{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      padding:22px;
+    }
+    .grid2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+    .grid3{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+    }
+    .note,.tip,.warn{
+      border-radius:14px;
+      padding:14px 15px;
+      margin-top:10px;
+    }
+    .note{background:#f4f8ff;border:1px solid #d7e6ff}
+    .tip{background:var(--good-soft);border:1px solid #cfeadf}
+    .warn{background:var(--warn-soft);border:1px solid #f0ddb3}
+    .muted{color:var(--muted)}
+    .smallcaps{
+      text-transform:uppercase;
+      letter-spacing:.05em;
+      font-size:.76rem;
+      color:var(--muted);
+      font-weight:700;
+    }
+    .pill{
+      display:inline-block;
+      padding:5px 9px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:#f3f7fb;
+      font-size:.8rem;
+      margin:3px 6px 3px 0;
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:8px;
+      font-size:.95rem;
+    }
+    th,td{
+      border:1px solid var(--line);
+      padding:10px 11px;
+      text-align:left;
+      vertical-align:top;
+    }
+    th{background:#f3f7fd}
+    ul,ol{margin:8px 0 0 20px;padding:0}
+    li{margin:6px 0}
+    details{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px 14px;
+      margin-top:10px;
+      background:#fcfdff;
+    }
+    summary{
+      cursor:pointer;
+      font-weight:700;
+      color:var(--ink);
+    }
+    .qblock{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px;
+      margin-top:12px;
+      background:#fcfdff;
+    }
+    .flash{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px;
+      background:#fff;
+    }
+    .flash .term{
+      font-weight:700;
+      margin-bottom:8px;
+    }
+    .btnrow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+    button{
+      appearance:none;
+      border:none;
+      background:var(--accent);
+      color:#fff;
+      padding:10px 14px;
+      border-radius:12px;
+      font:inherit;
+      font-weight:600;
+      cursor:pointer;
+    }
+    button.secondary{
+      background:#eef3fb;
+      color:var(--ink);
+      border:1px solid var(--line);
+    }
+    textarea{
+      width:100%;
+      min-height:90px;
+      resize:vertical;
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:11px 12px;
+      font:inherit;
+      color:var(--ink);
+      background:#fff;
+    }
+    .footer{
+      text-align:center;
+      color:var(--muted);
+      font-size:.9rem;
+      padding:12px 0 24px;
+    }
+    @media (max-width:950px){
+      .layout{grid-template-columns:1fr}
+      .nav{position:static}
+      .grid2,.grid3{grid-template-columns:1fr}
+      .wrap{padding:14px}
+      .hero,.card{padding:18px}
+    }
+    @media print{
+      .nav,.btnrow{display:none!important}
+      .hero,.card{box-shadow:none}
+      body{background:#fff}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="eyebrow">PSIR 172 • Final Exam Review</div>
+      <h1>Final Exam Study Guide</h1>
+      <p class="sub">
+        This guide is built around the actual structure of the PSIR 172 final exam:
+        <strong>25 marks</strong>, <strong>2 hours</strong>, with greater weight on
+        <strong>campaign strategy</strong> and <strong>Model United Nations</strong> than on earlier pre-midterm material.
+      </p>
+      <div class="btnrow">
+        <button onclick="window.print()">Print / Save as PDF</button>
+        <button class="secondary" onclick="document.getElementById('practice').scrollIntoView()">Jump to Practice Questions</button>
+        <button class="secondary" onclick="document.getElementById('checklist').scrollIntoView()">Jump to Final Checklist</button>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="nav">
+        <h3>Contents</h3>
+        <a href="#overview">1. Exam Overview</a>
+        <a href="#weights">2. What Matters Most</a>
+        <a href="#sectionA">3. Section A Review</a>
+        <a href="#sectionB">4. Section B Review</a>
+        <a href="#sectionC">5. Section C Review</a>
+        <a href="#sectionD">6. Section D Review</a>
+        <a href="#flashcards">7. Key Concepts</a>
+        <a href="#mistakes">8. Common Mistakes</a>
+        <a href="#practice">9. Practice Questions</a>
+        <a href="#timing">10. Timing Strategy</a>
+        <a href="#checklist">11. Final Checklist</a>
+        <a href="#notes">12. My Notes</a>
+      </aside>
+
+      <main class="content">
+        <section class="card" id="overview">
+          <div class="smallcaps">Exam Structure</div>
+          <h2>What the final exam looks like</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Section</th>
+                <th>Focus</th>
+                <th>Marks</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>A</strong></td>
+                <td>Core concepts and skills</td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <td><strong>B</strong></td>
+                <td>Data interpretation</td>
+                <td>3</td>
+              </tr>
+              <tr>
+                <td><strong>C</strong></td>
+                <td>Campaign strategy and communication</td>
+                <td>8</td>
+              </tr>
+              <tr>
+                <td><strong>D</strong></td>
+                <td>Model United Nations strategy and resolution work</td>
+                <td>9</td>
+              </tr>
+              <tr>
+                <td colspan="2"><strong>Total</strong></td>
+                <td><strong>25</strong></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="note">
+            <strong>Important:</strong> Earlier material is still on the exam, but it is not the majority. The heaviest weight falls on <strong>campaign strategy</strong> and <strong>MUN work</strong>.
+          </div>
+        </section>
+
+        <section class="card" id="weights">
+          <div class="smallcaps">Study Priorities</div>
+          <h2>What matters most</h2>
+          <div class="grid2">
+            <div class="tip">
+              <h3>Higher-priority material</h3>
+              <ul>
+                <li>Target audience</li>
+                <li>Campaign goal and key message</li>
+                <li>Choosing outputs that fit the audience</li>
+                <li>Logos, ethos, pathos</li>
+                <li>MUN priorities, allies, red lines</li>
+                <li>Operative clauses and diplomatic wording</li>
+              </ul>
+            </div>
+            <div class="warn">
+              <h3>Still important, but lighter</h3>
+              <ul>
+                <li>Research question vs broad topic</li>
+                <li>Primary vs secondary sources</li>
+                <li>Policy brief vs academic essay</li>
+                <li>Correlation vs causation</li>
+                <li>Basic chart / graph clarity</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="card" id="sectionA">
+          <div class="smallcaps">Section A • 5 marks</div>
+          <h2>Core concepts and skills</h2>
+          <p>This section is short and direct. You should be ready to define or distinguish key early-semester concepts.</p>
+
+          <h3>Know these especially well:</h3>
+          <ul>
+            <li><strong>Broad topic vs research question</strong></li>
+            <li><strong>Primary source vs secondary source</strong></li>
+            <li><strong>Policy brief vs academic essay</strong></li>
+            <li><strong>Correlation vs causation</strong></li>
+            <li><strong>One feature of a good chart/graph</strong></li>
+          </ul>
+
+          <details>
+            <summary>What kind of answer gets full marks here?</summary>
+            <p>Usually a short, precise answer. Do not over-write. If asked for a difference, clearly state both sides. If asked for an example, give a concrete one.</p>
+          </details>
+        </section>
+
+        <section class="card" id="sectionB">
+          <div class="smallcaps">Section B • 3 marks</div>
+          <h2>Data interpretation</h2>
+          <p>This section tests whether you can read evidence carefully and avoid making exaggerated claims.</p>
+
+          <h3>What to remember</h3>
+          <ul>
+            <li>Describe what the data actually shows.</li>
+            <li>Do not claim more than the evidence proves.</li>
+            <li>Separate <strong>observation</strong> from <strong>explanation</strong>.</li>
+            <li>If data shows a pattern, that does not automatically prove the reason for the pattern.</li>
+          </ul>
+
+          <div class="tip">
+            <strong>Safe formula:</strong> “A valid conclusion is X. However, the evidence does not by itself prove Y, because other explanations may also exist.”
+          </div>
+        </section>
+
+        <section class="card" id="sectionC">
+          <div class="smallcaps">Section C • 8 marks</div>
+          <h2>Campaign strategy and communication</h2>
+          <p>This is one of the most important parts of the exam. You need to show that you understand how a campaign is designed strategically.</p>
+
+          <h3>Be ready to do all of these:</h3>
+          <ul>
+            <li>Identify an appropriate <strong>target audience</strong></li>
+            <li>Define a clear <strong>campaign goal</strong></li>
+            <li>Write or explain a <strong>key message</strong></li>
+            <li>Choose <strong>outputs</strong> that fit the audience</li>
+            <li>Explain how <strong>logos, ethos, and pathos</strong> would be used</li>
+          </ul>
+
+          <div class="grid3">
+            <div class="note">
+              <h3>Audience</h3>
+              <p class="muted">Be specific. “Students” may be too broad unless you explain which students and why.</p>
+            </div>
+            <div class="note">
+              <h3>Outputs</h3>
+              <p class="muted">Do not choose randomly. Explain why this format fits the audience and goal.</p>
+            </div>
+            <div class="note">
+              <h3>Rhetoric</h3>
+              <p class="muted">Do not just define logos/ethos/pathos. Show how they would function in the campaign.</p>
+            </div>
+          </div>
+
+          <details>
+            <summary>Quick reminder: what makes a strong campaign answer?</summary>
+            <ul>
+              <li>Clear audience</li>
+              <li>Clear desired change or action</li>
+              <li>Strong message</li>
+              <li>Outputs that make sense</li>
+              <li>Deliberate rhetorical strategy</li>
+            </ul>
+          </details>
+        </section>
+
+        <section class="card" id="sectionD">
+          <div class="smallcaps">Section D • 9 marks</div>
+          <h2>Model United Nations strategy and resolution work</h2>
+          <p>This is the heaviest section on the exam. You need to show that you understand how a delegation thinks and acts strategically.</p>
+
+          <h3>Be ready to explain:</h3>
+          <ul>
+            <li><strong>Delegation priorities</strong></li>
+            <li><strong>Likely allies</strong></li>
+            <li><strong>What wording or proposals would be resisted</strong></li>
+            <li><strong>What kinds of operative clauses a delegation would support</strong></li>
+          </ul>
+
+          <h3>Core MUN ideas to remember</h3>
+          <span class="pill">interests</span>
+          <span class="pill">red lines</span>
+          <span class="pill">allies</span>
+          <span class="pill">opponents</span>
+          <span class="pill">negotiation</span>
+          <span class="pill">compromise</span>
+          <span class="pill">operative clause</span>
+          <span class="pill">diplomatic wording</span>
+
+          <div class="warn">
+            <strong>Common trap:</strong> Students often answer from their personal opinion. On MUN questions, answer from the delegation’s likely position and strategic logic.
+          </div>
+
+          <details>
+            <summary>What does a good operative clause usually include?</summary>
+            <ul>
+              <li>An operative verb: <em>Encourages, Calls upon, Urges, Requests</em></li>
+              <li>An actor: <em>Member States, UN bodies, donor states</em></li>
+              <li>An action: funding, coordination, technical support, etc.</li>
+              <li>Realistic diplomatic wording</li>
+            </ul>
+          </details>
+        </section>
+
+        <section class="card" id="flashcards">
+          <div class="smallcaps">Quick Review</div>
+          <h2>Key Concepts</h2>
+          <div class="grid2">
+            <div class="flash">
+              <div class="term">Research question</div>
+              <div>A specific, answerable question that guides inquiry.</div>
+            </div>
+            <div class="flash">
+              <div class="term">Primary source</div>
+              <div>Original material such as interviews, speeches, treaties, survey data, or official documents.</div>
+            </div>
+            <div class="flash">
+              <div class="term">Secondary source</div>
+              <div>Analysis written by others, such as academic books or journal articles.</div>
+            </div>
+            <div class="flash">
+              <div class="term">Policy brief</div>
+              <div>Short, direct, practical writing aimed at decision-makers and recommendations.</div>
+            </div>
+            <div class="flash">
+              <div class="term">Correlation</div>
+              <div>Two things vary together; this alone does not prove one causes the other.</div>
+            </div>
+            <div class="flash">
+              <div class="term">Target audience</div>
+              <div>The specific group a campaign is trying to reach and persuade.</div>
+            </div>
+            <div class="flash">
+              <div class="term">Logos</div>
+              <div>Appeal through logic, evidence, or reasoning.</div>
+            </div>
+            <div class="flash">
+              <div class="term">Ethos</div>
+              <div>Appeal through credibility, legitimacy, or trustworthiness.</div>
+            </div>
+            <div class="flash">
+              <div class="term">Pathos</div>
+              <div>Appeal through emotion, values, concern, or identification.</div>
+            </div>
+            <div class="flash">
+              <div class="term">Red line</div>
+              <div>A proposal, wording, or commitment a delegation will not accept.</div>
+            </div>
+            <div class="flash">
+              <div class="term">Operative clause</div>
+              <div>The action part of a resolution: what states or bodies are encouraged or asked to do.</div>
+            </div>
+            <div class="flash">
+              <div class="term">Allies</div>
+              <div>Delegations whose interests or policy preferences are close enough for cooperation.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card" id="mistakes">
+          <div class="smallcaps">Avoid These</div>
+          <h2>Common mistakes</h2>
+          <ul>
+            <li>Giving a <strong>topic</strong> instead of a <strong>research question</strong></li>
+            <li>Confusing <strong>attendance decline</strong> with proof of <strong>declining interest</strong></li>
+            <li>Saying a campaign is for “everyone”</li>
+            <li>Choosing outputs without explaining why they fit the audience</li>
+            <li>Defining logos/ethos/pathos without applying them to the scenario</li>
+            <li>Answering MUN questions from personal opinion instead of delegation logic</li>
+            <li>Writing an “operative clause” that sounds like an essay sentence instead of resolution language</li>
+          </ul>
+        </section>
+
+        <section class="card" id="practice">
+          <div class="smallcaps">Practice</div>
+          <h2>Practice questions</h2>
+
+          <div class="qblock">
+            <h3>Practice 1 – Core concepts</h3>
+            <p><strong>Question:</strong> Explain the difference between an academic essay and a policy brief.</p>
+            <details>
+              <summary>Model answer</summary>
+              <p>An academic essay is usually more analytical, detailed, and aimed at explaining or evaluating an issue in depth. A policy brief is shorter, more direct, and designed for decision-makers, usually with practical recommendations.</p>
+            </details>
+          </div>
+
+          <div class="qblock">
+            <h3>Practice 2 – Data interpretation</h3>
+            <p><strong>Question:</strong> A chart shows that student club attendance fell over four weeks. What can you say safely, and what can you not claim for sure?</p>
+            <details>
+              <summary>Model answer</summary>
+              <p>You can say attendance fell over time. You cannot say for certain why it fell without more evidence, because other explanations may exist.</p>
+            </details>
+          </div>
+
+          <div class="qblock">
+            <h3>Practice 3 – Campaign strategy</h3>
+            <p><strong>Question:</strong> A campaign wants more students to use public transport to campus. Name a likely audience, one good output, and one rhetorical appeal that would work well.</p>
+            <details>
+              <summary>Model answer</summary>
+              <p>A likely audience could be commuting students. A strong output could be an Instagram carousel or campus poster. A useful rhetorical appeal could be logos through cost savings and convenience, or pathos through stress reduction and environmental responsibility.</p>
+            </details>
+          </div>
+
+          <div class="qblock">
+            <h3>Practice 4 – MUN strategy</h3>
+            <p><strong>Question:</strong> A delegation supports host-state assistance but resists unrealistic obligations. What kind of clause would it likely support?</p>
+            <details>
+              <summary>Model answer</summary>
+              <p>It would likely support an operative clause encouraging Member States to provide financial and technical support to heavily affected host countries while respecting national capacity and practical implementation constraints.</p>
+            </details>
+          </div>
+        </section>
+
+        <section class="card" id="timing">
+          <div class="smallcaps">Exam Management</div>
+          <h2>Timing strategy for the 2-hour exam</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Section</th>
+                <th>Suggested time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Section A</td>
+                <td>10–15 minutes</td>
+              </tr>
+              <tr>
+                <td>Section B</td>
+                <td>10–15 minutes</td>
+              </tr>
+              <tr>
+                <td>Section C</td>
+                <td>25–30 minutes</td>
+              </tr>
+              <tr>
+                <td>Section D</td>
+                <td>30–35 minutes</td>
+              </tr>
+              <tr>
+                <td>Review time</td>
+                <td>10–15 minutes</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="tip">
+            <strong>Best habit:</strong> Do not spend too long on Section A. Save your energy for Sections C and D, where most of the marks are.
+          </div>
+        </section>
+
+        <section class="card" id="checklist">
+          <div class="smallcaps">Last-Minute Review</div>
+          <h2>Final checklist</h2>
+          <div class="grid2">
+            <div class="note">
+              <h3>Before the exam, can you explain...</h3>
+              <ul>
+                <li>topic vs research question?</li>
+                <li>primary vs secondary source?</li>
+                <li>policy brief vs essay?</li>
+                <li>correlation vs causation?</li>
+                <li>one feature of a good graph?</li>
+              </ul>
+            </div>
+            <div class="note">
+              <h3>Before the exam, can you apply...</h3>
+              <ul>
+                <li>target audience logic?</li>
+                <li>campaign goal and key message?</li>
+                <li>logos, ethos, and pathos?</li>
+                <li>MUN priorities and red lines?</li>
+                <li>operative clause wording?</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="card" id="notes">
+          <div class="smallcaps">Personal Use</div>
+          <h2>My notes</h2>
+          <p class="muted">Type your own final reminders here. They save on this device.</p>
+          <textarea id="notesBox" placeholder="Write your own study notes, weak areas, definitions, or examples here..."></textarea>
+          <div class="btnrow">
+            <button onclick="saveNotes()">Save notes</button>
+            <button class="secondary" onclick="loadNotes()">Reload notes</button>
+            <button class="secondary" onclick="clearNotes()">Clear notes</button>
+          </div>
+          <p class="muted" id="status">No notes saved yet.</p>
+        </section>
+      </main>
+    </div>
+
+    <div class="footer">
+      PSIR 172 – Final Exam Study Guide
+    </div>
+  </div>
+
+  <script>
+    const key = "psir172_final_exam_notes";
+
+    function saveNotes(){
+      const val = document.getElementById("notesBox").value;
+      localStorage.setItem(key, val);
+      document.getElementById("status").textContent =
+        "Notes saved on this device at " + new Date().toLocaleTimeString() + ".";
+    }
+
+    function loadNotes(){
+      const saved = localStorage.getItem(key);
+      if(saved !== null){
+        document.getElementById("notesBox").value = saved;
+        document.getElementById("status").textContent = "Saved notes loaded.";
+      }
+    }
+
+    function clearNotes(){
+      localStorage.removeItem(key);
+      document.getElementById("notesBox").value = "";
+      document.getElementById("status").textContent = "Saved notes cleared.";
+    }
+
+    window.addEventListener("load", loadNotes);
+  </script>
+</body>
+</html>
